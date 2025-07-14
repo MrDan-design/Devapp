@@ -4,6 +4,7 @@ const db = require('./config/db');
 require('./config/passport');
 const path = require('path');
 const passport = require('passport');
+require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
 
@@ -14,6 +15,7 @@ const depositRoutes = require('./routes/depositRoutes');
 const oauthRoutes = require('./routes/oauthRoutes');
 const investRoutes = require('./routes/investRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
+const stockRoutes = require('./routes/stockRoutes');
 
 
 app.use(cors());
@@ -23,11 +25,11 @@ app.use('/api/swap', swapRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/deposit', depositRoutes);
 app.use(passport.initialize());
-app.use('/auth', oauthRoutes);
+app.use('/api/auth', require('./routes/oauthRoutes'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/invest', investRoutes);
 app.use('/api/dashboard', require('./routes/dashboard'));
-app.use('/api/stock', require('./routes/stockRoutes'));
+app.use('/api/stocks', stockRoutes);
 app.use('/api/transaction', transactionRoutes);
 
 // Simple test route to confirm db connection is working

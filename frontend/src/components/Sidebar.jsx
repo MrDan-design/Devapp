@@ -1,5 +1,6 @@
 // src/components/Sidebar.jsx
 import { NavLink } from 'react-router-dom';
+import "./Sidebar.css";
 
 const links = [
   { name: 'AdminDashboard', path: '/admin' },
@@ -11,25 +12,32 @@ const links = [
   { name: "Withdrawals", path: "/admin/withdrawals" },
 ];
 
-const Sidebar = () => (
-  <div className="flex flex-col h-full">
-    <h2 className="text-2xl font-bold text-[#6425FE] mb-10">Tesla Admin</h2>
-    <nav className="space-y-2">
-      {links.map((link) => (
-        <NavLink
-          key={link.path}
-          to={link.path}
-          className={({ isActive }) =>
-            `block px-4 py-3 text-base font-medium rounded-lg transition ${
-              isActive ? "bg-[#f0ebff] text-[#6425FE]" : "text-[#666666] hover:bg-gray-100"
-            }`
-          }
-        >
-          {link.name}
-        </NavLink>
-      ))}
-    </nav>
-  </div>
-);
+const Sidebar = () => {
+  return (
+    <div
+      className="d-flex flex-column bg-white shadow-sm p-3"
+      style={{ width: "250px", minHeight: "100vh" }}
+    >
+      <div className="fs-4 fw-bold text-center text-primary mb-4">
+        TESLA Admin
+      </div>
+      <nav className="nav flex-column">
+        {links.map((link) => (
+          <NavLink
+            key={link.path}
+            to={link.path}
+            className={({ isActive }) =>
+              `nav-link my-1 rounded px-3 py-2 ${
+                isActive ? "text-white bg-primary" : "text-secondary"
+              }`
+            }
+          >
+            {link.name}
+          </NavLink>
+        ))}
+      </nav>
+    </div>
+  );
+};
 
 export default Sidebar;

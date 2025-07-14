@@ -1,0 +1,75 @@
+.signup-wrapper {
+  position: relative;
+  min-height: 100vh;
+  background-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0.4), rgba(5, 5, 5, 0.6)), url('../../assets/bg-image.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  backdrop-filter: blur(4px);
+}
+
+.signup-form-container {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.signup-wrapper .overlay {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(5px);
+  z-index: 0;
+}
+
+.signup-page {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)),
+    url('../../assets/bg-image.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 60px 0;
+  backdrop-filter: blur(4px);
+}
+
+.signup-card {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 991px) {
+  .signup-card {
+    flex-direction: column !important;
+  }
+}
+
+@keyframes floatIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(10px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-png {
+  animation: floatIn 1.5s ease-out forwards;
+  transition: transform 0.3s ease;
+}
+
+.animate-png:hover {
+  transform: scale(1.05);
+}

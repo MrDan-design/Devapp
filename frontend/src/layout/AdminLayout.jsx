@@ -1,26 +1,27 @@
-// src/layouts/AdminLayout.jsx
+// AdminLayout.jsx (Bootstrap version)
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import AdminNavbar from "../components/AdminNavbar";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const AdminLayout = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex">
-      {/* Sidebar block with gap to main content */}
-      <aside className="bg-white shadow-md min-h-screen p-6">
-        <Sidebar />
-      </aside>
+    <div className="container-fluid">
+      <div className="row min-vh-100">
+        {/* Sidebar */}
+        <nav className="col-md-3 col-lg-2 d-md-block bg-white sidebar shadow-sm px-0">
+          <Sidebar />
+        </nav>
 
-      {/* Gap between sidebar and main content */}
-      <div className="flex-1 px-6 py-6">
-        {/* Navbar area */}
-        <header className="bg-white shadow rounded-md p-4 mb-6">
-          <AdminNavbar />
-        </header>
+        {/* Main Content */}
+        <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4 bg-light">
+          <header className="py-3 mb-4 border-bottom bg-white">
+            <AdminNavbar />
+          </header>
 
-        {/* Page content */}
-        <main className="bg-white shadow rounded-md p-6">
-          <Outlet />
+          <div className="pt-3">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

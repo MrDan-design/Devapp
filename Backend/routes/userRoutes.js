@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
 //Signup route
 router.post('/signup', async (req, res) => {
-    const { fullname, email, password, country, currency } = req.body;
+    const { fullname, email, password, country, currency, nextOfKin, nextOfKinNumber } = req.body;
 
     if (!fullname || !email || !password) {
         return res.status(400).json({ message: 'All fields are required'});
@@ -27,7 +27,7 @@ router.post('/signup', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Insert new user into the database
-        await db.query('INSERT INTO users (fullname, email, password, country, currency) VALUES (?, ?, ?)', [fullname, email, hashedPassword, country || null, currency || 'USD']);
+        await db.query('INSERT INTO users (fullname, email, password, country, currency, next_of_kin, next_of_kin_number) VALUES (?, ?, ?, ?, ?, ?, ?)', [fullname, email, hashedPassword, country, nextOfKin, nextOfKinNumber || null, currency || 'USD']);
 
         res.status(201).json({ message: 'User created successfully' });
     } catch (error) {

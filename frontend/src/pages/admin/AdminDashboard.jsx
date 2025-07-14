@@ -1,21 +1,53 @@
+import {  useEffect, useState } from 'react';   
+import adminApi from '../../utils/adminApi';
+
 const AdminDashboard = () => {
-    return (
-    <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div className="bg-gray-50 p-6 rounded-lg shadow text-center">
-        <h3 className="text-lg font-semibold">Total Users</h3>
-        <p className="text-3xl text-[#6425FE]">1,234</p>
-      </div>
-      <div className="bg-gray-50 p-6 rounded-lg shadow text-center">
-        <h3 className="text-lg font-semibold">Pending Deposits</h3>
-        <p className="text-3xl text-[#6425FE]">$8,740</p>
-      </div>
-      <div className="bg-gray-50 p-6 rounded-lg shadow text-center">
-        <h3 className="text-lg font-semibold">Gift Cards Awaiting Approval</h3>
-        <p className="text-3xl text-[#6425FE]">15</p>
-      </div>
-      <div className="bg-gray-50 p-6 rounded-lg shadow text-center">
-        <h3 className="text-lg font-semibold">Withdrawals Pending</h3>
-        <p className="text-3xl text-[#6425FE]">6</p>
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    pendingDeposits: 0,
+    pendingCards: 0,
+    pendingWithdrawals: 0,
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await adminApi.get('/dashboard/stats');
+        setStats(res.data);
+      } catch (err) {
+        console.error('Error fetching dashboard stats:', err);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  return (
+    <div className="container py-4">
+      <div className="row g-4">
+        <div className="col-md-3">
+          <div className="bg-white p-4 rounded shadow text-center">
+            <h5>Total Users</h5>
+            <p className="h4 text-primary">{stats.totalUsers}</p>
+          </div>
+        </div>
+        <div className="col-md-3">
+          <div className="bg-white p-4 rounded shadow text-center">
+            <h5>Pending Deposits</h5>
+            <p className="h4 text-primary">{stats.pendingDeposits}</p>
+          </div>
+        </div>
+        <div className="col-md-3">
+          <div className="bg-white p-4 rounded shadow text-center">
+            <h5>Gift Cards Awaiting Approval</h5>
+            <p className="h4 text-primary">{stats.pendingCards}</p>
+          </div>
+        </div>
+        <div className="col-md-3">
+          <div className="bg-white p-4 rounded shadow text-center">
+            <h5>Withdrawals Pending</h5>
+            <p className="h4 text-primary">{stats.pendingWithdrawals}</p>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -115,6 +115,25 @@ router.post('/deposits/approve/:id', verifyToken, isAdmin, async (req, res) => {
   res.json({ message: 'Deposit approved & balance updated.' });
 });
 
+router.get('/dashboard/stats', verifyToken, isAdmin, async (req, res) => {
+  try {
+    const [[users]] = await db.query('SELECT COUNT(*) AS totalUsers FROM users');
+    const [[deposits]] = await db.query('SELECT COUNT(*) AS pendingDeposits FROM deposits WHERE status = "pending"');
+    const [[cards]] = await db.query('SELECT COUNT(*) AS pendingCards FROM gift_cards WHERE status = "pending"');
+    const [[withdrawals]] = await db.query('SELECT COUNT(*) AS pendingWithdrawals FROM withdrawals WHERE status = "pending"');
+
+    res.json({
+      totalUsers: users.totalUsers,
+      pendingDeposits: deposits.pendingDeposits,
+      pendingCards: cards.pendingCards,
+      pendingWithdrawals: withdrawals.pendingWithdrawals
+    });
+  } catch (err) {
+    console.error('Dashboard stats error:', err);
+    res.status(500).json({ message: 'Failed to fetch dashboard stats' });
+  }
+});
+
 router.get('/deposits/gift-cards', verifyToken, isAdmin, async (_req, res) => {
   try {
     // Grab pending gift‑card deposits plus user email/ name

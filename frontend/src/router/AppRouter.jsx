@@ -8,6 +8,7 @@ import Invest from "../pages/users/Invest";
 import FundWallet from "../pages/users/FundWallet";
 import Transactions from "../pages/users/Transactions";
 import Settings from "../pages/users/Settings";
+import SignupDetails from "../pages/users/SignupDetails";
 
 import AdminLayout from "../layout/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -31,6 +32,9 @@ const AppRouter =() => {
             <Route path="/fund-wallet" element={<FundWallet />} />
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/signup-details" element={<SignupDetails />} />
+
+            {/* Admin Routes */}
             
 
         <Route path="/admin" element={<AdminLayout />}>

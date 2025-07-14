@@ -2,78 +2,72 @@ import { useEffect, useState } from "react";
 import adminApi from "../../utils/adminApi";
 
 const Withdrawals = () => {
-    const [withdrawals, setWithdrawals] = useState([]);
+  const [withdrawals, setWithdrawals] = useState([]);
 
-    useEffect(() => {
-    const fetchWithdrawals = async () => {
-      try {
-        const res = await adminApi.get("/withdrawals/pending");
-        setWithdrawals(res.data);
-      } catch (err) {
-        console.error("Error fetching withdrawals:", err);
-      }
-    };
-
-    fetchWithdrawals();
-  }, []);
-
-  const handleApprove = async (id) => {
+  const fetchWithdrawals = async () => {
     try {
-      await adminApi.post(`/withdrawals/approve/${id}`);
-      setWithdrawals((prev) => prev.filter((w) => w.id !== id));
-      alert("Withdrawal approved and email sent");
+      const res = await adminApi.get("/withdrawals/pending");
+      setWithdrawals(res.data);
     } catch (err) {
-      console.error("Approval failed:", err);
-      alert("Approval failed");
+      console.error("Error fetching withdrawals:", err);
     }
   };
 
+  const approveWithdrawal = async (id) => {
+    try {
+      const res = await adminApi.post(`/withdrawals/approve/${id}`);
+      alert(res.data.message);
+      fetchWithdrawals(); // refresh list
+    } catch (err) {
+      console.error("Approval failed:", err);
+      alert("Approval failed.");
+    }
+  };
+
+  useEffect(() => {
+    fetchWithdrawals();
+  }, []);
+
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Pending Withdrawals</h2>
-      {withdrawals.length === 0 ? (
-        <p>No pending withdrawals.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full table-auto border">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="px-4 py-2">User ID</th>
-                <th className="px-4 py-2">Shares</th>
-                <th className="px-4 py-2">Crypto</th>
-                <th className="px-4 py-2">Wallet Address</th>
-                <th className="px-4 py-2">Requested</th>
-                <th className="px-4 py-2">Action</th>
+    <div className="container-fluid px-4">
+      <h2 className="mb-4 fw-bold text-primary">Pending Withdrawals</h2>
+      <div className="table-responsive">
+        <table className="table table-bordered table-hover">
+          <thead className="table-dark">
+            <tr>
+              <th>#</th>
+              <th>User</th>
+              <th>Crypto</th>
+              <th>Amount</th>
+              <th>Shares</th>
+              <th>Wallet Address</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {withdrawals.map((wd, index) => (
+              <tr key={wd.id}>
+                <td>{index + 1}</td>
+                <td>{wd.email}</td>
+                <td>{wd.crypto_symbol.toUpperCase()}</td>
+                <td>{parseFloat(wd.crypto_amount).toFixed(8)}</td>
+                <td>
+                  {wd.shares_amount} {wd.shares_symbol}
+                </td>
+                <td>{wd.wallet_address}</td>
+                <td>
+                  <button
+                    className="btn btn-sm btn-success"
+                    onClick={() => approveWithdrawal(wd.id)}
+                  >
+                    Approve
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {withdrawals.map((w) => (
-                <tr key={w.id} className="border-t text-center">
-                  <td className="px-4 py-2">{w.user_id}</td>
-                  <td className="px-4 py-2">
-                    {w.shares_amount} {w.shares_symbol}
-                  </td>
-                  <td className="px-4 py-2">
-                    {w.crypto_amount} {w.crypto_symbol}
-                  </td>
-                  <td className="px-4 py-2">{w.wallet_address}</td>
-                  <td className="px-4 py-2">
-                    {new Date(w.created_at).toLocaleString()}
-                  </td>
-                  <td className="px-4 py-2">
-                    <button
-                      onClick={() => handleApprove(w.id)}
-                      className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700"
-                    >
-                      Approve
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

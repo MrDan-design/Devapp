@@ -3,57 +3,77 @@ import adminApi from "../../utils/adminApi";
 
 const GiftCards = () => {
   const [giftCards, setGiftCards] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchGiftCards = async () => {
-    try {
-      const res = await adminApi.get("/deposits/gift-cards");
-      setGiftCards(res.data);
-    } catch (err) {
-      console.error("Error fetching gift cards:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleReject = async (id) => {
-    try {
-      await adminApi.post(`/deposits/gift-cards/reject/${id}`);
-      setGiftCards((prev) => prev.filter((card) => card.id !== id));
-    } catch (err) {
-      console.error("Failed to reject gift card:", err);
-    }
-  };
 
   useEffect(() => {
+    const fetchGiftCards = async () => {
+      try {
+        const res = await adminApi.get("/deposits/gift-cards");
+        setGiftCards(res.data);
+      } catch (err) {
+        console.error("Error fetching gift cards:", err);
+      }
+    };
+
     fetchGiftCards();
   }, []);
 
-  if (loading) return <div className="p-4">Loading gift cards...</div>;
-  if (giftCards.length === 0) return <div className="p-4 text-gray-600">No gift cards found.</div>;
+  const rejectGiftCard = async (id) => {
+    try {
+      const res = await adminApi.post(`/deposits/reject-gift-card/${id}`);
+      alert(res.data.message);
+      setGiftCards(giftCards.filter((card) => card.id !== id));
+    } catch (err) {
+      console.error("Reject failed:", err);
+      alert("Failed to reject gift card.");
+    }
+  };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">Gift Card Submissions</h2>
-      <div className="grid gap-4">
-        {giftCards.map((card) => (
-          <div key={card.id} className="bg-white p-4 rounded shadow-md">
-            <p><strong>User:</strong> {card.user_id}</p>
-            <p><strong>Country:</strong> {card.country}</p>
-            <p><strong>Value:</strong> ${card.value}</p>
-            <p><strong>Status:</strong> {card.status}</p>
-            <div className="flex gap-2 mt-2">
-              <img src={card.front_image_url} alt="Front" className="w-40 h-auto rounded border" />
-              <img src={card.back_image_url} alt="Back" className="w-40 h-auto rounded border" />
-            </div>
-            <button
-              className="mt-3 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-              onClick={() => handleReject(card.id)}
-            >
-              Reject
-            </button>
-          </div>
-        ))}
+    <div className="container-fluid px-4">
+      <h2 className="mb-4 fw-bold text-primary">Gift Cards Awaiting Review</h2>
+      <div className="table-responsive">
+        <table className="table table-bordered table-hover">
+          <thead className="table-dark">
+            <tr>
+              <th>#</th>
+              <th>User</th>
+              <th>Amount (USD)</th>
+              <th>Card Image</th>
+              <th>Uploaded At</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {giftCards.map((card, index) => (
+              <tr key={card.id}>
+                <td>{index + 1}</td>
+                <td>{card.email}</td>
+                <td>${parseFloat(card.amount).toFixed(2)}</td>
+                <td>
+                  <a href={card.image_url} target="_blank" rel="noopener noreferrer">
+                    <img src={card.image_url} alt="Gift card" width="60" height="40" />
+                  </a>
+                </td>
+                <td>{new Date(card.created_at).toLocaleString()}</td>
+                <td>
+                  <button
+                    className="btn btn-sm btn-danger"
+                    onClick={() => rejectGiftCard(card.id)}
+                  >
+                    Reject
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {giftCards.length === 0 && (
+              <tr>
+                <td colSpan="6" className="text-center">
+                  No pending gift cards.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

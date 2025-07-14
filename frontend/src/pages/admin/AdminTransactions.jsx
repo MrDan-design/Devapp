@@ -10,7 +10,7 @@ const AdminTransactions = () => {
         const res = await adminApi.get("/all-transactions");
         setTransactions(res.data);
       } catch (err) {
-        console.error("Failed to fetch transactions", err);
+        console.error("Error fetching transactions:", err);
       }
     };
 
@@ -18,27 +18,41 @@ const AdminTransactions = () => {
   }, []);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">All Transactions</h1>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white shadow rounded">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="py-2 px-4">Type</th>
-              <th className="py-2 px-4">Amount ($)</th>
-              <th className="py-2 px-4">User ID</th>
-              <th className="py-2 px-4">Status</th>
-              <th className="py-2 px-4">Date</th>
+    <div className="container-fluid px-4">
+      <h2 className="mb-4 fw-bold text-primary">All Transactions</h2>
+      <div className="table-responsive">
+        <table className="table table-bordered table-striped">
+          <thead className="table-dark">
+            <tr>
+              <th>#</th>
+              <th>User</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
             </tr>
           </thead>
           <tbody>
-            {transactions.map((tx) => (
-              <tr key={`${tx.type}-${tx.id}`} className="border-t">
-                <td className="py-2 px-4">{tx.type}</td>
-                <td className="py-2 px-4">${tx.amount.toFixed(2)}</td>
-                <td className="py-2 px-4">{tx.user_id}</td>
-                <td className="py-2 px-4">{tx.status}</td>
-                <td className="py-2 px-4">{new Date(tx.created_at).toLocaleString()}</td>
+            {transactions.map((tx, index) => (
+              <tr key={tx.id}>
+                <td>{index + 1}</td>
+                <td>{tx.user_fullname || tx.email}</td>
+                <td>{tx.type}</td>
+                <td>${parseFloat(tx.amount).toFixed(2)}</td>
+                <td>
+                  <span
+                    className={`badge ${
+                      tx.status === "completed"
+                        ? "bg-success"
+                        : tx.status === "pending"
+                        ? "bg-warning text-dark"
+                        : "bg-danger"
+                    }`}
+                  >
+                    {tx.status}
+                  </span>
+                </td>
+                <td>{new Date(tx.created_at).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>

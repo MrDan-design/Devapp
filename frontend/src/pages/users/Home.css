@@ -1,0 +1,54 @@
+.home-page {
+  min-height: 100vh;
+  background-image: linear-gradient(
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url("../../assets/bg-image.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero-section {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+
+.custom-button {
+  border-radius: 20px !important;
+  background-color: #cc0000 !important;
+}
+.custom-btn {
+
+  background-color: #cc0000 !important;
+}
+
+.custom-input {
+  border-left: 20px !important;
+}
+
+@media (max-width: 768px) {
+  .home-page h1 {
+    font-size: 2rem;
+  }
+}
+
+.token-btn {
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;;
+}
+
+.token-btn:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.token-btn > img {
+  size: 0.8rem;
+}

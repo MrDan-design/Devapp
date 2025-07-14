@@ -1,23 +1,25 @@
 import { useState } from "react";
 import { Menu } from "lucide-react";
 
-const AdminNavbar = ({ toggleSidebar }) => {
+// src/components/AdminNavbar.jsx
+const AdminNavbar = () => {
   return (
-    <div className="flex items-center justify-between bg-white shadow px-4 py-3 lg:px-6">
-      {/* Hamburger menu only on small screens */}
-      <button
-        onClick={toggleSidebar}
-        className="text-[#6425FE] text-2xl lg:hidden"
-      >
-        <Menu />
-      </button>
-
-      <div className="text-xl font-bold text-[#6425FE]">
-        TESLA Admin
+    <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 md-4 py-3 shadow-sm">
+      <div className="container-fluid d-flex justify-content-between align-items-center">
+        <span className="navbar-brand text-primary fw-bold">TESLA Admin</span>
+        <div className="d-flex align-items-center">
+          <span className="me-2 me-md-3 text-secondary small small-md">Admin</span>
+          <img
+            src="https://via.placeholder.com/40"
+            alt="Admin"
+            className="rounded-circle"
+            width="36"
+            height="36"
+          />
+        </div>
       </div>
-    </div>
+    </nav>
   );
 };
-
 
 export default AdminNavbar;
