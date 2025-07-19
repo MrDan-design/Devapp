@@ -1,12 +1,14 @@
 import React from 'react';
 import StockList from '../../components/StockList';
 import InvestmentChart from '../../components/InvestmentChart';
+import PageWrapper from '../../components/PageWrapper';
 
-function Portfolio() {
+const Portfolio = () => {
   return (
-    <div className="container-fluid p-4">
+    <PageWrapper>
+      <div>
       <h2 className="mb-4">Your Portfolio</h2>
-      
+
       {/* Static Stocks Section */}
       <StockList />
 
@@ -16,7 +18,8 @@ function Portfolio() {
         <InvestmentChart />
       </div>
     </div>
+    </PageWrapper>
   );
-}
+};
 
 export default Portfolio;

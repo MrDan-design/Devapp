@@ -4,19 +4,13 @@ import { Menu } from "lucide-react";
 // src/components/AdminNavbar.jsx
 const AdminNavbar = () => {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 md-4 py-3 shadow-sm">
-      <div className="container-fluid d-flex justify-content-between align-items-center">
+    <nav
+      className="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm"
+      style={{ marginLeft: "250px", height: "70px", zIndex: 1030, position: "fixed", top: 0, right: 0, left: 250 }}
+    >
+      <div className="container-fluid d-flex justify-content-between align-items-center px-4">
         <span className="navbar-brand text-primary fw-bold">TESLA Admin</span>
-        <div className="d-flex align-items-center">
-          <span className="me-2 me-md-3 text-secondary small small-md">Admin</span>
-          <img
-            src="https://via.placeholder.com/40"
-            alt="Admin"
-            className="rounded-circle"
-            width="36"
-            height="36"
-          />
-        </div>
+        <span className="me-2 text-secondary small">Admin</span>
       </div>
     </nav>
   );

@@ -1,4 +1,4 @@
-// src/components/Sidebar.jsx
+// Sidebar.jsx
 import { NavLink } from 'react-router-dom';
 import "./Sidebar.css";
 
@@ -10,13 +10,14 @@ const links = [
   { name: 'Investments', path: '/admin/investments' },
   { name: 'Transactions', path: '/admin/transactions' },
   { name: "Withdrawals", path: "/admin/withdrawals" },
+  { name: "Subscriptions", path: "/admin/subscriptions" },
 ];
 
 const Sidebar = () => {
   return (
     <div
-      className="d-flex flex-column bg-white shadow-sm p-3"
-      style={{ width: "250px", minHeight: "100vh" }}
+      className="sidebar fixed-top-start d-flex flex-column bg-white shadow-sm p-3"
+      style={{ width: "200px", height: "100vh", position: "fixed", top: 0, left: 0, zIndex: 2 }}
     >
       <div className="fs-4 fw-bold text-center text-primary mb-4">
         TESLA Admin
@@ -28,7 +29,7 @@ const Sidebar = () => {
             to={link.path}
             className={({ isActive }) =>
               `nav-link my-1 rounded px-3 py-2 ${
-                isActive ? "text-white bg-primary" : "text-secondary"
+                isActive ? "text-white bg-danger" : "text-white"
               }`
             }
           >

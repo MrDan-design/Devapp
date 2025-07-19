@@ -6,7 +6,7 @@ const Deposits = () => {
 
   const fetchDeposits = async () => {
     try {
-      const res = await adminApi.get("/pending-deposits");
+      const res = await adminApi.get("/deposits/pending");
       setDeposits(res.data);
     } catch (err) {
       console.error("Error fetching deposits:", err);

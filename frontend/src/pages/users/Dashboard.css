@@ -10,13 +10,18 @@
 }
 
 .sidebar .nav-link {
-  color: #000;
+  color: #666 !important;
+  border-left: 4px solid transparent;
+  padding-left: 1rem;
   margin-bottom: 10px;
   font-weight: 500;
 }
 
-.sidebar .nav-link.active {
-  color: #6425FE;
+.sidebar .nav-link.active-link {
+  color: #6425FE !important;
+  border-left: 4px solid #6425FE;
+  background-color: transparent;
+  font-weight: 600;
 }
 
 /* Topbar */

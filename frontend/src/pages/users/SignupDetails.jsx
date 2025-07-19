@@ -7,6 +7,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import SideImage from '../../assets/Illustration.png'; 
 import { useNavigate } from 'react-router-dom';
+import PageWrapper from '../../components/PageWrapper';
 
 const SignupDetails = () => {
   const [searchParams] = useSearchParams();
@@ -59,7 +60,8 @@ const SignupDetails = () => {
   };
 
   return (
-    <div className="signup-page">
+    <PageWrapper>
+      <div className="signup-page">
       <div className="container">
         <div className="row justify-content-center">
           {/* White Form Box */}
@@ -126,6 +128,7 @@ const SignupDetails = () => {
         </div>
       </div>
     </div>
+    </PageWrapper>
   );
 };
 

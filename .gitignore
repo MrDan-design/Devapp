@@ -1,0 +1,21 @@
+# Ignore environment variables
+# Global ignores
+node_modules/
+dist/
+.env
+.env.* # precaution in case other env variants
+
+# Ignore frontend build
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Ignore backend files
+Backend/node_modules/
+Backend/.env
+Backend/uploads/ # if you store uploaded files here
+
+# OS/IDE files
+.DS_Store
+.vscode/
+Backend/.env

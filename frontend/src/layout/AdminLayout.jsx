@@ -1,28 +1,32 @@
-// AdminLayout.jsx (Bootstrap version)
+// AdminLayout.jsx
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import AdminNavbar from "../components/AdminNavbar";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../layout/AdminLayout.css";
+import AdminChatPanel from "../components/AdminChatPanel"; // ✅
 
 const AdminLayout = () => {
+  const [selectedChat, setSelectedChat] = useState(null);
+
   return (
-    <div className="container-fluid">
-      <div className="row min-vh-100">
-        {/* Sidebar */}
-        <nav className="col-md-3 col-lg-2 d-md-block bg-white sidebar shadow-sm px-0">
-          <Sidebar />
-        </nav>
+    <div className="admin-layout d-flex">
+      <Sidebar />
 
-        {/* Main Content */}
-        <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4 bg-light">
-          <header className="py-3 mb-4 border-bottom bg-white">
-            <AdminNavbar />
-          </header>
+      <div className="flex-grow-1 d-flex flex-column position-relative">
+        <AdminNavbar />
 
-          <div className="pt-3">
-            <Outlet />
-          </div>
+        <main className="admin-main-content flex-grow-1 p-4 bg-light">
+          <Outlet />
         </main>
+
+        {/* ✅ Floating admin chat panel */}
+        <AdminChatPanel onSelectChat={setSelectedChat} />
+        {selectedChat ? (
+        <ChatBox chat={selectedChat} isAdmin={true} />
+      ) : (
+        <div className="p-4">Select a chat to start messaging</div>
+      )}
       </div>
     </div>
   );

@@ -1,34 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function InvestmentChart() {
+const InvestmentChart = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const fetchGrowthData = async () => {
+    const fetchChartData = async () => {
       try {
-        const res = await axios.get('/api/investments/portfolio-growth'); // Adjust to your backend route
+        const token = localStorage.getItem('token');
+        const res = await axios.get('http://localhost:5000/api/invest/chart-data', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         setData(res.data);
       } catch (err) {
-        console.error('Error fetching chart data:', err);
+        console.error('Chart fetch error:', err);
       }
     };
 
-    fetchGrowthData();
+    fetchChartData();
   }, []);
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis />
-        <Tooltip />
-        <Line type="monotone" dataKey="value" stroke="#6425FE" strokeWidth={2} />
-      </LineChart>
-    </ResponsiveContainer>
+    <div className="bg-white p-4 rounded-4 shadow-sm">
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+          <XAxis 
+            dataKey="date"
+            stroke="#888" // ash
+            tick={{ fontSize: 12 }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis 
+            stroke="#888" // ash
+            tick={{ fontSize: 12 }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <Tooltip
+            contentStyle={{ backgroundColor: '#fff', border: '1px solid #ddd' }}
+            labelStyle={{ fontWeight: 'bold' }}
+            cursor={{ stroke: '#eee', strokeWidth: 2 }}
+          />
+          <Line 
+            type="monotone"
+            dataKey="total"
+            stroke="#D62828" // 🔴 Brand red
+            strokeWidth={3}
+            dot={{ r: 4 }}
+            activeDot={{ r: 6 }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   );
-}
+};
 
 export default InvestmentChart;

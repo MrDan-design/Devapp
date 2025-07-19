@@ -6,7 +6,37 @@ const path = require('path');
 const passport = require('passport');
 require('dotenv').config(); // Load environment variables from .env file
 
+const http = require('http'); // <-- New
+const { Server } = require('socket.io');
+
 const app = express();
+
+const server = http.createServer(app); // <-- Wrap express in http server
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:5173', // You can specify your frontend origin
+    methods: ['GET', 'POST'],
+  }
+});
+
+// SOCKET.IO HANDLER
+io.on('connection', (socket) => {
+  console.log('New client connected:', socket.id);
+
+  socket.on('join chat', (chatId) => {
+    socket.join(chatId);
+    console.log(`User joined chat room: ${chatId}`);
+  });
+
+  socket.on('chat message', (msg) => {
+    console.log('Received message:', msg);
+    io.to(msg.chat_id).emit('chat message', msg); // Emit to chat room
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
+  });
+});
 
 const userRoutes = require('./routes/userRoutes');
 const swapRoutes = require('./routes/swapRoutes');
@@ -16,7 +46,10 @@ const oauthRoutes = require('./routes/oauthRoutes');
 const investRoutes = require('./routes/investRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const stockRoutes = require('./routes/stockRoutes');
-
+const withdrawalRoutes = require('./routes/withdrawalRoutes');
+const subscriptionRoutes = require('./routes/subscriptionRoutes');
+const pendingSubscriptionsRoutes = require('./routes/pendingSubscriptionsRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 app.use(cors());
 app.use(express.json());
@@ -30,7 +63,11 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/invest', investRoutes);
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/stocks', stockRoutes);
-app.use('/api/transaction', transactionRoutes);
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/withdrawals', withdrawalRoutes)
+app.use('/api/subscriptions', subscriptionRoutes);
+app.use('/api/pending-subscriptions', pendingSubscriptionsRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Simple test route to confirm db connection is working
 app.get('/', async (req, res) => {
@@ -45,6 +82,6 @@ app.get('/', async (req, res) => {
 
 const PORT = 5000;
 require('./cron/investmentProcessor');
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

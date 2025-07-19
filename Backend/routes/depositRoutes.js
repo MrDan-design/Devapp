@@ -2,7 +2,7 @@ const express = require('express');
 const db = require('../config/db');
 const router = express.Router();
 const verifyToken = require('../middlewares/authMiddleware');
-const upload = require('../middlewares/upload');
+const upload = require('../middlewares/upload')('giftcards');
 
 router.post('/crypto', verifyToken, async (req, res) => {
     const { crypto_type, tx_hash, amount_usd } = req.body;
@@ -15,7 +15,7 @@ router.post('/crypto', verifyToken, async (req, res) => {
     try {
         await db.query(
             `INSERT INTO deposits (user_id, method, crypto_type, tx_hash, amount_usd, status)
-            VALUES (?, 'crypto', ?, ?, ?, 'pending')`
+            VALUES (?, 'crypto', ?, ?, ?, 'pending')`,
             [userId, crypto_type, tx_hash, amount_usd]
         );
 

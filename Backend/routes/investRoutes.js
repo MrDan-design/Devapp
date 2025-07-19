@@ -80,4 +80,34 @@ router.post('/', verifyToken, async (req, res)=> {
     }
 });
 
+router.get('/categories', verifyToken, async (req, res) => {
+  try {
+    const [rows] = await db.query('SELECT * FROM investment_categories ORDER BY min_amount ASC');
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching categories:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+router.get('/chart-data', verifyToken, async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const [rows] = await db.query(`
+      SELECT DATE(start_date) AS date, SUM(amount_invested) AS total
+      FROM investments
+      WHERE user_id = ? AND status IN ('active', 'completed')
+      GROUP BY DATE(start_date)
+      ORDER BY date ASC
+    `, [userId]);
+
+    res.json(rows);
+  } catch (err) {
+    console.error('Chart data error:', err);
+    res.status(500).json({ message: 'Failed to fetch chart data' });
+  }
+});
+
 module.exports = router;

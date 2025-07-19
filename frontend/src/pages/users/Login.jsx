@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import PageWrapper from "../../components/PageWrapper";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,34 +15,36 @@ const Login = () => {
   const togglePassword = () => setShowPassword(!showPassword);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const res = await axios.post("http://localhost:5000/api/users/login", {
-        email,
-        password,
-      });
+  try {
+    const res = await axios.post("http://localhost:5000/api/users/login", {
+      email,
+      password,
+    });
 
-      const token = res.data.token;
-      const isAdmin = res.data.user?.is_admin || 0;
+    const token = res.data.token;
+    const user = res.data.user;
+    const isAdmin = user?.is_admin || 0;
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("isAdmin", isAdmin);
-      localStorage.setItem("userEmail", email);
+    localStorage.setItem("user", JSON.stringify(res.data.user));
+    localStorage.setItem("token", token);
 
-      if (email === ADMIN_EMAIL || isAdmin) {
-        navigate("/admin");
-      } else {
-        navigate("/dashboard");
-      }
-    } catch (err) {
-      console.error("Login failed", err);
-      alert("Login failed. Check credentials.");
+    if (email === ADMIN_EMAIL || isAdmin) {
+      navigate("/admin");
+    }  else {
+      navigate("/dashboard");
     }
-  };
+  } catch (err) {
+    console.error("Login failed", err);
+    alert("Login failed. Check credentials.");
+  }
+};
+
 
   return (
-    <div className="login-bg py-5">
+    <PageWrapper>
+      <div className="login-bg py-5">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-md-5 bg-white p-4 rounded">
@@ -101,6 +104,7 @@ const Login = () => {
         </div>
       </div>
     </div>
+    </PageWrapper>
   );
 };
 

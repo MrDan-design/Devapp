@@ -1,0 +1,9 @@
+.admin-layout {
+  min-height: 100vh;
+  
+}
+
+.admin-main-content {
+  margin-top: 70px; /* Adjust if navbar is taller */
+  margin-left: 300px;
+}

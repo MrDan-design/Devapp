@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Signup.css"; 
 import { useNavigate } from "react-router-dom";
+import PageWrapper from "../../components/PageWrapper";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +15,8 @@ const Signup = () => {
   };
 
   return (
-    <div className="signup-wrapper">
+    <PageWrapper>
+      <div className="signup-wrapper">
       <div className="overlay"></div>
 
       <div className="signup-form-container">
@@ -69,6 +71,7 @@ const Signup = () => {
             </button>
       </div>
     </div>
+    </PageWrapper>
   );
 };
 

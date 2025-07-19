@@ -1,0 +1,29 @@
+.checkout-page-wrapper {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Background layer */
+.checkout-page-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)),
+              url('../../assets/bg-image.jpg') center/cover no-repeat;
+  filter: blur(4px);
+  z-index: 1;
+}
+
+/* Content on top of blur */
+.checkout-card {
+  position: relative;
+  z-index: 2;
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 600px;
+  width: 100%;
+  margin: auto;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}

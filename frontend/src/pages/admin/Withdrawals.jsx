@@ -37,9 +37,9 @@ const Withdrawals = () => {
             <tr>
               <th>#</th>
               <th>User</th>
+              <th>USD</th>
               <th>Crypto</th>
-              <th>Amount</th>
-              <th>Shares</th>
+              <th>Crypto Amount</th>
               <th>Wallet Address</th>
               <th>Action</th>
             </tr>
@@ -49,11 +49,9 @@ const Withdrawals = () => {
               <tr key={wd.id}>
                 <td>{index + 1}</td>
                 <td>{wd.email}</td>
+                <td>${parseFloat(wd.usd_amount).toFixed(2)}</td>
                 <td>{wd.crypto_symbol.toUpperCase()}</td>
                 <td>{parseFloat(wd.crypto_amount).toFixed(8)}</td>
-                <td>
-                  {wd.shares_amount} {wd.shares_symbol}
-                </td>
                 <td>{wd.wallet_address}</td>
                 <td>
                   <button
