@@ -14,7 +14,7 @@ const app = express();
 const server = http.createServer(app); // <-- Wrap express in http server
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173', // You can specify your frontend origin
+    origin: process.env.FRONTEND_URL, // You can specify your frontend origin
     methods: ['GET', 'POST'],
   }
 });
@@ -51,7 +51,10 @@ const subscriptionRoutes = require('./routes/subscriptionRoutes');
 const pendingSubscriptionsRoutes = require('./routes/pendingSubscriptionsRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+}));
 app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/swap', swapRoutes);

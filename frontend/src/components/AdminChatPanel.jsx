@@ -11,7 +11,7 @@ const AdminChatPanel = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/chat/admin/chats")
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/chat/admin/chats`)
     .then((res) => res.json())
     .then((data) => {
       console.log("Fetched chats:", data);

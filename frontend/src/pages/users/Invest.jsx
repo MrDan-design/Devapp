@@ -14,7 +14,7 @@ const Invest = () => {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/invest/categories", {
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/invest/categories`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         setPackages(res.data);
@@ -31,7 +31,7 @@ const Invest = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        "http://localhost:5000/api/invest",
+        `${import.meta.env.VITE_API_BASE_URL}/invest`,
         { category_id: categoryId, amount, duration },
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -23,7 +23,7 @@ const CheckoutPage = () => {
       formData.append('planId', planId);
       formData.append('paymentProof', paymentProof);
 
-      await axios.post('/api/subscriptions/submit', formData, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/subscriptions/submit`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -41,7 +41,7 @@ const CheckoutPage = () => {
   useEffect(() => {
     const fetchWallets = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/deposit/wallets');
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/deposit/wallets`);
         setWallets(res.data);
         if (res.data.length > 0) {
           setSelectedWallet(res.data[0].address);

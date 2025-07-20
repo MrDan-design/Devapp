@@ -15,7 +15,7 @@ const UpgradePage = () => {
 
   useEffect(() => {
   // Fetch subscription plans (no auth needed)
-  axios.get('http://localhost:5000/api/subscriptions')
+  axios.get(`${import.meta.env.VITE_API_BASE_URL}/subscriptions`)
     .then(res => setPlans(res.data))
     .catch(err => console.error('Failed to fetch plans:', err));
 
@@ -23,7 +23,7 @@ const UpgradePage = () => {
   const token = localStorage.getItem('token'); // or sessionStorage.getItem
 
   if (token) {
-    axios.get('http://localhost:5000/api/users/profile', {
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/profile`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

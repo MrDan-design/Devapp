@@ -13,7 +13,7 @@ const LiveChat = ({ user }) => {
 
     console.log("Fetching chat session for user:", user.id);
 
-    fetch(`http://localhost:5000/api/chat/start/${user.id}`)
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/chat/start/${user.id}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Chat ID fetched:", data.chat_id);

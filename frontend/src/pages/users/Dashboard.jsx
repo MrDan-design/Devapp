@@ -43,7 +43,7 @@ const UserDashboard = () => {
         const token = localStorage.getItem("token");
 
         const dashboardRes = await axios.get(
-          "http://localhost:5000/api/users/balance",
+          `${import.meta.env.VITE_API_BASE_URL}/users/balance`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -51,7 +51,7 @@ const UserDashboard = () => {
         setDashboardData(dashboardRes.data);
 
         const stocksRes = await axios.get(
-          "http://localhost:5000/api/stocks/top"
+          `${import.meta.env.VITE_API_BASE_URL}/stocks/top`
         );
         setTopStocks(stocksRes.data);
       } catch (err) {

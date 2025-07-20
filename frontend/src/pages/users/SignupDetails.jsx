@@ -47,7 +47,7 @@ const SignupDetails = () => {
     setMessage("");
 
     try {
-      const response = await axios.post("http://localhost:5000/api/users/signup", formData);
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/signup`, formData);
       setMessage("Account created successfully!");
       setLoading(false);
 

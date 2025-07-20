@@ -51,7 +51,7 @@ const UserLayout = () => {
     useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("http://localhost:5000/api/users/profile", {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/users/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => res.json())

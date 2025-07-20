@@ -9,7 +9,7 @@ const InvestmentChart = () => {
     const fetchChartData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/invest/chart-data', {
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/invest/chart-data`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setData(res.data);

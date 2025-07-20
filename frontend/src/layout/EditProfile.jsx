@@ -28,7 +28,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/users/profile")
+      .get(`${import.meta.env.VITE_API_BASE_URL}/users/profile`)
       .then((res) => {
         const data = res.data;
         setFormData({
@@ -73,7 +73,7 @@ const EditProfile = () => {
     }
 
     try {
-      await axios.put("/api/users/profile", submitData, {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/users/profile`, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Profile updated!");
@@ -90,7 +90,7 @@ const EditProfile = () => {
     }
 
     try {
-      await axios.put("/api/users/change-password", {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/users/change-password`, {
         currentPassword: passwords.currentPassword,
         newPassword: passwords.newPassword,
       });

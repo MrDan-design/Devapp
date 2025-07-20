@@ -16,7 +16,7 @@ function StockList() {
   useEffect(() => {
     const fetchStocks = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/stocks/top");
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/stocks/top`);
         // Only include the 5 for portfolio
         const portfolioStocks = ["TSLA", "NVDA", "AMD", "META", "AAPL"];
         const filtered = res.data.filter(stock => portfolioStocks.includes(stock.symbol));

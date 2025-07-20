@@ -27,7 +27,7 @@ const Transactions = () => {
     const fetchTx = async () => {
   try {
     const token = localStorage.getItem("token");
-    const res = await axios.get("http://localhost:5000/api/transactions/history", {
+    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/transactions/history`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

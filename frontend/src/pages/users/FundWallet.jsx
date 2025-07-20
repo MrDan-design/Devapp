@@ -16,7 +16,7 @@ const FundWallet = () => {
 
   try {
     const token = localStorage.getItem("token");
-    const res = await axios.post("http://localhost:5000/api/withdrawals/take-out", {
+    const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/withdrawals/take-out`, {
       amount_usd: takeoutAmount,
       crypto_symbol: cryptoTypeTakeout.toLowerCase(),
       wallet_address: walletAddress,
@@ -52,7 +52,7 @@ const FundWallet = () => {
 
   useEffect(() => {
     if (method === 'crypto') {
-      axios.get('http://localhost:5000/api/deposit/wallets')
+      axios.get(`${import.meta.env.VITE_API_BASE_URL}/deposit/wallets`)
         .then(res => setWallets(res.data))
         .catch(err => console.error(err));
     }
@@ -61,7 +61,7 @@ const FundWallet = () => {
   const handleCryptoSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/deposit/crypto', {
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/deposit/crypto`, {
         crypto_type: cryptoType,
         tx_hash: txHash,
         amount_usd: amountUsd
@@ -90,7 +90,7 @@ const FundWallet = () => {
     formData.append('card_back_image', cardBackImage);
 
     try {
-      const res = await axios.post('/api/deposit/gift-cards', formData, {
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/deposit/gift-cards`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'multipart/form-data'
