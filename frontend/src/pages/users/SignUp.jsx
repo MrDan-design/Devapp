@@ -28,7 +28,7 @@ const Signup = () => {
         <div className="d-grid gap-3 mb-4" style={{ maxWidth: '400px' }}>
   {/* Facebook Signup Button */}
   <a
-    href="https://tslaxai-io.onrender.com/api/auth/facebook"
+    href="https://tslaxai-api.onrender.com/api/auth/facebook"
     className="btn btn-light d-flex align-items-center justify-content-center rounded-pill border"
   >
     <img
@@ -42,7 +42,7 @@ const Signup = () => {
 
   {/* Google Signup Button */}
   <a
-    href="https://tslaxai-io.onrender.com/api/auth/google"
+    href="https://tslaxai-api.onrender.com/api/auth/google"
     className="btn btn-light d-flex align-items-center justify-content-center rounded-pill border"
   >
     <img
