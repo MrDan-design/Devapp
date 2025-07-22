@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import viteLogo from '/tes.png'
 //import './App.css'
 import Preloader from './components/Preloader'
 import AppRouter from './router/AppRouter'
