@@ -2,6 +2,8 @@ import { useState } from "react";
 import "./Signup.css"; 
 import { useNavigate } from "react-router-dom";
 import PageWrapper from "../../components/PageWrapper";
+import fblg from '../../assets/fb-logo.png';
+import glgg from '../../assets/google-logo.png'
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -28,11 +30,11 @@ const Signup = () => {
         <div className="d-grid gap-3 mb-4" style={{ maxWidth: '400px' }}>
   {/* Facebook Signup Button */}
   <a
-    href="https://tslaxai-api.onrender.com/api/auth/facebook"
+    href="http://tslaxai.io/api/auth/facebook"
     className="btn btn-light d-flex align-items-center justify-content-center rounded-pill border"
   >
     <img
-      src="fb-logo.png"
+      src={fblg}
       alt="Facebook"
       width="24"
       className="me-2"
@@ -42,11 +44,11 @@ const Signup = () => {
 
   {/* Google Signup Button */}
   <a
-    href="https://tslaxai-api.onrender.com/api/auth/google"
+    href="http://tslaxai.io/api/auth/google"
     className="btn btn-light d-flex align-items-center justify-content-center rounded-pill border"
   >
     <img
-      src="google-logo.png"
+      src={glgg}
       alt="Google"
       width="24"
       className="me-2"

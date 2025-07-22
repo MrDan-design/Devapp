@@ -6,6 +6,10 @@ import bgImage from "../../assets/bg-image.jpg";
 import PageWrapper from '../../components/PageWrapper';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import lgNow from '../../assets/lg-now.png';
+import Btclg from '../../assets/Bitcoin-Logo.png'
+import Dogelg from '../../assets/Doge-Logo.png'
+import Tslalg from '../../assets/Tesla-Logo.png'
 
 const Home = () => {
   const navigate = useNavigate();
@@ -36,7 +40,7 @@ const Home = () => {
             zIndex: 300, position: 'relative'
           }}>☰</button>
           <span className="navbar-brand text-white fw-bold fs-4">
-            <img src="/lg-now.png" alt="Logo" style={{ height: "30px"}}/>
+            <img src={lgNow} alt="Logo" style={{ height: "30px"}}/>
           </span>
         </div>
 
@@ -67,17 +71,17 @@ const Home = () => {
         </div>
         <div className="d-flex gap-3 mt-2">
           <button className='token-btn' onClick={() => handleSearchDirect("BTCUSD")}>
-            <img src="Bitcoin-Logo.png" alt="BTCUSD" className='me-2' width="20"/>
+            <img src={Btclg} alt="BTCUSD" className='me-2' width="20"/>
             BTCUSD
           </button>
 
           <button className='token-btn' onClick={() => handleSearchDirect("DOGE")}>
-            <img src="Doge-logo.png" alt="DOGE" className='me-2' width="20"/>
+            <img src={Dogelg} alt="DOGE" className='me-2' width="20"/>
             DOGE
           </button>
 
           <button className='token-btn' onClick={() => handleSearchDirect("TSLA")}>
-            <img src="Tesla-Logo.png" alt="TSLA" className='me-2' width="20"/>
+            <img src={Tslalg} alt="TSLA" className='me-2' width="20"/>
             TSLA
           </button>
         </div>
