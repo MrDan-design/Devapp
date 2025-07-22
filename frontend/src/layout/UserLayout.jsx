@@ -7,7 +7,7 @@ import { FaTachometerAlt, FaWallet, FaChartLine, FaMoneyCheckAlt, FaExchangeAlt,
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../layout/SearchBar";
 import ChatWidget from '../components/ChatWidget';
-import lgNow from '../../assets/rf-lg.png';
+import lgNow from '../assets/rf-lg.png';
 
 const navLinks = [
   { name: "Dashboard", path: "/dashboard", icon: <FaTachometerAlt /> },
