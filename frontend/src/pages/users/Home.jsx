@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import lgNow from '../../assets/lg-now.png';
 import Btclg from '../../assets/Bitcoin-Logo.png'
-import Dogelg from '../../assets/Doge-Logo.png'
+import Dogelg from '../../assets/Doge-logo.png'
 import Tslalg from '../../assets/Tesla-Logo.png'
 
 const Home = () => {

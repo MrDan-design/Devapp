@@ -7,6 +7,7 @@ import { FaTachometerAlt, FaWallet, FaChartLine, FaMoneyCheckAlt, FaExchangeAlt,
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../layout/SearchBar";
 import ChatWidget from '../components/ChatWidget';
+import lgNow from '../../assets/lg-now.png';
 
 const navLinks = [
   { name: "Dashboard", path: "/dashboard", icon: <FaTachometerAlt /> },
@@ -73,10 +74,10 @@ const UserLayout = () => {
 <div className="d-flex align-items-center justify-content-between p-3 border-bottom bg-white position-fixed top-navbar w-100">
   <div className="d-flex align-items-center gap-3">
     <img
-      src="/rf-lg.png"
+      src={lgNow}
       alt="Logo"
       className="logo"
-      style={{ height: "30px", width: "170px", marginLeft: "30px" }}
+      style={{ height: "30px", marginLeft: "30px" }}
     />
     <div className="d-flex align-items-center" style={{ marginLeft: "80px" }}>
       <h5 className="mb-0 fw-bold">Hello {userName}, Welcome back!</h5>
