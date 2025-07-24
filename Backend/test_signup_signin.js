@@ -14,7 +14,7 @@ async function testSignupAndSignin() {
     nextOfKin: 'Kin Name',
     nextOfKinNumber: '1234567890'
   };
-
+//nothing
   // 1. Signup
   try {
     const signupRes = await axios.post(`${API_BASE}/signup`, testUser);
