@@ -7,6 +7,10 @@ CREATE TABLE IF NOT EXISTS users (
     fullname VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    country VARCHAR(100),
+    currency VARCHAR(10) DEFAULT 'USD',
+    next_of_kin VARCHAR(100),
+    next_of_kin_number VARCHAR(20),
     balance DECIMAL(10, 2) DEFAULT 0.00,
     is_admin BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
