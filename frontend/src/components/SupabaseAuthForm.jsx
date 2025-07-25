@@ -22,6 +22,12 @@ export default function SupabaseAuthForm() {
     }
   };
 
+  const handleOAuthLogin = async (provider) => {
+    setMessage('');
+    const { error } = await supabase.auth.signInWithOAuth({ provider });
+    if (error) setMessage(error.message);
+  };
+
   return (
     <div style={{ maxWidth: 400, margin: '2rem auto', padding: 20, border: '1px solid #eee', borderRadius: 8 }}>
       <h2>{mode === 'signup' ? 'Sign Up' : 'Sign In'}</h2>
@@ -48,6 +54,13 @@ export default function SupabaseAuthForm() {
       </form>
       <button onClick={() => setMode(mode === 'signup' ? 'signin' : 'signup')} style={{ width: '100%' }}>
         {mode === 'signup' ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+      </button>
+      <hr style={{ margin: '20px 0' }} />
+      <button onClick={() => handleOAuthLogin('google')} style={{ width: '100%', marginBottom: 10, background: '#4285F4', color: 'white', border: 'none', padding: '10px', borderRadius: 4 }}>
+        Continue with Google
+      </button>
+      <button onClick={() => handleOAuthLogin('facebook')} style={{ width: '100%', marginBottom: 10, background: '#3b5998', color: 'white', border: 'none', padding: '10px', borderRadius: 4 }}>
+        Continue with Facebook
       </button>
       {message && <div style={{ marginTop: 10, color: 'red' }}>{message}</div>}
     </div>
