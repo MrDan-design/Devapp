@@ -57,7 +57,7 @@ const UserLayout = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (data && data.fullname) {
+          if (data?.fullname) {
             setUserName(data.fullname);
             setProfileImage(data.profile_image);
             setUserPlan(data.plan); // Set user’s plan here
