@@ -146,7 +146,7 @@ router.get('/balance', verifyToken, async (req, res) => {
 
     // 2. Fetch USD balance
     const [[user]] = await db.query(
-      `SELECT balance, email FROM users WHERE id = ?`,
+      "SELECT balance, email FROM users WHERE id = ?",
       [userId]
     );
 

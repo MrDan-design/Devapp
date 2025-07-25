@@ -23,7 +23,7 @@ const PendingSubscriptions = () => {
       await axios.put(`/api/subscriptions/${id}/${action}`);
       setSubscriptions(subscriptions.filter((sub) => sub.id !== id));
     } catch (err) {
-      console.error(`Error updating subscription:`, err);
+      console.error("Error updating subscription:", err);
     }
   };
 

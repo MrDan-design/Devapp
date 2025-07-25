@@ -178,7 +178,7 @@ router.post('/gift-cards/approve/:id', verifyToken, isAdmin, async (req, res) =>
   if (card.status !== 'pending') return res.status(400).json({ message: 'Already processed' });
 
   // 2. Mark as approved
-  await db.query(`UPDATE gift_cards SET status = 'approved', approved_at = NOW() WHERE id = ?`, [id]);
+  await db.query("UPDATE gift_cards SET status = 'approved', approved_at = NOW() WHERE id = ?", [id]);
 
   // 3. Credit user balance
 await db.query(
@@ -281,19 +281,19 @@ router.post('/admin/process-investments', verifyToken, isAdmin, async (_req, res
 router.get("/all-transactions", verifyToken, isAdmin, async (req, res) => {
   try {
     const [giftcards] = await db.query(
-      `SELECT id, user_id, 'Gift Card' AS type, card_value AS amount, status, created_at FROM deposits`
+      "SELECT id, user_id, 'Gift Card' AS type, card_value AS amount, status, created_at FROM deposits"
     );
 
     const [deposits] = await db.query(
-      `SELECT id, user_id, 'Deposit' AS type, amount_usd, status, created_at FROM deposits`
+      "SELECT id, user_id, 'Deposit' AS type, amount_usd, status, created_at FROM deposits"
     );
 
     const [investments] = await db.query(
-      `SELECT id, user_id, 'Investment' AS type, amount_invested AS amount, status, start_date AS created_at FROM investments`
+      "SELECT id, user_id, 'Investment' AS type, amount_invested AS amount, status, start_date AS created_at FROM investments"
     );
 
     const [withdrawals] = await db.query(
-      `SELECT id, user_id, 'Withdrawal' AS type, usd_value, status, created_at FROM withdrawals`
+      "SELECT id, user_id, 'Withdrawal' AS type, usd_value, status, created_at FROM withdrawals"
     );
 
     const allTransactions = [

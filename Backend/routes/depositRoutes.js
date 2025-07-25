@@ -28,7 +28,7 @@ router.post('/crypto', verifyToken, async (req, res) => {
 
 router.get('/wallets', async (req, res) => {
   try {
-    const [wallets] = await db.query(`SELECT crypto_type, address FROM wallet_addresses`);
+    const [wallets] = await db.query("SELECT crypto_type, address FROM wallet_addresses");
     res.status(200).json(wallets);
   } catch (err) {
     console.error('Wallet fetch error:', err);

@@ -65,7 +65,7 @@ const Invest = () => {
         {pkg && (
   <div
     key={pkg.id}
-    className={`bg-white rounded-4 p-4 mb-4 d-flex flex-column flex-md-row align-items-start gap-4 animate-slide`}
+    className={"bg-white rounded-4 p-4 mb-4 d-flex flex-column flex-md-row align-items-start gap-4 animate-slide"}
     style={{ animation: 'slideIn 0.5s ease-in-out' }}
   >
     {/* Image */}

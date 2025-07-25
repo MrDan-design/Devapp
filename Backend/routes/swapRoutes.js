@@ -40,7 +40,7 @@ router.post('/crypto-to-shares', verifyToken, async (req, res) => {
         );
 
         // 4. Deduct equivalent USD from user's balance
-        await db.query(`UPDATE users SET balance = balance - ? WHERE id = ?`, [usdValue, userId]);
+        await db.query("UPDATE users SET balance = balance - ? WHERE id = ?", [usdValue, userId]);
 
         res.status(200).json({
             mesaage: 'Swap Successful',
@@ -78,7 +78,7 @@ router.post('/shares-to-crypto', verifyToken, async (req, res) => {
 
     // 3. Check if user owns enough shares
     const [rows] = await db.query(
-      `SELECT * FROM user_shares WHERE user_id = ? AND company_symbol = ?`,
+      "SELECT * FROM user_shares WHERE user_id = ? AND company_symbol = ?",
       [userId, stockSymbol]
     );
 
@@ -96,11 +96,11 @@ router.post('/shares-to-crypto', verifyToken, async (req, res) => {
 
     if (newShareBalance > 0) {
       await db.query(
-        `UPDATE user_shares SET shares_owned = ? WHERE id = ?`,
+        "UPDATE user_shares SET shares_owned = ? WHERE id = ?",
         [newShareBalance, userShares.id]
       );
     } else {
-      await db.query(`DELETE FROM user_shares WHERE id = ?`, [userShares.id]);
+      await db.query("DELETE FROM user_shares WHERE id = ?", [userShares.id]);
     }
 
     // 6. (Optional) Update user balance or wallet — here we’ll return result only
@@ -136,7 +136,7 @@ router.post('/take-out-shares', verifyToken, async (req, res) => {
 
     // Check user's shares
     const [rows] = await db.query(
-      `SELECT * FROM user_shares WHERE user_id = ? AND company_symbol = ?`,
+      "SELECT * FROM user_shares WHERE user_id = ? AND company_symbol = ?",
       [userId, stockSymbol]
     );
 
@@ -152,9 +152,9 @@ router.post('/take-out-shares', verifyToken, async (req, res) => {
     // Update shares
     const newBalance = userShares.shares_owned - sharesToTakeOut;
     if (newBalance > 0) {
-      await db.query(`UPDATE user_shares SET shares_owned = ? WHERE id = ?`, [newBalance, userShares.id]);
+      await db.query("UPDATE user_shares SET shares_owned = ? WHERE id = ?", [newBalance, userShares.id]);
     } else {
-      await db.query(`DELETE FROM user_shares WHERE id = ?`, [userShares.id]);
+      await db.query("DELETE FROM user_shares WHERE id = ?", [userShares.id]);
     }
 
     // Insert withdrawal request
