@@ -24,7 +24,7 @@ export default function SupabaseAuthForm() {
 
   return (
     <div style={{ maxWidth: 400, margin: '2rem auto', padding: 20, border: '1px solid #eee', borderRadius: 8 }}>
-      <h2>{mode === 'signup' ? 'Sign Up' : 'Sign In'} (Supabase)</h2>
+      <h2>{mode === 'signup' ? 'Sign Up' : 'Sign In'}</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="email"
