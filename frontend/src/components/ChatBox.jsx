@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const ChatBox = ({ chat, isAdmin = false }) => {
   const [messages, setMessages] = useState([

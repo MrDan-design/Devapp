@@ -1,5 +1,5 @@
 // --- Supabase signup/signin form (added for migration to Supabase, July 25, 2025) ---
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabaseClient';
 

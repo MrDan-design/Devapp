@@ -1,4 +1,4 @@
-import React from 'react';
+
 import StockList from '../../components/StockList';
 import InvestmentChart from '../../components/InvestmentChart';
 import PageWrapper from '../../components/PageWrapper';

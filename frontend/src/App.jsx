@@ -1,10 +1,9 @@
-import { useState } from 'react'
-import './assets/react.svg'
-//import './App.css'
-
-import Preloader from './components/Preloader'
-import AppRouter from './router/AppRouter'
-// import SupabaseAuthForm from './components/SupabaseAuthForm'
+import { useState } from 'react';
+import './assets/react.svg';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Preloader from './components/Preloader';
+import AppRouter from './router/AppRouter';
 // import SupabaseSignupProfileForm from './components/SupabaseSignupProfileForm'
 
 const App = () => {
@@ -17,6 +16,7 @@ const App = () => {
         {/* <SupabaseSignupProfileForm /> */}
         {/* <SupabaseAuthForm /> */}
         <AppRouter />
+        <ToastContainer position="top-right" autoClose={4000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
       </>}
     </>
   );

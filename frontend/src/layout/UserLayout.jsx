@@ -1,5 +1,6 @@
-// UserLayout.jsx
 import React from "react";
+// UserLayout.jsx
+
 import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import "./UserLayout.css";

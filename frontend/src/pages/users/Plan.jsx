@@ -1,5 +1,5 @@
 // PlanCard.jsx
-import React from 'react';
+
 import './Plan.css';
 import { FaCrown, FaCircle } from 'react-icons/fa';
 

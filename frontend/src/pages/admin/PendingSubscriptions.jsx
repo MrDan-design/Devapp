@@ -1,5 +1,5 @@
 // src/pages/admin/PendingSubscriptions.jsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Spinner, Table, Button } from 'react-bootstrap';
 
