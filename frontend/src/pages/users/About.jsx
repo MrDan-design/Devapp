@@ -46,7 +46,7 @@ const About = () => {
                   <br /><br />
                   With groundbreaking models like the Model S, Model 3, Model X, and Model Y, Tesla has pushed the boundaries of performance, range, and autonomous driving technology. Beyond vehicles, Tesla’s energy division focuses on renewable solutions like Powerwall, Powerpack, and Solar Roof, aiming to accelerate the world’s transition to sustainable energy.
                   <br /><br />
-                  Headquartered in Palo Alto, California, Tesla continues to lead innovation in the EV market while challenging conventional automotive and energy industries worldwide.
+                  Headquartered in Palo Alto, California, Tesla continues to lead innovation in the EV market while challenging conventional automotive and energy industries worldwide.
                 </p>
                 <button className="btn btn-light position-absolute next-btn" onClick={handleNext}>›</button>
               </div>
@@ -63,7 +63,7 @@ const About = () => {
             </div>
             <div className="text-white about-text-box position-relative">
               <p className="about-text text-center">
-                Behind every great achievement is a team of passionate individuals driven by a shared vision. At [Company Name], our team blends creativity, expertise, and innovation to deliver exceptional results. From designers and developers to strategists and project managers, each member brings unique skills and a commitment to excellence. Together, we make ideas happen — and we’re excited to bring your vision to life.
+                Behind every great achievement is a team of passionate individuals driven by a shared vision. At [Company Name], our team blends creativity, expertise, and innovation to deliver exceptional results. From designers and developers to strategists and project managers, each member brings unique skills and a commitment to excellence. Together, we make ideas happen — and we’re excited to bring your vision to life.
               </p>
               <button className="btn btn-light position-absolute back-btn" onClick={handleBack}>‹</button>
               <button className="btn btn-light position-absolute next-btn" onClick={handleNext}>›</button>
@@ -80,7 +80,7 @@ const About = () => {
         <div className="text-white">
           <h5>Our Electric Cars</h5>
           <p className="about-text">
-            Tesla’s electric vehicles redefine performance, safety, and innovation in the automotive world. Designed with cutting-edge battery technology, sleek aerodynamics, and advanced software, each Tesla delivers an unmatched driving experience. From the high-performance Model S and versatile Model X, to the affordable Model 3 and compact Model Y, Tesla’s lineup offers something for every driver. With zero emissions, long-range capability, and features like Autopilot, Tesla’s cars aren’t just vehicles — they’re a glimpse into the future of mobility.
+            Tesla’s electric vehicles redefine performance, safety, and innovation in the automotive world. Designed with cutting-edge battery technology, sleek aerodynamics, and advanced software, each Tesla delivers an unmatched driving experience. From the high-performance Model S and versatile Model X, to the affordable Model 3 and compact Model Y, Tesla’s lineup offers something for every driver. With zero emissions, long-range capability, and features like Autopilot, Tesla’s cars aren’t just vehicles — they’re a glimpse into the future of mobility.
           </p>
         </div>
       </div>
@@ -90,7 +90,7 @@ const About = () => {
         <div className="text-white">
           <h5>Starlink</h5>
           <p className="about-text">
-            Starlink, a project by SpaceX, is a satellite-based internet service designed to deliver high-speed broadband access across the globe. Using a growing network of low Earth orbit (LEO) satellites, Starlink provides reliable internet connectivity, especially in remote and underserved areas where traditional networks fall short. With its mission to bridge the digital divide, Starlink offers fast download speeds, low latency, and the potential to revolutionize global communication. Whether for homes, businesses, or mobile users, Starlink is redefining how the world connects.
+            Starlink, a project by SpaceX, is a satellite-based internet service designed to deliver high-speed broadband access across the globe. Using a growing network of low Earth orbit (LEO) satellites, Starlink provides reliable internet connectivity, especially in remote and underserved areas where traditional networks fall short. With its mission to bridge the digital divide, Starlink offers fast download speeds, low latency, and the potential to revolutionize global communication. Whether for homes, businesses, or mobile users, Starlink is redefining how the world connects.
           </p>
         </div>
       </div>
@@ -112,7 +112,7 @@ const About = () => {
         <div className="text-white">
           <h5>Grok</h5>
           <p className="about-text">
-            Grok is an AI chatbot developed by xAI, Elon Musk’s artificial intelligence company. Designed as a conversational assistant, Grok integrates advanced language models to provide real-time answers, creative insights, and personalized interactions. Unlike typical AI tools, Grok is built with a sense of humor and a bold personality, aiming to make information-seeking more engaging and human-like. With direct integration into platforms like X (formerly Twitter), Grok represents a fresh approach to AI-powered communication — smart, witty, and always learning.
+            Grok is an AI chatbot developed by xAI, Elon Musk’s artificial intelligence company. Designed as a conversational assistant, Grok integrates advanced language models to provide real-time answers, creative insights, and personalized interactions. Unlike typical AI tools, Grok is built with a sense of humor and a bold personality, aiming to make information-seeking more engaging and human-like. With direct integration into platforms like X (formerly Twitter), Grok represents a fresh approach to AI-powered communication — smart, witty, and always learning.
           </p>
         </div>
       </div>
@@ -122,7 +122,7 @@ const About = () => {
         <div className="text-white">
           <h5>Cybertruck</h5>
           <p className="about-text">
-            The Tesla Cybertruck is a revolutionary all-electric pickup designed to challenge conventional automotive design and performance. Built with ultra-hard stainless steel exoskeleton and armored glass, the Cybertruck combines durability with futuristic aesthetics. Engineered for strength, utility, and speed, it offers impressive towing capacity, adaptive air suspension, and powerful electric drivetrain options. More than just a truck, the Cybertruck redefines what a utility vehicle can be — rugged, high-performing, and sustainable, all while making a bold statement on and off the road.
+            The Tesla Cybertruck is a revolutionary all-electric pickup designed to challenge conventional automotive design and performance. Built with ultra-hard stainless steel exoskeleton and armored glass, the Cybertruck combines durability with futuristic aesthetics. Engineered for strength, utility, and speed, it offers impressive towing capacity, adaptive air suspension, and powerful electric drivetrain options. More than just a truck, the Cybertruck redefines what a utility vehicle can be — rugged, high-performing, and sustainable, all while making a bold statement on and off the road.
           </p>
         </div>
       </div>
