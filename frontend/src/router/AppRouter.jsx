@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "../pages/users/Home";
 import Login from "../pages/users/Login";
-import SignUp from "../pages/users/SignUp";
+// import SignUp from "../pages/users/SignUp";
 import Dashboard from "../pages/users/Dashboard";
 import Portfolio from "../pages/users/Portfolio";
 import Invest from "../pages/users/Invest";
 import FundWallet from "../pages/users/FundWallet";
 import Transactions from "../pages/users/Transactions";
 import Settings from "../pages/users/Settings";
-import SignupDetails from "../pages/users/SignupDetails";
+// import SignupDetails from "../pages/users/SignupDetails";
 import UserLayout from "../layout/UserLayout";
 import EditProfile from "../layout/EditProfile";
 import About from "../pages/users/About";
@@ -38,8 +38,8 @@ const AppRouter =() => {
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/signup-details" element={<SignupDetails />} />
+            {/* <Route path="/signup" element={<SignUp />} /> */}
+            {/* <Route path="/signup-details" element={<SignupDetails />} /> */}
             <Route path="/about" element={<About />} />
             <Route path="/upgrade-plan" element={<UpgradePage />} />
             <Route path="/preview" element={<PagePreview />} />
