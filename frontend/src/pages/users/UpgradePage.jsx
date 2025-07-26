@@ -41,7 +41,7 @@ const UpgradePage = () => {
     if (token) {
       navigate('/checkout', { state: { selectedPlan: plan } });
     } else {
-      navigate('/login');
+      navigate('/'); // Redirect to home instead of /login
     }
   };
 

@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "../pages/users/Home";
-import Login from "../pages/users/Login";
+// import Login from "../pages/users/Login";
 // import SignUp from "../pages/users/SignUp";
 import Dashboard from "../pages/users/Dashboard";
 import Portfolio from "../pages/users/Portfolio";
@@ -37,9 +37,7 @@ const AppRouter =() => {
         <BrowserRouter>
         <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            {/* <Route path="/signup" element={<SignUp />} /> */}
-            {/* <Route path="/signup-details" element={<SignupDetails />} /> */}
+            {/* <Route path="/login" element={<Login />} /> */}
             <Route path="/about" element={<About />} />
             <Route path="/upgrade-plan" element={<UpgradePage />} />
             <Route path="/preview" element={<PagePreview />} />

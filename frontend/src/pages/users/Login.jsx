@@ -95,10 +95,7 @@ const Login = () => {
             </form>
 
             <p className="text-center mt-3 small text-muted">
-              Don't have an account?{" "}
-              <a href="/signup" className="text-danger">
-                Sign Up
-              </a>
+              {/* Don't have an account? Sign Up link removed, use modal-based auth only */}
             </p>
           </div>
         </div>
