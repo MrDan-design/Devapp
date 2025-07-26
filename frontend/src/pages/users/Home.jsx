@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SupabaseAuthForm from '../../components/SupabaseAuthForm';
 import "./Home.css";
 import FadeIn from '../../components/FadeIn';
 import bgImage from "../../assets/bg-image.jpg";
@@ -15,6 +16,7 @@ const Home = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const handleSearchDirect = () => {
@@ -45,8 +47,8 @@ const Home = () => {
         </div>
 
         <div className="d-flex align-items-center">
-          <Link to="/login" className="btn btn-outline-light me-2">Login</Link>
-          <Link to="/signup" className="btn btn-danger custom-button">Get Started</Link>
+          <button className="btn btn-outline-light me-2" onClick={() => setShowAuth(true)}>Login</button>
+          <button className="btn btn-danger custom-button" onClick={() => setShowAuth(true)}>Get Started</button>
         </div>
       </nav>
 
@@ -99,6 +101,26 @@ const Home = () => {
   </div>
 )}
     </div>
+      {/* Auth Modal Overlay */}
+      {showAuth && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          background: 'rgba(0,0,0,0.7)',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <div style={{ position: 'relative', background: '#fff', borderRadius: 8, boxShadow: '0 2px 16px rgba(0,0,0,0.2)' }}>
+            <button onClick={() => setShowAuth(false)} style={{ position: 'absolute', top: 10, right: 10, background: 'transparent', border: 'none', fontSize: 24, cursor: 'pointer' }}>&times;</button>
+            <SupabaseAuthForm />
+          </div>
+        </div>
+      )}
     </PageWrapper>
   );
 };
