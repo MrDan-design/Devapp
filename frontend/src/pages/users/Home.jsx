@@ -117,7 +117,7 @@ const Home = () => {
         }}>
           <div style={{ position: 'relative', background: '#fff', borderRadius: 8, boxShadow: '0 2px 16px rgba(0,0,0,0.2)' }}>
             <button onClick={() => setShowAuth(false)} style={{ position: 'absolute', top: 10, right: 10, background: 'transparent', border: 'none', fontSize: 24, cursor: 'pointer' }}>&times;</button>
-            <SupabaseAuthForm />
+            <SupabaseAuthForm onAuthSuccess={() => setShowAuth(false)} />
           </div>
         </div>
       )}

@@ -1,12 +1,14 @@
 // --- Supabase signup/signin form (added for migration to Supabase, July 25, 2025) ---
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabaseClient';
 
-export default function SupabaseAuthForm() {
+export default function SupabaseAuthForm({ onAuthSuccess }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState('signin');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,11 +16,19 @@ export default function SupabaseAuthForm() {
     if (mode === 'signup') {
       const { error } = await supabase.auth.signUp({ email, password });
       if (error) setMessage(error.message);
-      else setMessage('Signup successful! Check your email for confirmation.');
+      else {
+        setMessage('Signup successful! Check your email for confirmation.');
+        if (onAuthSuccess) onAuthSuccess();
+        setTimeout(() => navigate('/dashboard'), 1000);
+      }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setMessage(error.message);
-      else setMessage('Signin successful!');
+      else {
+        setMessage('Signin successful!');
+        if (onAuthSuccess) onAuthSuccess();
+        setTimeout(() => navigate('/dashboard'), 500);
+      }
     }
   };
 
