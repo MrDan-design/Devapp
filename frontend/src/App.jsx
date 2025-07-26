@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/tes.png'
+import './assets/react.svg'
 //import './App.css'
 
 import Preloader from './components/Preloader'
