@@ -5,7 +5,7 @@ import './assets/react.svg'
 import Preloader from './components/Preloader'
 import AppRouter from './router/AppRouter'
 import SupabaseAuthForm from './components/SupabaseAuthForm'
-import SupabaseSignupProfileForm from './components/SupabaseSignupProfileForm'
+// import SupabaseSignupProfileForm from './components/SupabaseSignupProfileForm'
 
 const App = () => {
   const [loadingDone, setLoadingDone] = useState(false);
@@ -14,7 +14,7 @@ const App = () => {
     <>
       {!loadingDone && <Preloader onFinish={() => setLoadingDone(true)} />}
       {loadingDone && <>
-        <SupabaseSignupProfileForm />
+        {/* <SupabaseSignupProfileForm /> */}
         <SupabaseAuthForm />
         <AppRouter />
       </>}

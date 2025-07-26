@@ -1,1 +1,1 @@
-// Removed legacy SignUp page. Signup is now handled via modal/auth form.
+// File removed. Signup is now handled via modal/auth form.
