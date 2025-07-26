@@ -1,9 +1,10 @@
-import express from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import supabase from '../config/supabaseClient.js';
-import upload from '../middlewares/upload.js';
-import verifyToken from '../middlewares/authMiddleware.js';
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const supabase = require('../config/supabaseClient.js');
+const upload = require('../middlewares/upload.js');
+const verifyToken = require('../middlewares/authMiddleware.js');
+
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
@@ -243,4 +244,5 @@ router.post('/subscribe/request', verifyToken, async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
+
