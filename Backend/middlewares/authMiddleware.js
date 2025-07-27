@@ -11,7 +11,11 @@ async function getSupabaseJWKs() {
   if (jwksCache && (now - jwksCacheTime < JWKS_CACHE_TTL)) {
     return jwksCache;
   }
-  const { data } = await axios.get(SUPABASE_JWKS_URL);
+  const { data } = await axios.get(SUPABASE_JWKS_URL, {
+    headers: {
+      apikey: process.env.SUPABASE_KEY
+    }
+  });
   jwksCache = data.keys;
   jwksCacheTime = now;
   return jwksCache;
