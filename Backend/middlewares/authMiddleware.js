@@ -37,25 +37,32 @@ function jwkToPem(jwk) {
 const verifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer')) {
+    console.log('No token provided');
     return res.status(401).json({ message: 'No token provided' });
   }
   const token = authHeader.split(' ')[1];
+  console.log('Received token:', token);
   try {
     // Decode header to get kid
     const decodedHeader = jwt.decode(token, { complete: true });
+    console.log('Decoded JWT header:', decodedHeader);
     if (!decodedHeader || !decodedHeader.header.kid) {
+      console.log('Invalid token header');
       return res.status(401).json({ message: 'Invalid token header' });
     }
     const jwks = await getSupabaseJWKs();
     const jwk = getKeyFromJWKs(decodedHeader.header.kid, jwks);
     if (!jwk) {
+      console.log('Public key not found for token');
       return res.status(401).json({ message: 'Public key not found for token' });
     }
     const pem = jwkToPem(jwk);
     const decoded = jwt.verify(token, pem, { algorithms: ['RS256'] });
+    console.log('Decoded JWT payload:', decoded);
     req.user = decoded;
     next();
   } catch (err) {
+    console.log('JWT verification error:', err);
     return res.status(401).json({ message: 'Invalid or expired token', error: err.message });
   }
 };
