@@ -17,9 +17,13 @@ export default function SupabaseAuthForm({ onAuthSuccess }) {
       const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) setMessage(error.message);
       else {
-        // Save token if available (email confirmation required for some providers)
         if (data.session && data.session.access_token) {
           localStorage.setItem('token', data.session.access_token);
+        }
+        // Fetch user profile and save to localStorage
+        const user = data.user || (data.session && data.session.user);
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
         }
         setMessage('Signup successful! Check your email for confirmation.');
         if (onAuthSuccess) onAuthSuccess();
@@ -31,6 +35,11 @@ export default function SupabaseAuthForm({ onAuthSuccess }) {
       else {
         if (data.session && data.session.access_token) {
           localStorage.setItem('token', data.session.access_token);
+        }
+        // Fetch user profile and save to localStorage
+        const user = data.user || (data.session && data.session.user);
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
         }
         setMessage('Signin successful!');
         if (onAuthSuccess) onAuthSuccess();
