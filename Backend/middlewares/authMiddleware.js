@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
-const SUPABASE_JWKS_URL = `https://rcvyqtekidnrkhlbygam.supabase.co/auth/v1/keys`;
+const SUPABASE_JWKS_URL = `https://rcvyqtekidnrkhlbygam.supabase.co/auth/v1/.well-known/jwks.json`;
 
 let jwksCache = null;
 let jwksCacheTime = 0;
@@ -11,14 +11,23 @@ async function getSupabaseJWKs() {
   if (jwksCache && (now - jwksCacheTime < JWKS_CACHE_TTL)) {
     return jwksCache;
   }
-  const { data } = await axios.get(SUPABASE_JWKS_URL, {
-    headers: {
-      apikey: process.env.SUPABASE_KEY
-    }
-  });
-  jwksCache = data.keys;
-  jwksCacheTime = now;
-  return jwksCache;
+  if (!process.env.SUPABASE_KEY) {
+    console.error('SUPABASE_KEY environment variable is not set!');
+    throw new Error('SUPABASE_KEY environment variable is not set!');
+  }
+  try {
+    const { data } = await axios.get(SUPABASE_JWKS_URL, {
+      headers: {
+        apikey: process.env.SUPABASE_KEY
+      }
+    });
+    jwksCache = data.keys;
+    jwksCacheTime = now;
+    return jwksCache;
+  } catch (err) {
+    console.error('Error fetching JWKS from Supabase:', err.response ? err.response.data : err.message);
+    throw err;
+  }
 }
 
 function getKeyFromJWKs(kid, jwks) {
