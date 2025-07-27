@@ -1,5 +1,5 @@
 // --- Supabase signup/signin form (added for migration to Supabase, July 25, 2025) ---
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabaseClient';
 
@@ -48,11 +48,37 @@ export default function SupabaseAuthForm({ onAuthSuccess }) {
     }
   };
 
+
   const handleOAuthLogin = async (provider) => {
     setMessage('');
     const { error } = await supabase.auth.signInWithOAuth({ provider });
     if (error) setMessage(error.message);
+    // For OAuth, Supabase will redirect and set the session, so we handle token in useEffect below
   };
+
+  // Always keep token in sync with Supabase session
+  useEffect(() => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session && session.access_token) {
+        localStorage.setItem('token', session.access_token);
+        if (session.user) {
+          localStorage.setItem('user', JSON.stringify(session.user));
+        }
+      }
+    });
+    // On mount, also check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session && session.access_token) {
+        localStorage.setItem('token', session.access_token);
+        if (session.user) {
+          localStorage.setItem('user', JSON.stringify(session.user));
+        }
+      }
+    });
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <div style={{ maxWidth: 400, margin: '2rem auto', padding: 20, border: '1px solid #eee', borderRadius: 8 }}>
