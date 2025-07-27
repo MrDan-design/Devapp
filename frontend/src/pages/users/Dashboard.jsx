@@ -41,11 +41,14 @@ const UserDashboard = () => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
+        console.log("Dashboard.jsx token:", token);
+        const authHeader = { Authorization: `Bearer ${token}` };
+        console.log("Dashboard.jsx Authorization header:", authHeader);
 
         const dashboardRes = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/users/balance`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: authHeader,
           }
         );
         setDashboardData(dashboardRes.data);
