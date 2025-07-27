@@ -30,6 +30,7 @@ export default function SupabaseAuthForm({ onAuthSuccess }) {
         setTimeout(() => navigate('/dashboard'), 1000);
       }
     } else {
+      console.log('Attempting signInWithPassword with:', { email, password });
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       console.log('Supabase signin result:', { data, error });
       if (error) setMessage(error.message);
