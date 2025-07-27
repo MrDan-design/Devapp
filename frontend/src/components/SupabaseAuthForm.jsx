@@ -14,17 +14,24 @@ export default function SupabaseAuthForm({ onAuthSuccess }) {
     e.preventDefault();
     setMessage('');
     if (mode === 'signup') {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) setMessage(error.message);
       else {
+        // Save token if available (email confirmation required for some providers)
+        if (data.session && data.session.access_token) {
+          localStorage.setItem('token', data.session.access_token);
+        }
         setMessage('Signup successful! Check your email for confirmation.');
         if (onAuthSuccess) onAuthSuccess();
         setTimeout(() => navigate('/dashboard'), 1000);
       }
     } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setMessage(error.message);
       else {
+        if (data.session && data.session.access_token) {
+          localStorage.setItem('token', data.session.access_token);
+        }
         setMessage('Signin successful!');
         if (onAuthSuccess) onAuthSuccess();
         setTimeout(() => navigate('/dashboard'), 500);
