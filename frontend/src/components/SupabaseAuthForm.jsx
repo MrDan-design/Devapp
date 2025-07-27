@@ -15,12 +15,12 @@ export default function SupabaseAuthForm({ onAuthSuccess }) {
     setMessage('');
     if (mode === 'signup') {
       const { data, error } = await supabase.auth.signUp({ email, password });
+      console.log('Supabase signup result:', { data, error });
       if (error) setMessage(error.message);
       else {
         if (data.session && data.session.access_token) {
           localStorage.setItem('token', data.session.access_token);
         }
-        // Fetch user profile and save to localStorage
         const user = data.user || (data.session && data.session.user);
         if (user) {
           localStorage.setItem('user', JSON.stringify(user));
@@ -31,12 +31,12 @@ export default function SupabaseAuthForm({ onAuthSuccess }) {
       }
     } else {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      console.log('Supabase signin result:', { data, error });
       if (error) setMessage(error.message);
       else {
         if (data.session && data.session.access_token) {
           localStorage.setItem('token', data.session.access_token);
         }
-        // Fetch user profile and save to localStorage
         const user = data.user || (data.session && data.session.user);
         if (user) {
           localStorage.setItem('user', JSON.stringify(user));
@@ -59,6 +59,7 @@ export default function SupabaseAuthForm({ onAuthSuccess }) {
   // Always keep token in sync with Supabase session
   useEffect(() => {
     const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Supabase onAuthStateChange:', { event, session });
       if (session && session.access_token) {
         localStorage.setItem('token', session.access_token);
         if (session.user) {
@@ -68,6 +69,7 @@ export default function SupabaseAuthForm({ onAuthSuccess }) {
     });
     // On mount, also check current session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Supabase getSession on mount:', session);
       if (session && session.access_token) {
         localStorage.setItem('token', session.access_token);
         if (session.user) {
