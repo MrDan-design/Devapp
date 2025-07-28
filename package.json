@@ -12,6 +12,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "react-toastify": "^11.0.5"
+    "react-toastify": "^10.0.6"
   }
 }
