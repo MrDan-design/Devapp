@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const supabase = require('../config/supabaseClient.js');
+const db = require('../config/db.js');
 const upload = require('../middlewares/upload.js');
 const verifyToken = require('../middlewares/authMiddleware.js');
 
@@ -18,13 +18,9 @@ router.post('/signup', async (req, res) => {
   }
 
   try {
-    // Check if user exists
-    const { data: existingUser, error: existingUserError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', email);
 
-    if (existingUserError) throw existingUserError;
+    // Check if user exists
+    const [existingUser] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
     if (existingUser.length > 0) {
       return res.status(409).json({ message: 'User already exists' });
     }
@@ -33,20 +29,10 @@ router.post('/signup', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert new user
-    const { error: insertError } = await supabase
-      .from('users')
-      .insert([{
-        fullname,
-        email,
-        password: hashedPassword,
-        country,
-        currency: currency || 'USD',
-        next_of_kin: nextOfKin || null,
-        next_of_kin_number: nextOfKinNumber || null,
-      }]);
-
-    if (insertError) throw insertError;
-
+    await db.query(
+      'INSERT INTO users (fullname, email, password, country, currency, next_of_kin, next_of_kin_number) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [fullname, email, hashedPassword, country, currency || 'USD', nextOfKin || null, nextOfKinNumber || null]
+    );
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
     console.error('Signup error:', error);
@@ -63,17 +49,11 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    const { data: users, error: findError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('email', email);
 
-    if (findError) throw findError;
-
+    const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
     if (users.length === 0) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-
     const user = users[0];
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -110,18 +90,21 @@ router.get('/profile', verifyToken, async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const { data: users, error } = await supabase
-      .from('users')
-      .select('fullname, profile_image, subscription_plans(name)')
-      .eq('id', userId)
-      .single();
 
-    if (error) throw error;
-
+    const [users] = await db.query('SELECT fullname, profile_image, subscription_plan_id FROM users WHERE id = ?', [userId]);
+    if (users.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const user = users[0];
+    let planName = 'None';
+    if (user.subscription_plan_id) {
+      const [plans] = await db.query('SELECT name FROM subscription_plans WHERE id = ?', [user.subscription_plan_id]);
+      if (plans.length > 0) planName = plans[0].name;
+    }
     res.json({
-      fullname: users.fullname,
-      profileImage: users.profile_image,
-      plan: users.subscription_plans?.name || 'None',
+      fullname: user.fullname,
+      profileImage: user.profile_image,
+      plan: planName,
     });
 
   } catch (err) {
@@ -136,13 +119,7 @@ router.post("/profile/image", verifyToken, upload("profile").single("image"), as
   const imageUrl = `/uploads/profile/${req.file.filename}`;
 
   try {
-    const { error } = await supabase
-      .from('users')
-      .update({ profile_image: imageUrl })
-      .eq('id', userId);
-
-    if (error) throw error;
-
+    await db.query('UPDATE users SET profile_image = ? WHERE id = ?', [imageUrl, userId]);
     res.json({ message: "Image uploaded successfully", profileImage: imageUrl });
   } catch (err) {
     console.error("Error saving profile image:", err);
@@ -155,32 +132,21 @@ router.get('/balance', verifyToken, async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const { data: investments, error: invError } = await supabase
-      .from('investments')
-      .select('shares_given, amount_invested')
-      .eq('user_id', userId)
-      .eq('status', 'active');
 
-    if (invError) throw invError;
-
+    const [investments] = await db.query('SELECT shares_given, amount_invested FROM investments WHERE user_id = ? AND status = ?', [userId, 'active']);
     let sharesBalance = 0;
     let totalInvested = 0;
     investments.forEach(inv => {
       sharesBalance += inv.shares_given || 0;
       totalInvested += inv.amount_invested || 0;
     });
-
-    const { data: users, error: userError } = await supabase
-      .from('users')
-      .select('balance, email')
-      .eq('id', userId)
-      .single();
-
-    if (userError) throw userError;
-
+    const [users] = await db.query('SELECT balance, email FROM users WHERE id = ?', [userId]);
+    if (users.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
     res.status(200).json({
-      name: users.email.split('@')[0],
-      walletBalance: users.balance,
+      name: users[0].email.split('@')[0],
+      walletBalance: users[0].balance,
       sharesBalance: sharesBalance,
       totalInvested: totalInvested
     });
@@ -200,24 +166,11 @@ router.post('/upgrade', async (req, res) => {
   }
 
   try {
-    const { data: planExists, error: planError } = await supabase
-      .from('subscription_plans')
-      .select('*')
-      .eq('id', planId);
-
-    if (planError) throw planError;
-
+    const [planExists] = await db.query('SELECT * FROM subscription_plans WHERE id = ?', [planId]);
     if (planExists.length === 0) {
       return res.status(404).json({ message: 'Subscription plan not found.' });
     }
-
-    const { error: updateError } = await supabase
-      .from('users')
-      .update({ subscription_plan_id: planId })
-      .eq('id', userId);
-
-    if (updateError) throw updateError;
-
+    await db.query('UPDATE users SET subscription_plan_id = ? WHERE id = ?', [planId, userId]);
     res.json({ message: 'Subscription upgraded successfully.' });
   } catch (error) {
     console.error('Error upgrading subscription:', error);
@@ -231,12 +184,7 @@ router.post('/subscribe/request', verifyToken, async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const { error } = await supabase
-      .from('pending_subscriptions')
-      .insert([{ user_id: userId, plan_id: planId }]);
-
-    if (error) throw error;
-
+    await db.query('INSERT INTO pending_subscriptions (user_id, plan_id) VALUES (?, ?)', [userId, planId]);
     res.json({ message: 'Subscription request submitted for approval.' });
   } catch (err) {
     console.error('Error inserting subscription request:', err);

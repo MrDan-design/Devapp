@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import SupabaseAuthForm from '../../components/SupabaseAuthForm';
+import BackendAuthForm from '../../components/BackendAuthForm';
 import "./Home.css";
 import FadeIn from '../../components/FadeIn';
 import bgImage from "../../assets/bg-image.jpg";
@@ -109,16 +109,67 @@ const Home = () => {
           left: 0,
           width: '100vw',
           height: '100vh',
-          background: 'rgba(0,0,0,0.7)',
+          background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%)',
+          backdropFilter: 'blur(10px)',
           zIndex: 9999,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          animation: 'fadeIn 0.3s ease'
         }}>
-          <div style={{ position: 'relative', background: '#fff', borderRadius: 8, boxShadow: '0 2px 16px rgba(0,0,0,0.2)' }}>
-            <button onClick={() => setShowAuth(false)} style={{ position: 'absolute', top: 10, right: 10, background: 'transparent', border: 'none', fontSize: 24, cursor: 'pointer' }}>&times;</button>
-            <SupabaseAuthForm onAuthSuccess={() => setShowAuth(false)} />
+          <div style={{ 
+            position: 'relative',
+            margin: '20px',
+            width: '90%',
+            maxWidth: '650px',
+            animation: 'slideUp 0.3s ease'
+          }}>
+            <button 
+              onClick={() => setShowAuth(false)} 
+              style={{ 
+                position: 'absolute', 
+                top: '-10px', 
+                right: '10px', 
+                background: 'rgba(255,255,255,0.2)', 
+                border: 'none', 
+                fontSize: '24px', 
+                cursor: 'pointer', 
+                zIndex: 1,
+                color: 'white',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backdropFilter: 'blur(10px)',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'rgba(255,255,255,0.3)';
+                e.target.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'rgba(255,255,255,0.2)';
+                e.target.style.transform = 'scale(1)';
+              }}
+            >
+              &times;
+            </button>
+            <BackendAuthForm onAuthSuccess={() => setShowAuth(false)} />
           </div>
+          
+          <style>{`
+            @keyframes fadeIn {
+              0% { opacity: 0; }
+              100% { opacity: 1; }
+            }
+            
+            @keyframes slideUp {
+              0% { opacity: 0; transform: translateY(50px); }
+              100% { opacity: 1; transform: translateY(0); }
+            }
+          `}</style>
         </div>
       )}
     </PageWrapper>

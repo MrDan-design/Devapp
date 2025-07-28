@@ -52,7 +52,12 @@ const pendingSubscriptionsRoutes = require('./routes/pendingSubscriptionsRoutes'
 const chatRoutes = require('./routes/chatRoutes');
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:5174', 
+    'http://localhost:3000',
+    process.env.FRONTEND_URL
+  ],
   credentials: true,
 }));
 app.use(express.json());
