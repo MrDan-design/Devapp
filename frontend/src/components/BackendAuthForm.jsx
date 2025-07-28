@@ -26,7 +26,11 @@ export default function BackendAuthForm({ onAuthSuccess }) {
         ? { email: formData.email, password: formData.password }
         : formData;
 
-      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+      // Use relative URL for Vercel deployment, fallback to env variable
+      const apiBaseUrl = window.location.hostname.includes('vercel.app') 
+        ? '/api' 
+        : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api');
+      
       const response = await fetch(`${apiBaseUrl}${endpoint}`, {
         method: 'POST',
         headers: {
