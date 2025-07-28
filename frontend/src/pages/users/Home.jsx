@@ -120,19 +120,23 @@ const Home = () => {
         }}>
           <div style={{ 
             position: 'relative',
-            margin: '10px',
             width: '100%',
-            maxWidth: '650px',
+            maxWidth: '600px',
+            maxHeight: 'calc(100vh - 20px)',
+            overflowY: 'auto',
             animation: 'slideUp 0.3s ease',
             display: 'flex',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            paddingTop: '10px',
+            paddingBottom: '10px'
           }}>
             <button 
               onClick={() => setShowAuth(false)} 
               style={{ 
-                position: 'absolute', 
-                top: '-5px', 
-                right: '5px', 
+                position: 'fixed', 
+                top: '15px', 
+                right: '15px', 
                 background: 'rgba(255,255,255,0.2)', 
                 border: 'none', 
                 fontSize: '24px', 
@@ -181,6 +185,12 @@ const Home = () => {
               .auth-modal-container {
                 padding: 5px !important;
                 margin: 5px !important;
+              }
+              
+              /* Make modal scrollable on mobile */
+              .auth-modal-overlay {
+                align-items: flex-start !important;
+                padding: 5px !important;
               }
             }
           `}</style>

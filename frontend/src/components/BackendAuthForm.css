@@ -1,0 +1,227 @@
+/* BackendAuthForm Mobile Responsive Styles */
+
+.auth-form-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 600px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 40px;
+}
+
+.auth-form-inner {
+  background: rgba(255,255,255,0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  padding: 40px;
+}
+
+.auth-form-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-form-title {
+  font-size: 32px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.auth-form-subtitle {
+  color: #666;
+  font-size: 16px;
+  margin: 0;
+}
+
+.auth-form-field {
+  margin-bottom: 20px;
+}
+
+.auth-form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.auth-form-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  outline: none;
+  box-sizing: border-box;
+  background: white;
+}
+
+.auth-form-input:focus {
+  border-color: #667eea;
+}
+
+.auth-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.auth-form-button {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  margin-bottom: 20px;
+}
+
+.auth-form-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+}
+
+.auth-form-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.auth-form-toggle {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.auth-form-toggle:hover {
+  color: #764ba2;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .auth-form-container {
+    padding: 15px;
+    max-width: calc(100vw - 20px);
+    margin: 0 10px;
+    border-radius: 16px;
+  }
+  
+  .auth-form-inner {
+    padding: 20px;
+    border-radius: 12px;
+  }
+  
+  .auth-form-header {
+    margin-bottom: 20px;
+  }
+  
+  .auth-form-title {
+    font-size: 24px;
+  }
+  
+  .auth-form-subtitle {
+    font-size: 14px;
+  }
+  
+  .auth-form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  
+  .auth-form-grid .auth-form-field:first-child {
+    margin-bottom: 16px;
+  }
+  
+  .auth-form-input {
+    padding: 12px 14px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .auth-form-button {
+    padding: 14px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-form-container {
+    padding: 10px;
+    max-width: calc(100vw - 10px);
+    margin: 0 5px;
+    border-radius: 12px;
+  }
+  
+  .auth-form-inner {
+    padding: 15px;
+  }
+  
+  .auth-form-title {
+    font-size: 20px;
+  }
+  
+  .auth-form-subtitle {
+    font-size: 13px;
+  }
+  
+  .auth-form-input {
+    padding: 12px;
+  }
+  
+  .auth-form-button {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .auth-form-container {
+    padding: 8px;
+    max-width: calc(100vw - 8px);
+    margin: 0 4px;
+  }
+  
+  .auth-form-inner {
+    padding: 12px;
+  }
+  
+  .auth-form-title {
+    font-size: 18px;
+  }
+  
+  .auth-form-input {
+    padding: 10px;
+  }
+}
