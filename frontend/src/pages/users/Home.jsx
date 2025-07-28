@@ -156,7 +156,11 @@ const Home = () => {
             >
               &times;
             </button>
-            <BackendAuthForm onAuthSuccess={() => setShowAuth(false)} />
+            <BackendAuthForm onAuthSuccess={() => {
+              setShowAuth(false);
+              // Redirect to dashboard after successful login
+              navigate('/dashboard');
+            }} />
           </div>
           
           <style>{`

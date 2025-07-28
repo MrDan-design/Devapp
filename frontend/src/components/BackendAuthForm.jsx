@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useAuth } from '../context/AuthContext';
 
 export default function BackendAuthForm({ onAuthSuccess }) {
+  const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     fullname: '',
@@ -35,18 +37,16 @@ export default function BackendAuthForm({ onAuthSuccess }) {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success(data.message || (isLogin ? 'Login successful!' : 'Account created successfully!'));
-        
         if (isLogin && data.token) {
-          // Store token and user data
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('user', JSON.stringify(data.user));
+          // Store token and user data using auth context
+          login(data.user, data.token);
+          toast.success(`Welcome back, ${data.user.fullname}! 🎉`);
           console.log('Backend auth success:', { token: data.token, user: data.user });
           onAuthSuccess?.();
         } else if (!isLogin) {
           // For signup, switch to login
           setIsLogin(true);
-          toast.info('Please log in with your new account');
+          toast.success(`Account created successfully! Please log in with your new account.`);
         }
       } else {
         toast.error(data.message || 'Authentication failed');

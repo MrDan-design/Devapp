@@ -34,7 +34,12 @@ const AppRouter =() => {
     const isAdmin = user?.role === 'admin';
 
     return (
-        <BrowserRouter>
+        <BrowserRouter 
+            future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true
+            }}
+        >
         <Routes>
             <Route path="/" element={<Home />} />
             {/* <Route path="/login" element={<Login />} /> */}

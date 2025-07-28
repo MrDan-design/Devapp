@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Preloader from './components/Preloader';
 import AppRouter from './router/AppRouter';
+import { AuthProvider } from './context/AuthContext';
 // import SupabaseSignupProfileForm from './components/SupabaseSignupProfileForm'
 
 const App = () => {
@@ -15,7 +16,9 @@ const App = () => {
       {loadingDone && <>
         {/* <SupabaseSignupProfileForm /> */}
         {/* <SupabaseAuthForm /> */}
-        <AppRouter />
+        <AuthProvider>
+          <AppRouter />
+        </AuthProvider>
         <ToastContainer position="top-right" autoClose={4000} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover />
       </>}
     </>
