@@ -7,28 +7,20 @@
       "config": {
         "distDir": "dist"
       }
-    },
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node"
     }
   ],
   "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.js"
-    },
     {
       "src": "/(.*)",
       "dest": "/frontend/dist/$1"
     }
   ],
   "functions": {
-    "api/index.js": {
+    "api/**/*.js": {
       "maxDuration": 30
     }
   },
   "env": {
-    "JWT_SECRET": "your-super-secret-jwt-key-change-this"
+    "JWT_SECRET": "devapp-jwt-secret-2025-production-key-super-secure"
   }
 }
