@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import PageWrapper from "../../components/PageWrapper";
+import "./Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -44,63 +45,65 @@ const Login = () => {
 
   return (
     <PageWrapper>
-      <div className="login-bg py-5">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-md-5 bg-white p-4 rounded">
-            <h3 className="mb-3 text-center">Login</h3>
-            <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label>Email Address</label>
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+      <div className="login-bg">
+        <div className="container-fluid">
+          <div className="row justify-content-center">
+            <div className="login-container">
+              <div className="login-form">
+                <h3 className="text-center">Welcome Back</h3>
+                <p className="text-center text-muted mb-4">Sign in to your account</p>
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label className="form-label">Email Address</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Password</label>
+                    <div className="input-group">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        className="form-control"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                      <span
+                        className="input-group-text"
+                        onClick={togglePassword}
+                      >
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="d-flex justify-content-between mb-4">
+                    <a href="/forgot-password" className="small text-muted">
+                      Forgot Password?
+                    </a>
+                  </div>
+
+                  <button type="submit" className="btn btn-danger w-100">
+                    Sign In
+                  </button>
+                </form>
+
+                <p className="text-center mt-3 small text-muted">
+                  Don't have an account? <a href="/" className="text-decoration-none">Get Started</a>
+                </p>
               </div>
-
-              <div className="mb-3">
-                <label>Password</label>
-                <div className="input-group">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    className="form-control"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <span
-                    className="input-group-text bg-white border-start-0"
-                    onClick={togglePassword}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </span>
-                </div>
-              </div>
-
-              <div className="d-flex justify-content-between mb-3">
-                <a href="/forgot-password" className="small text-muted">
-                  Forgot Password?
-                </a>
-              </div>
-
-              <button type="submit" className="btn btn-danger w-100">
-                Login
-              </button>
-            </form>
-
-            <p className="text-center mt-3 small text-muted">
-              {/* Don't have an account? Sign Up link removed, use modal-based auth only */}
-            </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </PageWrapper>
   );
 };

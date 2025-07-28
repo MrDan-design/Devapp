@@ -31,7 +31,14 @@ export default function BackendAuthForm({ onAuthSuccess }) {
         ? '/api' 
         : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api');
       
-      const response = await fetch(`${apiBaseUrl}${endpoint}`, {
+      const fullUrl = `${apiBaseUrl}${endpoint}`;
+      console.log('API Request:', { 
+        url: fullUrl, 
+        method: 'POST', 
+        payload: isLogin ? payload : { ...payload, password: '[HIDDEN]' } 
+      });
+      
+      const response = await fetch(fullUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,6 +47,7 @@ export default function BackendAuthForm({ onAuthSuccess }) {
       });
 
       const data = await response.json();
+      console.log('API Response:', { status: response.status, data });
 
       if (response.ok) {
         if (isLogin && data.token) {
@@ -51,14 +59,24 @@ export default function BackendAuthForm({ onAuthSuccess }) {
         } else if (!isLogin) {
           // For signup, switch to login
           setIsLogin(true);
+          setFormData({
+            fullname: '',
+            email: formData.email, // Keep email for convenience
+            password: '',
+            country: '',
+            currency: 'USD',
+            nextOfKin: '',
+            nextOfKinNumber: ''
+          });
           toast.success(`Account created successfully! Please log in with your new account.`);
         }
       } else {
-        toast.error(data.message || 'Authentication failed');
+        console.error('API Error:', data);
+        toast.error(data.message || `${isLogin ? 'Login' : 'Signup'} failed`);
       }
     } catch (error) {
-      console.error('Auth error:', error);
-      toast.error('Network error. Please try again.');
+      console.error('Network/Auth error:', error);
+      toast.error('Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -74,25 +92,25 @@ export default function BackendAuthForm({ onAuthSuccess }) {
   return (
     <div style={{
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      padding: '40px',
+      padding: window.innerWidth <= 768 ? '20px' : '40px',
       borderRadius: '20px',
       boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-      minWidth: '500px',
       width: '100%',
-      maxWidth: '600px',
+      maxWidth: window.innerWidth <= 768 ? '95vw' : '600px',
+      minWidth: 'auto',
       backdropFilter: 'blur(10px)',
       border: '1px solid rgba(255,255,255,0.1)'
     }}>
       <div style={{
         background: 'rgba(255,255,255,0.95)',
-        padding: '40px',
+        padding: window.innerWidth <= 768 ? '20px' : '40px',
         borderRadius: '16px',
         boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
       }}>
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+        <div style={{ textAlign: 'center', marginBottom: window.innerWidth <= 768 ? '20px' : '30px' }}>
           <h2 style={{
-            fontSize: '32px',
+            fontSize: window.innerWidth <= 768 ? '24px' : '32px',
             fontWeight: '700',
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             WebkitBackgroundClip: 'text',
@@ -103,7 +121,7 @@ export default function BackendAuthForm({ onAuthSuccess }) {
           </h2>
           <p style={{
             color: '#666',
-            fontSize: '16px',
+            fontSize: window.innerWidth <= 768 ? '14px' : '16px',
             margin: 0
           }}>
             {isLogin ? 'Sign in to your account' : 'Create your account to get started'}
@@ -133,7 +151,7 @@ export default function BackendAuthForm({ onAuthSuccess }) {
                   padding: '14px 16px',
                   border: '2px solid #e5e7eb',
                   borderRadius: '12px',
-                  fontSize: '16px',
+                  fontSize: window.innerWidth <= 768 ? '16px' : '16px', // 16px prevents zoom on mobile
                   transition: 'all 0.3s ease',
                   outline: 'none',
                   boxSizing: 'border-box'
@@ -211,135 +229,139 @@ export default function BackendAuthForm({ onAuthSuccess }) {
           
           {!isLogin && (
             <>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    color: '#374151'
-                  }}>
-                    Country
-                  </label>
-                  <input
-                    type="text"
-                    name="country"
-                    placeholder="Your country"
-                    value={formData.country}
-                    onChange={handleChange}
-                    style={{
-                      width: '100%',
-                      padding: '14px 16px',
-                      border: '2px solid #e5e7eb',
-                      borderRadius: '12px',
-                      fontSize: '16px',
-                      transition: 'all 0.3s ease',
-                      outline: 'none',
-                      boxSizing: 'border-box'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#667eea'}
-                    onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-                  />
+              {!isLogin && (
+                <div style={{ display: window.innerWidth <= 768 ? 'block' : 'grid', gridTemplateColumns: window.innerWidth <= 768 ? 'none' : '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+                  <div style={{ marginBottom: window.innerWidth <= 768 ? '16px' : '0' }}>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '8px',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: '#374151'
+                    }}>
+                      Country
+                    </label>
+                    <input
+                      type="text"
+                      name="country"
+                      placeholder="Your country"
+                      value={formData.country}
+                      onChange={handleChange}
+                      style={{
+                        width: '100%',
+                        padding: '14px 16px',
+                        border: '2px solid #e5e7eb',
+                        borderRadius: '12px',
+                        fontSize: '16px',
+                        transition: 'all 0.3s ease',
+                        outline: 'none',
+                        boxSizing: 'border-box'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                      onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                    />
+                  </div>
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '8px',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: '#374151'
+                    }}>
+                      Currency
+                    </label>
+                    <select
+                      name="currency"
+                      value={formData.currency}
+                      onChange={handleChange}
+                      style={{
+                        width: '100%',
+                        padding: '14px 16px',
+                        border: '2px solid #e5e7eb',
+                        borderRadius: '12px',
+                        fontSize: '16px',
+                        transition: 'all 0.3s ease',
+                        outline: 'none',
+                        boxSizing: 'border-box',
+                        background: 'white'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                      onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                    >
+                      <option value="USD">USD</option>
+                      <option value="EUR">EUR</option>
+                      <option value="GBP">GBP</option>
+                      <option value="NGN">NGN</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    color: '#374151'
-                  }}>
-                    Currency
-                  </label>
-                  <select
-                    name="currency"
-                    value={formData.currency}
-                    onChange={handleChange}
-                    style={{
-                      width: '100%',
-                      padding: '14px 16px',
-                      border: '2px solid #e5e7eb',
-                      borderRadius: '12px',
-                      fontSize: '16px',
-                      transition: 'all 0.3s ease',
-                      outline: 'none',
-                      boxSizing: 'border-box',
-                      background: 'white'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#667eea'}
-                    onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-                  >
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
-                    <option value="GBP">GBP</option>
-                    <option value="NGN">NGN</option>
-                  </select>
-                </div>
-              </div>
+              )}
               
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '30px' }}>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    color: '#374151'
-                  }}>
-                    Next of Kin
-                  </label>
-                  <input
-                    type="text"
-                    name="nextOfKin"
-                    placeholder="Emergency contact"
-                    value={formData.nextOfKin}
-                    onChange={handleChange}
-                    style={{
-                      width: '100%',
-                      padding: '14px 16px',
-                      border: '2px solid #e5e7eb',
-                      borderRadius: '12px',
-                      fontSize: '16px',
-                      transition: 'all 0.3s ease',
-                      outline: 'none',
-                      boxSizing: 'border-box'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#667eea'}
-                    onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-                  />
+              {!isLogin && (
+                <div style={{ display: window.innerWidth <= 768 ? 'block' : 'grid', gridTemplateColumns: window.innerWidth <= 768 ? 'none' : '1fr 1fr', gap: '16px', marginBottom: '30px' }}>
+                  <div style={{ marginBottom: window.innerWidth <= 768 ? '16px' : '0' }}>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '8px',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: '#374151'
+                    }}>
+                      Next of Kin
+                    </label>
+                    <input
+                      type="text"
+                      name="nextOfKin"
+                      placeholder="Emergency contact"
+                      value={formData.nextOfKin}
+                      onChange={handleChange}
+                      style={{
+                        width: '100%',
+                        padding: '14px 16px',
+                        border: '2px solid #e5e7eb',
+                        borderRadius: '12px',
+                        fontSize: '16px',
+                        transition: 'all 0.3s ease',
+                        outline: 'none',
+                        boxSizing: 'border-box'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                      onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                    />
+                  </div>
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '8px',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: '#374151'
+                    }}>
+                      Phone Number
+                    </label>
+                    <input
+                      type="text"
+                      name="nextOfKinNumber"
+                      placeholder="Contact number"
+                      value={formData.nextOfKinNumber}
+                      onChange={handleChange}
+                      style={{
+                        width: '100%',
+                        padding: '14px 16px',
+                        border: '2px solid #e5e7eb',
+                        borderRadius: '12px',
+                        fontSize: '16px',
+                        transition: 'all 0.3s ease',
+                        outline: 'none',
+                        boxSizing: 'border-box'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                      onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    color: '#374151'
-                  }}>
-                    Phone Number
-                  </label>
-                  <input
-                    type="text"
-                    name="nextOfKinNumber"
-                    placeholder="Contact number"
-                    value={formData.nextOfKinNumber}
-                    onChange={handleChange}
-                    style={{
-                      width: '100%',
-                      padding: '14px 16px',
-                      border: '2px solid #e5e7eb',
-                      borderRadius: '12px',
-                      fontSize: '16px',
-                      transition: 'all 0.3s ease',
-                      outline: 'none',
-                      boxSizing: 'border-box'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = '#667eea'}
-                    onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-                  />
-                </div>
-              </div>
+              )}
             </>
           )}
           

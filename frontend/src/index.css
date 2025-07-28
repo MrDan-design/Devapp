@@ -1,10 +1,16 @@
-
-
+* {
+  box-sizing: border-box;
+}
 
 body, html, #root {
   margin: 0;
   padding: 0;
   height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .login-bg {
@@ -19,6 +25,7 @@ body, html, #root {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
 }
 
 @keyframes slideIn {
@@ -51,5 +58,34 @@ body, html, #root {
   100% {
     opacity: 0;
     visibility: hidden;
+  }
+}
+
+/* Global mobile improvements */
+@media (max-width: 768px) {
+  .login-bg {
+    padding: 0.5rem;
+  }
+  
+  /* Ensure text inputs don't zoom on iOS */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+  
+  /* Improve button accessibility on mobile */
+  .btn {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-bg {
+    padding: 0.25rem;
   }
 }

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import BackendAuthForm from '../../components/BackendAuthForm';
 import "./Home.css";
 import FadeIn from '../../components/FadeIn';
-import bgImage from "../../assets/bg-image.jpg";
 import PageWrapper from '../../components/PageWrapper';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -115,26 +114,30 @@ const Home = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          animation: 'fadeIn 0.3s ease'
+          animation: 'fadeIn 0.3s ease',
+          padding: '10px',
+          overflowY: 'auto'
         }}>
           <div style={{ 
             position: 'relative',
-            margin: '20px',
-            width: '90%',
+            margin: '10px',
+            width: '100%',
             maxWidth: '650px',
-            animation: 'slideUp 0.3s ease'
+            animation: 'slideUp 0.3s ease',
+            display: 'flex',
+            justifyContent: 'center'
           }}>
             <button 
               onClick={() => setShowAuth(false)} 
               style={{ 
                 position: 'absolute', 
-                top: '-10px', 
-                right: '10px', 
+                top: '-5px', 
+                right: '5px', 
                 background: 'rgba(255,255,255,0.2)', 
                 border: 'none', 
                 fontSize: '24px', 
                 cursor: 'pointer', 
-                zIndex: 1,
+                zIndex: 10001,
                 color: 'white',
                 borderRadius: '50%',
                 width: '40px',
@@ -172,6 +175,13 @@ const Home = () => {
             @keyframes slideUp {
               0% { opacity: 0; transform: translateY(50px); }
               100% { opacity: 1; transform: translateY(0); }
+            }
+            
+            @media (max-width: 768px) {
+              .auth-modal-container {
+                padding: 5px !important;
+                margin: 5px !important;
+              }
             }
           `}</style>
         </div>

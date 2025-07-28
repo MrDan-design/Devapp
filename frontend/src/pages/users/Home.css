@@ -32,6 +32,65 @@
   .home-page h1 {
     font-size: 2rem;
   }
+  
+  .hero-section {
+    padding-top: 80px;
+    padding-bottom: 80px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .home-page .navbar {
+    padding: 1rem !important;
+  }
+  
+  .home-page .display-4 {
+    font-size: 1.75rem !important;
+    line-height: 1.2;
+  }
+  
+  .input-group {
+    max-width: 100% !important;
+  }
+  
+  .token-btn {
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.85rem;
+  }
+  
+  .token-btn img {
+    width: 16px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  
+  .home-page .display-4 {
+    font-size: 1.5rem !important;
+  }
+  
+  .home-page .navbar .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .custom-button, .custom-btn {
+    padding: 0.6rem 1.2rem !important;
+  }
+  
+  .token-btn {
+    padding: 0.35rem 0.7rem !important;
+    font-size: 0.8rem;
+  }
+  
+  .d-flex.gap-3 {
+    flex-wrap: wrap;
+    gap: 0.5rem !important;
+  }
 }
 
 .token-btn {

@@ -62,15 +62,14 @@ const CheckoutPage = () => {
   };
 
   return (
-    <div className="checkout-page-wrapper d-flex justify-content-center align-items-center">
+    <div className="checkout-page-wrapper">
       <div className="checkout-card">
-        <div className="bg-white p-4 p-md-5 rounded shadow-lg" style={{ maxWidth: '600px', width: '100%' }}>
         <h3 className="mb-3">Complete Your Subscription</h3>
         <p className="text-muted">Plan: <strong>{selectedPlan?.name || 'N/A'}</strong></p>
 
         <div className="mb-4">
           <h5>Select Wallet:</h5>
-          <div className="d-flex align-items-center gap-2">
+          <div className="wallet-selector">
             <select
               className="form-control"
               value={selectedWallet}
@@ -89,19 +88,20 @@ const CheckoutPage = () => {
         </div>
 
         <form onSubmit={handleSubmitRequest}>
-          <div className="form-group">
-            <label htmlFor="paymentProof">Upload Payment Screenshot</label>
+          <div className="form-group mb-3">
+            <label htmlFor="paymentProof" className="form-label">Upload Payment Screenshot</label>
             <input
               type="file"
-              className="form-control-file"
+              className="form-control-file form-control"
               id="paymentProof"
               onChange={(e) => setPaymentProof(e.target.files[0])}
+              accept="image/*"
               required
             />
           </div>
 
-          <div className="d-flex justify-content-between mt-4">
-            <button onClick={handleSubmitRequest} type="submit" className="btn btn-primary">
+          <div className="action-buttons">
+            <button type="submit" className="btn btn-primary">
               Submit for Approval
             </button>
             <button
@@ -113,7 +113,6 @@ const CheckoutPage = () => {
             </button>
           </div>
         </form>
-      </div>
       </div>
     </div>
       
