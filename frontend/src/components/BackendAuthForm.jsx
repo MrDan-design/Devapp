@@ -21,12 +21,13 @@ export default function BackendAuthForm({ onAuthSuccess }) {
     setLoading(true);
 
     try {
-      const endpoint = isLogin ? '/api/users/login' : '/api/users/signup';
+      const endpoint = isLogin ? '/users/login' : '/users/signup';
       const payload = isLogin 
         ? { email: formData.email, password: formData.password }
         : formData;
 
-      const response = await fetch(`http://localhost:4000${endpoint}`, {
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+      const response = await fetch(`${apiBaseUrl}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
