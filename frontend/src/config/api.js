@@ -1,12 +1,20 @@
-// API Configuration
+// Smart API Configuration that adapts to environment
+const getApiBaseUrl = () => {
+  // Check if we're on Vercel deployment
+  if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+    return '/api';
+  }
+  
+  // Use environment variable for local development
+  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+};
+
 const API_CONFIG = {
-  // Try deployed backend first, fallback to localhost for development
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://devapp-backend.onrender.com/api',
+  baseURL: getApiBaseUrl(),
   timeout: 10000,
   
   // Fallback URLs in case primary fails
   fallbackURLs: [
-    'https://devapp-backend.onrender.com/api',
     'http://localhost:4000/api'
   ]
 };
