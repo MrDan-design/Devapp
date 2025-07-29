@@ -186,6 +186,58 @@ app.get('/', async (req, res) => {
     }
 });
 
+// Quick table setup endpoint (temporary)
+app.get('/api/quick-setup-tables', async (req, res) => {
+    try {
+        console.log('🚀 Creating missing database tables...');
+
+        // Create deposits table
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS deposits (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                method VARCHAR(20) NOT NULL,
+                crypto_type VARCHAR(20),
+                amount_usd DECIMAL(10, 2),
+                tx_hash TEXT,
+                status VARCHAR(20) DEFAULT 'pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+        `);
+
+        // Create withdrawals table
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS withdrawals (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                usd_value DECIMAL(10, 2),
+                status VARCHAR(20) DEFAULT 'pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                approved_at TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+        `);
+
+        console.log('✅ Tables created successfully!');
+        
+        // Test the tables
+        const depositTest = await db.query('SELECT COUNT(*) as count FROM deposits');
+        const withdrawalTest = await db.query('SELECT COUNT(*) as count FROM withdrawals');
+        
+        res.json({
+            success: true,
+            message: 'Tables created successfully',
+            deposits: depositTest.rows[0].count,
+            withdrawals: withdrawalTest.rows[0].count
+        });
+        
+    } catch (error) {
+        console.error('❌ Error creating tables:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 const PORT = process.env.PORT || 4000;
 
 // Test database connection on startup
