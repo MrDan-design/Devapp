@@ -2,8 +2,11 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db.js');
-const upload = require('../middlewares/upload.js');
+const getUploader = require('../middlewares/upload.js');
 const verifyToken = require('../middlewares/authMiddleware.js');
+
+// Create upload instance for profile images
+const upload = getUploader('profiles');
 
 
 const router = express.Router();
