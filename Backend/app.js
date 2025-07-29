@@ -111,9 +111,33 @@ app.get('/api/setup-database', async (req, res) => {
     }
 });
 
-// Health check endpoint
+// Health check endpoint (without database dependency)
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'OK', message: 'Backend is running', timestamp: new Date().toISOString() });
+    res.json({ 
+        status: 'OK', 
+        message: 'Backend is running', 
+        timestamp: new Date().toISOString(),
+        env: process.env.NODE_ENV,
+        port: process.env.PORT
+    });
+});
+
+// Database health check endpoint
+app.get('/api/health/db', async (req, res) => {
+    try {
+        const result = await db.query('SELECT NOW() AS current_time');
+        res.json({
+            status: 'OK',
+            message: 'Database connection successful',
+            timestamp: result.rows[0].current_time
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'ERROR',
+            message: 'Database connection failed',
+            error: error.message
+        });
+    }
 });
 
 // Test signup endpoint (PostgreSQL compatible)
@@ -160,8 +184,23 @@ app.get('/', async (req, res) => {
     }
 });
 
-const PORT =process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000;
+
+// Test database connection on startup
+async function testDatabaseConnection() {
+    try {
+        const result = await db.query('SELECT NOW() AS current_time');
+        console.log('✅ Database connected successfully at:', result.rows[0].current_time);
+    } catch (error) {
+        console.error('❌ Database connection failed:', error.message);
+        // Don't exit, let the app start anyway
+    }
+}
+
 require('./cron/investmentProcessor');
-server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server is running on port ${PORT}`);
+
+// Start server with error handling
+server.listen(PORT, '0.0.0.0', async () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+    await testDatabaseConnection();
 });

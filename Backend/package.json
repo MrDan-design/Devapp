@@ -5,6 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
+    "start:render": "node start-render.js",
+    "dev": "nodemon app.js",
     "test": "node test_signup_signin.js"
   },
   "keywords": [],
