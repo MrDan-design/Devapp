@@ -5,6 +5,7 @@ require('./config/passport');
 const path = require('path');
 const passport = require('passport');
 require('dotenv').config(); // Load environment variables from .env file
+const { setupDatabase } = require('./config/setupDatabase'); // Add database setup
 
 const http = require('http'); // <-- New
 const { Server } = require('socket.io');
@@ -99,11 +100,27 @@ app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/pending-subscriptions', pendingSubscriptionsRoutes);
 app.use('/api/chat', chatRoutes);
 
+// Database setup endpoint (run once to create tables)
+app.get('/api/setup-database', async (req, res) => {
+    try {
+        const result = await setupDatabase();
+        res.json(result);
+    } catch (error) {
+        console.error('Setup error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'OK', message: 'Backend is running', timestamp: new Date().toISOString() });
+});
+
 // Simple test route to confirm db connection is working
 app.get('/', async (req, res) => {
     try {
-        const [rows] = await db.query('SELECT NOW() AS current_time');
-        res.send(`Wallet app backend is running! Time: ${rows[0].current_time}`);
+        const result = await db.query('SELECT NOW() AS current_time');
+        res.send(`Wallet app backend is running! Time: ${result.rows[0].current_time}`);
     } catch (error) {
         console.error('DB error:', error);
         res.status(500).send('Database connection error');
