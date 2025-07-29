@@ -13,6 +13,12 @@ app.use(cors({
     'http://localhost:5174',
     'https://devapp-lovat.vercel.app',
     'https://devapp-mrdan-design.vercel.app',
+    'https://devapp-bay.vercel.app',
+    // Your production domains
+    'https://tslaxai.io',
+    'https://www.tslaxai.io',
+    'http://www.tslaxai.io',
+    'http://tslaxai.io',
     /\.vercel\.app$/,
     /\.netlify\.app$/
   ],

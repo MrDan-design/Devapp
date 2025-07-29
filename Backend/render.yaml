@@ -1,0 +1,16 @@
+# Render.com Deployment Configuration
+# 
+# Build Command: npm install
+# Start Command: node app.js
+# 
+# Environment Variables (set these in Render dashboard):
+# DB_HOST=<your-render-postgres-host>
+# DB_USER=<your-render-postgres-user>
+# DB_PASSWORD=<your-render-postgres-password>
+# DB_NAME=<your-render-postgres-database>
+# JWT_SECRET=41667d3f76ef579322571709f54753a3f46206584013049ec54424644986e70df581d72df5e452abfff9397760eebf1af7e82f2489f55f79f561185c55fb633f
+# PORT=4000
+# FRONTEND_URL=https://tslaxai.io
+# 
+# Auto-Deploy: Yes
+# Branch: main

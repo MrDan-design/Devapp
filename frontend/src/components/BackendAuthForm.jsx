@@ -33,6 +33,10 @@ export default function BackendAuthForm({ onAuthSuccess }) {
         : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api');
       
       const fullUrl = `${apiBaseUrl}${endpoint}`;
+      console.log('🔍 DEBUG - Current hostname:', window.location.hostname);
+      console.log('🔍 DEBUG - Environment VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);
+      console.log('🔍 DEBUG - Selected apiBaseUrl:', apiBaseUrl);
+      console.log('🔍 DEBUG - Full URL:', fullUrl);
       console.log('API Request:', { 
         url: fullUrl, 
         method: 'POST', 
