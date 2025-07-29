@@ -5,7 +5,7 @@ import "./Home.css";
 import FadeIn from '../../components/FadeIn';
 import PageWrapper from '../../components/PageWrapper';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import lgNow from '../../assets/lg-now.png';
 import Btclg from '../../assets/Bitcoin-Logo.png'
 import Dogelg from '../../assets/Doge-logo.png'
@@ -17,6 +17,23 @@ const Home = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  // Manage body scroll when modal is open
+  useEffect(() => {
+    if (showAuth) {
+      document.body.classList.add('modal-open');
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+    };
+  }, [showAuth]);
 
   const handleSearchDirect = () => {
     if (query.trim() !== "") {
@@ -100,98 +117,174 @@ const Home = () => {
   </div>
 )}
     </div>
-      {/* Auth Modal Overlay */}
+      {/* Auth Modal Overlay - Mobile Optimized */}
       {showAuth && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%)',
-          backdropFilter: 'blur(10px)',
-          zIndex: 9999,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          animation: 'fadeIn 0.3s ease',
-          padding: '10px',
-          overflowY: 'auto'
-        }}>
-          <div style={{ 
-            position: 'relative',
-            width: '100%',
-            maxWidth: '600px',
-            maxHeight: 'calc(100vh - 20px)',
-            overflowY: 'auto',
-            animation: 'slideUp 0.3s ease',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'flex-start',
-            paddingTop: '10px',
-            paddingBottom: '10px'
-          }}>
+        <div className="auth-modal-backdrop">
+          <div className="auth-modal-container">
             <button 
               onClick={() => setShowAuth(false)} 
-              style={{ 
-                position: 'fixed', 
-                top: '15px', 
-                right: '15px', 
-                background: 'rgba(255,255,255,0.2)', 
-                border: 'none', 
-                fontSize: '24px', 
-                cursor: 'pointer', 
-                zIndex: 10001,
-                color: 'white',
-                borderRadius: '50%',
-                width: '40px',
-                height: '40px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backdropFilter: 'blur(10px)',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = 'rgba(255,255,255,0.3)';
-                e.target.style.transform = 'scale(1.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = 'rgba(255,255,255,0.2)';
-                e.target.style.transform = 'scale(1)';
-              }}
+              className="auth-modal-close"
+              aria-label="Close"
             >
               &times;
             </button>
-            <BackendAuthForm onAuthSuccess={() => {
-              setShowAuth(false);
-              // Redirect to dashboard after successful login
-              navigate('/dashboard');
-            }} />
+            <div className="auth-modal-content">
+              <BackendAuthForm onAuthSuccess={() => {
+                setShowAuth(false);
+                navigate('/dashboard');
+              }} />
+            </div>
           </div>
           
           <style>{`
+            .auth-modal-backdrop {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100vw;
+              height: 100vh;
+              background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+              backdrop-filter: blur(15px);
+              -webkit-backdrop-filter: blur(15px);
+              z-index: 9999;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              animation: fadeIn 0.3s ease;
+              padding: 0;
+              overflow-y: auto;
+              -webkit-overflow-scrolling: touch;
+            }
+            
+            .auth-modal-container {
+              position: relative;
+              width: 100%;
+              max-width: 500px;
+              margin: 20px auto;
+              animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+              display: flex;
+              flex-direction: column;
+              min-height: 0;
+              max-height: calc(100vh - 40px);
+              padding: 0 20px;
+            }
+            
+            .auth-modal-close {
+              position: absolute;
+              top: -10px;
+              right: 10px;
+              background: rgba(255, 255, 255, 0.25);
+              border: none;
+              color: white;
+              font-size: 28px;
+              font-weight: 300;
+              cursor: pointer;
+              z-index: 10001;
+              border-radius: 50%;
+              width: 44px;
+              height: 44px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              backdrop-filter: blur(10px);
+              -webkit-backdrop-filter: blur(10px);
+              transition: all 0.3s ease;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+              line-height: 1;
+            }
+            
+            .auth-modal-close:hover {
+              background: rgba(255, 255, 255, 0.35);
+              transform: scale(1.05);
+            }
+            
+            .auth-modal-close:active {
+              transform: scale(0.95);
+            }
+            
+            .auth-modal-content {
+              flex: 1;
+              overflow-y: auto;
+              -webkit-overflow-scrolling: touch;
+              padding-top: 20px;
+            }
+            
             @keyframes fadeIn {
-              0% { opacity: 0; }
-              100% { opacity: 1; }
+              0% { 
+                opacity: 0;
+                backdrop-filter: blur(0px);
+                -webkit-backdrop-filter: blur(0px);
+              }
+              100% { 
+                opacity: 1;
+                backdrop-filter: blur(15px);
+                -webkit-backdrop-filter: blur(15px);
+              }
             }
             
             @keyframes slideUp {
-              0% { opacity: 0; transform: translateY(50px); }
-              100% { opacity: 1; transform: translateY(0); }
+              0% { 
+                opacity: 0; 
+                transform: translateY(60px) scale(0.95);
+              }
+              100% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+              }
             }
             
+            /* Mobile Optimizations */
             @media (max-width: 768px) {
-              .auth-modal-container {
-                padding: 5px !important;
-                margin: 5px !important;
+              .auth-modal-backdrop {
+                align-items: flex-start;
+                padding: 0;
               }
               
-              /* Make modal scrollable on mobile */
-              .auth-modal-overlay {
-                align-items: flex-start !important;
-                padding: 5px !important;
+              .auth-modal-container {
+                max-width: 100%;
+                margin: 0;
+                padding: 10px;
+                min-height: 100vh;
+                max-height: 100vh;
+                justify-content: flex-start;
+                padding-top: 60px;
               }
+              
+              .auth-modal-close {
+                top: 15px;
+                right: 15px;
+                width: 48px;
+                height: 48px;
+                font-size: 30px;
+              }
+              
+              .auth-modal-content {
+                padding-top: 0;
+                padding-bottom: 40px;
+              }
+            }
+            
+            @media (max-width: 480px) {
+              .auth-modal-container {
+                padding: 5px;
+                padding-top: 70px;
+              }
+              
+              .auth-modal-close {
+                top: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 32px;
+              }
+            }
+            
+            /* Prevent body scroll when modal is open */
+            body.modal-open {
+              overflow: hidden;
+              position: fixed;
+              width: 100%;
+              height: 100%;
             }
           `}</style>
         </div>

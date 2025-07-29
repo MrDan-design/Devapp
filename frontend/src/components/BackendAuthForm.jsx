@@ -96,7 +96,6 @@ export default function BackendAuthForm({ onAuthSuccess }) {
 
   return (
     <div className="auth-form-container">
-      <div className="auth-form-inner">
         {/* Header */}
         <div className="auth-form-header">
           <h2 className="auth-form-title">
@@ -245,7 +244,6 @@ export default function BackendAuthForm({ onAuthSuccess }) {
             {isLogin ? "Don't have an account? Create one" : "Already have an account? Sign in"}
           </button>
         </div>
-      </div>
     </div>
   );
 }
