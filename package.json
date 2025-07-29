@@ -1,14 +1,14 @@
 {
   "name": "devapp",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "DevApp - Trading Platform",
+  "main": "frontend/src/main.jsx",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "cd frontend && npm install && npm run build",
+    "dev": "cd frontend && npm run dev",
+    "preview": "cd frontend && npm run preview"
   },
-  "keywords": [],
+  "keywords": ["react", "vite", "trading", "platform"],
   "author": "",
   "license": "ISC",
   "dependencies": {
