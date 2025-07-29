@@ -60,6 +60,7 @@ const withdrawalRoutes = require('./routes/withdrawalRoutes');
 const subscriptionRoutes = require('./routes/subscriptionRoutes');
 const pendingSubscriptionsRoutes = require('./routes/pendingSubscriptionsRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const setupRoutes = require('./routes/setupRoutes');
 
 app.use(cors({
   origin: [
@@ -99,6 +100,7 @@ app.use('/api/withdrawals', withdrawalRoutes)
 app.use('/api/subscriptions', subscriptionRoutes);
 app.use('/api/pending-subscriptions', pendingSubscriptionsRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/setup', setupRoutes);
 
 // Database setup endpoint (run once to create tables)
 app.get('/api/setup-database', async (req, res) => {
