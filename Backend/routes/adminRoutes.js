@@ -10,17 +10,17 @@ const makeURL = (req, filename) =>
   filename ? `${req.protocol}://${req.get('host')}/uploads/giftcards/${filename}` : null;
 
 router.get("/users", async (req, res) => {
-  const [users] = await db.query("SELECT id, fullname, email, balance, is_admin, created_at FROM users");
-  res.json(users);
+  const usersResult = await db.query("SELECT id, fullname, email, balance, is_admin, created_at FROM users");
+  res.json(usersResult.rows);
 });
 
 // Get all pending withdrawal
 router.get('/withdrawals/pending', verifyToken, isAdmin, async (req, res) => {
     try {
-        const [results] = await db.query(
-            'SELECT * FROM withdrawals WHERE status = "pending"'
+        const results = await db.query(
+            'SELECT * FROM withdrawals WHERE status = $1', ['pending']
         );
-        res.status(200).json(results);
+        res.status(200).json(results.rows);
     } catch (err) {
         res.status(500).json({ message: 'Server error'});
     }
@@ -70,8 +70,8 @@ router.post('/withdrawals/approve/:id', verifyToken, isAdmin, async (req, res) =
 
 // see all pending deposits
 router.get('/deposits/pending', verifyToken, isAdmin, async (_req, res) => {
-  const [rows] = await db.query('SELECT * FROM deposits WHERE status="pending"');
-  res.json(rows);
+  const rows = await db.query('SELECT * FROM deposits WHERE status=$1', ['pending']);
+  res.json(rows.rows);
 });
 
 /* ---  approve a specific deposit  --- */
@@ -116,16 +116,16 @@ res.json({ message: 'Deposit approved and balance credited.' });
 
 router.get('/dashboard/stats', verifyToken, isAdmin, async (req, res) => {
   try {
-    const [[users]] = await db.query('SELECT COUNT(*) AS totalUsers FROM users');
-    const [[deposits]] = await db.query('SELECT COUNT(*) AS pendingDeposits FROM deposits WHERE method = "crypto" AND status = "pending"');
-    const [[cards]] = await db.query('SELECT COUNT(*) AS pendingCards FROM deposits WHERE method = "gift_card" AND status = "pending"');
-    const [[withdrawals]] = await db.query('SELECT COUNT(*) AS pendingWithdrawals FROM withdrawals WHERE status = "pending"');
+    const usersResult = await db.query('SELECT COUNT(*) AS totalUsers FROM users');
+    const depositsResult = await db.query('SELECT COUNT(*) AS pendingDeposits FROM deposits WHERE method = $1 AND status = $2', ['crypto', 'pending']);
+    const cardsResult = await db.query('SELECT COUNT(*) AS pendingCards FROM deposits WHERE method = $1 AND status = $2', ['gift_card', 'pending']);
+    const withdrawalsResult = await db.query('SELECT COUNT(*) AS pendingWithdrawals FROM withdrawals WHERE status = $1', ['pending']);
 
     res.json({
-      totalUsers: users.totalUsers,
-      pendingDeposits: deposits.pendingDeposits,
-      pendingCards: cards.pendingCards,
-      pendingWithdrawals: withdrawals.pendingWithdrawals
+      totalUsers: parseInt(usersResult.rows[0].totalusers),
+      pendingDeposits: parseInt(depositsResult.rows[0].pendingdeposits),
+      pendingCards: parseInt(cardsResult.rows[0].pendingcards),
+      pendingWithdrawals: parseInt(withdrawalsResult.rows[0].pendingwithdrawals)
     });
   } catch (err) {
     console.error('Dashboard stats error:', err);
