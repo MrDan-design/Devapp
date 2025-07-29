@@ -1,45 +1,24 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node",
-      "config": {
-        "maxDuration": 30
-      }
-    },
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist",
-        "buildCommand": "npm run build"
-      }
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "framework": "vite",
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 30
     }
-  ],
+  },
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "/api/index.js"
-    },
-    {
-      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))",
-      "dest": "/frontend/dist/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/frontend/dist/index.html"
     }
   ],
   "env": {
-    "JWT_SECRET": "41667d3f76ef579322571709f54753a3f46206584013049ec54424644986e70df581d72df5e452abfff9397760eebf1af7e82f2489f55f79f561185c55fb633f"
-  },
-  "build": {
-    "env": {
-      "VITE_API_BASE_URL": "https://devapp-backend.onrender.com/api",
-      "VITE_OAUTH_BASE_URL": "https://devapp-backend.onrender.com/api",
-      "VITE_SUPABASE_URL": "https://rcvyqtekidnrkhlbygam.supabase.co",
-      "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjdnlxdGVraWRucmtobGJ5Z2FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0MDI0MzcsImV4cCI6MjA2ODk3ODQzN30.9dSzUAz_eG3Pr_-Wjd9I8ZMFLp8Fnw9U9edw3f26BeM"
-    }
+    "JWT_SECRET": "41667d3f76ef579322571709f54753a3f46206584013049ec54424644986e70df581d72df5e452abfff9397760eebf1af7e82f2489f55f79f561185c55fb633f",
+    "VITE_API_BASE_URL": "https://devapp-backend.onrender.com/api",
+    "VITE_OAUTH_BASE_URL": "https://devapp-backend.onrender.com/api",
+    "VITE_SUPABASE_URL": "https://rcvyqtekidnrkhlbygam.supabase.co",
+    "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjdnlxdGVraWRucmtobGJ5Z2FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0MDI0MzcsImV4cCI6MjA2ODk3ODQzN30.9dSzUAz_eG3Pr_-Wjd9I8ZMFLp8Fnw9U9edw3f26BeM"
   }
 }
