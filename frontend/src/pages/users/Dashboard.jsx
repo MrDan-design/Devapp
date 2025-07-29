@@ -46,7 +46,7 @@ const UserDashboard = () => {
         console.log("Dashboard.jsx Authorization header:", authHeader);
 
         const dashboardRes = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/users/balance`,
+          `${import.meta.env.VITE_API_BASE_URL}/users/dashboard`,
           {
             headers: authHeader,
           }
