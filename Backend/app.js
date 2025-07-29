@@ -116,6 +116,39 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'OK', message: 'Backend is running', timestamp: new Date().toISOString() });
 });
 
+// Test signup endpoint (PostgreSQL compatible)
+app.post('/api/test-signup', async (req, res) => {
+    const { fullname, email, password } = req.body;
+    
+    if (!fullname || !email || !password) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
+    
+    try {
+        const bcrypt = require('bcryptjs');
+        
+        // Check if user exists
+        const existingUser = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+        if (existingUser.rows.length > 0) {
+            return res.status(409).json({ message: 'User already exists' });
+        }
+        
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        // Insert new user
+        await db.query(
+            'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3)',
+            [fullname, email, hashedPassword]
+        );
+        
+        res.status(201).json({ message: 'User created successfully' });
+    } catch (error) {
+        console.error('Test signup error:', error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // Simple test route to confirm db connection is working
 app.get('/', async (req, res) => {
     try {
