@@ -3,9 +3,9 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import './BackendAuthForm.css';
 
-export default function BackendAuthForm({ onAuthSuccess }) {
+export default function BackendAuthForm({ onAuthSuccess, initialMode = 'login' }) {
   const { login } = useAuth();
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(initialMode === 'login');
   const [formData, setFormData] = useState({
     fullname: '',
     email: '',

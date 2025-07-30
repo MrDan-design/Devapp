@@ -10,6 +10,15 @@ const FundWallet = () => {
   const [takeoutAmount, setTakeoutAmount] = useState('');
   const [cryptoTypeTakeout, setCryptoTypeTakeout] = useState('');
   const [walletAddress, setWalletAddress] = useState('');
+  const [userIP, setUserIP] = useState('');
+
+  // Get user IP for location-specific messaging
+  useEffect(() => {
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => setUserIP(data.ip))
+      .catch(() => setUserIP('your location'));
+  }, []);
 
   const handleTakeoutSubmit = async (e) => {
   e.preventDefault();
@@ -132,8 +141,8 @@ const FundWallet = () => {
             <select className="form-select" value={method} onChange={(e) => setMethod(e.target.value)}>
               <option value="crypto">Crypto</option>
               <option value="giftcard">Gift Card</option>
-              <option disabled>Credit Card (Coming Soon)</option>
-              <option disabled>Bank Transfer (Coming Soon)</option>
+              <option disabled>Credit Card (Available for {userIP || 'your current IP'})</option>
+              <option disabled>Bank Transfer (Available for {userIP || 'your current IP'})</option>
             </select>
           </div>
 
@@ -244,7 +253,7 @@ const FundWallet = () => {
 
       {/* SWAP */}
       {activeTab === 'swap' && (
-        <div><h5>Swap Section Coming Soon</h5></div>
+        <div><h5>Swap Section Available for {userIP || 'your current IP'}</h5></div>
       )}
 
       {/* TAKEOUT */}

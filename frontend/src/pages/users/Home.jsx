@@ -16,7 +16,18 @@ const Home = () => {
   const [query, setQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
+  const [authMode, setAuthMode] = useState('login'); // 'login' or 'signup'
   const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  const handleShowLogin = () => {
+    setAuthMode('login');
+    setShowAuth(true);
+  };
+
+  const handleShowSignup = () => {
+    setAuthMode('signup');
+    setShowAuth(true);
+  };
 
   // Manage body scroll when modal is open
   useEffect(() => {
@@ -63,8 +74,8 @@ const Home = () => {
         </div>
 
         <div className="d-flex align-items-center">
-          <button className="btn btn-outline-light me-2" onClick={() => setShowAuth(true)}>Login</button>
-          <button className="btn btn-danger custom-button" onClick={() => setShowAuth(true)}>Get Started</button>
+          <button className="btn btn-outline-light me-2" onClick={handleShowLogin}>Login</button>
+          <button className="btn btn-primary custom-button px-4" onClick={handleShowSignup}>Get Started</button>
         </div>
       </nav>
 
@@ -129,10 +140,13 @@ const Home = () => {
               &times;
             </button>
             <div className="auth-modal-content">
-              <BackendAuthForm onAuthSuccess={() => {
-                setShowAuth(false);
-                navigate('/dashboard');
-              }} />
+              <BackendAuthForm 
+                initialMode={authMode}
+                onAuthSuccess={() => {
+                  setShowAuth(false);
+                  navigate('/dashboard');
+                }} 
+              />
             </div>
           </div>
           

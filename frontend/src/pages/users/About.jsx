@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './About.css';
 import elonImage from '../../assets/elon.webp';
@@ -8,10 +8,21 @@ import product1a from '../../assets/product1.jpg';
 import product1b from '../../assets/product2.jpg';
 import product2a from '../../assets/grok.webp';
 import product2b from '../../assets/cybertruck.jpg';
+import ChatWidget from '../../components/ChatWidget';
 
 const About = () => {
   const navigate = useNavigate();
   const [section, setSection] = useState(0); // 0: About Us, 1: Meet the Team, 2: Our Products 1, 3: Our Products 2
+  const [user, setUser] = useState(null);
+
+  // Check if user is logged in to show chat widget
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const userData = JSON.parse(localStorage.getItem("user") || "{}");
+      setUser(userData);
+    }
+  }, []);
 
   const handleNext = () => {
     if (section < 3) setSection(section + 1);
@@ -135,6 +146,9 @@ const About = () => {
 )}
 
       </div>
+      
+      {/* Live Chat Widget - Show only for logged-in users */}
+      {user && <ChatWidget user={user} />}
     </div>
   );
 };
