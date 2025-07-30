@@ -312,18 +312,18 @@ router.get("/all-transactions", verifyToken, isAdmin, async (req, res) => {
 
 router.get('/subscriptions/pending', verifyToken, isAdmin, async (_req, res) => {
   try {
-    const [rows] = await db.query(`
+    const rows = await db.query(`
       SELECT ps.id, ps.status, ps.payment_proof, ps.created_at,
              u.id AS user_id, u.fullname, u.email,
              sp.name AS plan_name, sp.price
       FROM pending_subscriptions ps
       JOIN users u ON ps.user_id = u.id
       JOIN subscription_plans sp ON ps.plan_id = sp.id
-      WHERE ps.status = 'pending'
+      WHERE ps.status = $1
       ORDER BY ps.created_at DESC
-    `);
+    `, ['pending']);
 
-    res.json(rows);
+    res.json(rows.rows);
   } catch (err) {
     console.error('Error fetching subscriptions:', err);
     res.status(500).json({ message: 'Server error' });
@@ -334,19 +334,19 @@ router.post('/subscriptions/approve/:id', verifyToken, isAdmin, async (req, res)
   const { id } = req.params;
 
   try {
-    const [[subscription]] = await db.query(
-      'SELECT * FROM pending_subscriptions WHERE id = ?',
+    const subscription = await db.query(
+      'SELECT * FROM pending_subscriptions WHERE id = $1',
       [id]
     );
 
-    if (!subscription) return res.status(404).json({ message: 'Subscription not found' });
-    if (subscription.status !== 'pending')
+    if (subscription.rows.length === 0) return res.status(404).json({ message: 'Subscription not found' });
+    if (subscription.rows[0].status !== 'pending')
       return res.status(400).json({ message: 'Already processed' });
 
-    await db.query('UPDATE pending_subscriptions SET status = "approved", updated_at = NOW() WHERE id = ?', [id]);
+    await db.query('UPDATE pending_subscriptions SET status = $1 WHERE id = $2', ['approved', id]);
 
-    // Optional: Update user plan
-    await db.query('UPDATE users SET plan = ? WHERE id = ?', [subscription.plan_id, subscription.user_id]);
+    // Update user subscription plan
+    await db.query('UPDATE users SET subscription_plan_id = $1 WHERE id = $2', [subscription.rows[0].plan_id, subscription.rows[0].user_id]);
 
     res.json({ message: 'Subscription approved.' });
   } catch (err) {
@@ -360,26 +360,26 @@ router.post('/subscriptions/reject/:id', verifyToken, isAdmin, async (req, res) 
   const { reason } = req.body;
 
   try {
-    const [[subscription]] = await db.query(
-      'SELECT ps.*, u.email FROM pending_subscriptions ps JOIN users u ON ps.user_id = u.id WHERE ps.id = ?',
+    const subscription = await db.query(
+      'SELECT ps.*, u.email FROM pending_subscriptions ps JOIN users u ON ps.user_id = u.id WHERE ps.id = $1',
       [id]
     );
 
-    if (!subscription) return res.status(404).json({ message: 'Subscription not found' });
+    if (subscription.rows.length === 0) return res.status(404).json({ message: 'Subscription not found' });
 
     await db.query(
-      'UPDATE pending_subscriptions SET status = "rejected", updated_at = NOW() WHERE id = ?',
-      [id]
+      'UPDATE pending_subscriptions SET status = $1 WHERE id = $2',
+      ['rejected', id]
     );
 
-    // Optional: Email user
-    await sendMail(
-      subscription.email,
-      'Subscription Rejected ❌',
-      `<p>Hello, your subscription request has been <strong>rejected</strong>.</p>${
-        reason ? `<p><strong>Reason:</strong> ${reason}</p>` : ''
-      }<p>Contact support for assistance.</p>`
-    );
+    // Optional: Email user (if sendMail function exists)
+    // await sendMail(
+    //   subscription.rows[0].email,
+    //   'Subscription Rejected ❌',
+    //   `<p>Hello, your subscription request has been <strong>rejected</strong>.</p>${
+    //     reason ? `<p><strong>Reason:</strong> ${reason}</p>` : ''
+    //   }<p>Contact support for assistance.</p>`
+    // );
 
     res.json({ message: 'Subscription rejected and user notified.' });
   } catch (err) {

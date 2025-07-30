@@ -4,8 +4,8 @@ const db = require('../config/db');
 
 router.get('/', async (req, res) => {
     try {
-        const [plans] = await db.query('SELECT * FROM subscription_plans');
-        res.json(plans);
+        const plans = await db.query('SELECT * FROM subscription_plans');
+        res.json(plans.rows);
     } catch (err) {
         console.error('Error fetching subscription plan:', err)
         res.status(500).json({ message: 'Server error'})
@@ -22,8 +22,8 @@ router.post('/submit', async (req, res) => {
   try {
     await db.query(
       `INSERT INTO pending_subscriptions (user_id, plan_id, payment_proof, status)
-       VALUES (?, ?, ?, 'pending')`,
-      [userId, planId, paymentProof || null]
+       VALUES ($1, $2, $3, $4)`,
+      [userId, planId, paymentProof || null, 'pending']
     );
 
     res.json({ message: 'Subscription request submitted successfully' });

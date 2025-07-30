@@ -28,7 +28,7 @@ const UpgradePage = () => {
         Authorization: `Bearer ${token}`
       }
     })
-    .then(res => setUserPlan(res.data.plan))
+    .then(res => setUserPlan(res.data.subscription_plan))
     .catch(err => console.error('Failed to fetch user profile:', err.response?.data || err.message));
   } else {
     console.warn('No token found – user might not be logged in');
