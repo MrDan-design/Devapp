@@ -1,8 +1,8 @@
 #root {
-  max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
+  min-height: 100vh;
 }
 
 .logo {
@@ -39,6 +39,21 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Desktop specific styles */
+@media (min-width: 1024px) {
+  #root {
+    padding: 0;
+  }
+  
+  .container-fluid {
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 1400px;
+  }
 }
 
 /* Mobile responsive adjustments */

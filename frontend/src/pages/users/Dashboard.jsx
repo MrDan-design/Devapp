@@ -82,7 +82,7 @@ const UserDashboard = () => {
                 </div>
                 <div className="bg-light rounded px-3 py-2 d-inline-block">
                   <h4 className="text-danger fw-bold mb-0">
-                    {dashboardData.sharesBalance}
+                    {dashboardData.totalShares || 0}
                   </h4>
                 </div>
               </div>
@@ -112,7 +112,7 @@ const UserDashboard = () => {
                 </div>
                 <div className="bg-light rounded px-3 py-2 d-inline-block">
                   <h4 className="text-dark fw-bold mb-0">
-                    ${dashboardData.walletBalance}
+                    ${dashboardData.balance || 0}
                   </h4>
                 </div>
               </div>

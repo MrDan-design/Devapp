@@ -92,19 +92,41 @@ const UserLayout = () => {
     <button
       className="btn d-lg-none"
       onClick={toggleSidebar}
-      style={{ border: "none", background: "transparent" }}
+      style={{ 
+        border: "none", 
+        background: "transparent",
+        fontSize: "1.5rem",
+        color: "#333",
+        minWidth: "44px",
+        minHeight: "44px"
+      }}
+      aria-label="Toggle sidebar"
     >
-      <span className="navbar-toggler-icon">☰</span>
+      ☰
     </button>
   </div>
 </div>
 
       {/* Main Content Area */}
       <div className="d-flex flex-grow-1" style={{ marginTop: "70px" }}>
+        {/* Mobile Overlay */}
+        {sidebarOpen && (
+          <div 
+            className="d-lg-none position-fixed w-100 h-100"
+            style={{
+              top: 0,
+              left: 0,
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              zIndex: 1100
+            }}
+            onClick={toggleSidebar}
+          />
+        )}
+        
         {/* Sidebar */}
         <nav
-          className={`sidebar bg-white border-end ${
-            sidebarOpen ? "sidebar-open" : ""
+          className={`user-sidebar bg-white border-end ${
+            sidebarOpen ? "open" : ""
           }`}
           style={{
             width: sidebarOpen ? "250px" : "70px",

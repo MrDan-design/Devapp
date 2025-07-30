@@ -1,14 +1,42 @@
+/* Desktop-First UserLayout Design */
+
+.user-layout-container {
+  display: flex;
+  min-height: 100vh;
+}
+
 .user-sidebar {
-  width: 250px;
+  width: 280px;
   height: calc(100vh - 60px);
   position: fixed;
   top: 60px;
   left: 0;
-  background-color: white;
-  border-right: 1px solid #ddd;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-right: 1px solid #e0e0e0;
   overflow-y: auto;
   z-index: 1000;
-  padding: 1rem;
+  padding: 1.5rem;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-sidebar .nav-link {
+  padding: 1rem 1.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-sidebar .nav-link:hover {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  transform: translateX(5px);
 }
 
 .top-navbar {
@@ -17,24 +45,39 @@
   left: 0;
   right: 0;
   height: 60px;
-  background-color: white;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   z-index: 1100;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.main-content {
+  margin-left: 280px;
+  margin-top: 60px;
+  padding: 2rem;
+  min-height: calc(100vh - 60px);
+  background: #fafbfc;
+  width: calc(100% - 280px);
 }
 
 .active-link {
-  color: red !important;
+  color: #dc3545 !important;
   font-weight: 600;
-  background: none !important;
-  border-left: 3px solid red;
+  background: rgba(220, 53, 69, 0.15) !important;
+  border-left: 4px solid #dc3545;
+  padding-left: calc(1.5rem - 4px) !important;
 }
 
 .inactive-link {
-  color: #000 !important;
+  color: #333 !important;
   text-decoration: none;
 }
 
 .nav-link:hover {
-  color: red;
+  color: #dc3545;
 }
 
 .user-sidebar.open {
@@ -42,14 +85,16 @@
 }
 
 /* Enhanced Mobile-First Responsive Design */
-@media (max-width: 480px) {
+@media (max-width: 991px) {
   .user-sidebar {
     left: -100%;
-    width: 100%;
+    width: 280px;
     height: 100vh;
     top: 0;
     padding: 1rem;
     z-index: 1200;
+    transition: left 0.3s ease-in-out;
+    position: fixed !important;
   }
   
   .user-sidebar.open {
@@ -125,6 +170,20 @@
     font-size: 16px; /* Prevent iOS zoom */
     padding: 0.5rem;
     border-radius: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-sidebar {
+    width: 100%;
+  }
+  
+  .user-sidebar.open {
+    left: 0;
+  }
+  
+  .top-navbar .search-input {
+    max-width: 120px;
   }
 }
 

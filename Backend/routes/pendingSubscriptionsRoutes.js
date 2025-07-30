@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const getUploader = require('../middlewares/upload'); // adjust path as needed
-const { verifyToken } = require('../middlewares/authMiddleware'); // Add authentication
+const verifyToken = require('../middlewares/authMiddleware'); // Add authentication
 
 const upload = getUploader('paymentProofs'); // uploads/paymentProofs
 
