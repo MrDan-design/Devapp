@@ -133,29 +133,29 @@ router.post('/upload-profile-image', verifyToken, upload.single('profileImage'),
   }
 });
 
-// ✅ GET DASHBOARD DATA (PostgreSQL compatible)
+// ✅ GET DASHBOARD DATA (MySQL compatible)
 router.get('/dashboard', verifyToken, async (req, res) => {
   try {
     const userId = req.user.id;
     
-    const investments = await db.query('SELECT shares_given, amount_invested FROM investments WHERE user_id = $1 AND status = $2', [userId, 'active']);
+    const [investments] = await db.query('SELECT shares_given, amount_invested FROM investments WHERE user_id = ? AND status = ?', [userId, 'active']);
     
     let totalShares = 0;
     let totalInvested = 0;
     
-    investments.rows.forEach(investment => {
-      totalShares += parseFloat(investment.shares_given);
-      totalInvested += parseFloat(investment.amount_invested);
+    investments.forEach(investment => {
+      totalShares += parseFloat(investment.shares_given || 0);
+      totalInvested += parseFloat(investment.amount_invested || 0);
     });
     
-    const users = await db.query('SELECT balance, email FROM users WHERE id = $1', [userId]);
-    const user = users.rows[0];
+    const [users] = await db.query('SELECT balance, email FROM users WHERE id = ?', [userId]);
+    const user = users[0];
 
     res.json({
-      balance: user.balance,
+      balance: user?.balance || 0,
       totalShares,
       totalInvested,
-      email: user.email
+      email: user?.email
     });
   } catch (error) {
     console.error('Dashboard error:', error);
