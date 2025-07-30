@@ -58,6 +58,126 @@
   border-left: 20px !important;
 }
 
+/* Mobile-First Responsive Design */
+@media (max-width: 480px) {
+  .home-page {
+    min-height: 100vh;
+    background-attachment: scroll; /* Better performance on mobile */
+  }
+  
+  .navbar {
+    padding: 0.75rem 1rem !important;
+    flex-wrap: nowrap;
+  }
+  
+  .navbar-brand {
+    font-size: 1rem !important;
+  }
+  
+  .navbar-brand img {
+    height: 24px !important;
+  }
+  
+  /* Mobile buttons */
+  .btn-outline-light {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    min-height: 44px;
+  }
+  
+  .custom-button {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
+    min-height: 44px;
+  }
+  
+  /* Hero section mobile */
+  .hero-section {
+    padding: 40px 1rem 60px;
+    text-align: center;
+  }
+  
+  .hero-section h1 {
+    font-size: 1.5rem !important;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Search input mobile */
+  .input-group {
+    max-width: 100% !important;
+    margin-bottom: 1.5rem;
+  }
+  
+  .custom-input {
+    font-size: 16px !important; /* Prevent iOS zoom */
+    padding: 0.75rem !important;
+    min-height: 44px;
+  }
+  
+  .custom-btn {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.875rem !important;
+    min-height: 44px;
+  }
+  
+  /* Token buttons mobile */
+  .token-btn {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.75rem !important;
+    margin: 0.25rem;
+    min-height: 44px;
+    border-radius: 12px;
+  }
+  
+  .token-btn img {
+    width: 16px !important;
+    height: 16px;
+  }
+  
+  .d-flex.gap-3 {
+    gap: 0.5rem !important;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  /* Dropdown menu mobile */
+  .dropdown-overlay {
+    backdrop-filter: blur(8px);
+  }
+  
+  .dropdown-content {
+    top: 70px;
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+  }
+  
+  .dropdown-content ul {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dropdown-content li {
+    margin-bottom: 0.75rem;
+  }
+  
+  .dropdown-content a {
+    font-size: 1rem;
+    padding: 0.75rem;
+    display: block;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+  }
+  
+  .dropdown-content a:hover {
+    background: rgba(102, 126, 234, 0.1);
+  }
+}
+
 @media (max-width: 768px) {
   .home-page h1 {
     font-size: 2rem;

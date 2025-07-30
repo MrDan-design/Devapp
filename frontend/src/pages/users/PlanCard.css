@@ -85,7 +85,82 @@
   font-size: 1.5rem;
 }
 
-/* Mobile responsive styles */
+/* Enhanced Mobile-First Responsive Design */
+@media (max-width: 480px) {
+  .plan-card {
+    width: 100%;
+    max-width: 300px;
+    min-width: auto;
+    padding: 1.25rem;
+    margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .plan-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+  
+  .plan-price {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+  
+  .plan-price span {
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 0.25rem;
+  }
+  
+  .plan-benefits {
+    margin-bottom: 1.5rem;
+  }
+  
+  .plan-benefits li {
+    font-size: 0.875rem;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+  
+  .tick-icon {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+  
+  .select-btn {
+    padding: 1rem;
+    font-size: 0.9rem;
+    min-height: 48px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  .select-btn:hover,
+  .select-btn:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .active-icon {
+    font-size: 1.25rem;
+    top: 12px;
+    right: 12px;
+  }
+  
+  /* Enhanced hover effects for mobile */
+  .plan-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+}
+
 @media (max-width: 768px) {
   .plan-card {
     width: 280px;
@@ -150,5 +225,74 @@
     font-size: 1.25rem;
     top: 8px;
     right: 8px;
+  }
+}
+
+/* Tablet specific styles */
+@media (min-width: 481px) and (max-width: 768px) {
+  .plan-card {
+    width: 260px;
+    padding: 1.25rem;
+  }
+  
+  .plan-title {
+    font-size: 1.1rem;
+  }
+  
+  .plan-price {
+    font-size: 1.4rem;
+  }
+  
+  .plan-benefits li {
+    font-size: 0.9rem;
+  }
+}
+
+/* Large tablet and small desktop */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .plan-card {
+    width: 240px;
+    padding: 1.5rem;
+  }
+  
+  .plan-title {
+    font-size: 1.2rem;
+  }
+  
+  .plan-price {
+    font-size: 1.6rem;
+  }
+}
+
+/* Ensure proper grid layout on different screen sizes */
+@media (max-width: 480px) {
+  .plan-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .plan-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+}
+
+/* Focus and accessibility improvements */
+@media (max-width: 768px) {
+  .plan-card:focus-within {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+  }
+  
+  .select-btn:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
   }
 }

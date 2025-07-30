@@ -195,3 +195,227 @@ html {
   overflow-x: hidden;
   box-sizing: border-box;
 }
+
+/* Enhanced Mobile-First Responsive Design */
+@media (max-width: 480px) {
+  .about-page {
+    height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .top-nav {
+    padding: 0.75rem 1rem !important;
+    height: 60px;
+  }
+  
+  .top-nav img {
+    height: 28px !important;
+    width: auto;
+  }
+  
+  .close-btn {
+    font-size: 1.5rem !important;
+    padding: 0.5rem;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+  }
+  
+  .about-content {
+    padding: 70px 1rem 2rem;
+    height: calc(100vh - 60px);
+  }
+  
+  .about-content h2 {
+    font-size: 1.5rem !important;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .about-flex {
+    flex-direction: column !important;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  
+  .image-container {
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  
+  .elon-img {
+    width: 100% !important;
+    max-width: 280px;
+    height: auto !important;
+    border-radius: 12px;
+  }
+  
+  .about-text-box {
+    background: rgba(0, 0, 0, 0.3) !important;
+    padding: 1.25rem !important;
+    border-radius: 12px;
+    margin: 0;
+    width: 100%;
+  }
+  
+  .about-text {
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    text-align: left;
+  }
+  
+  .product-img {
+    width: 100% !important;
+    max-width: 280px;
+    height: 180px !important;
+    margin: 0 auto 1rem;
+  }
+  
+  .team-img {
+    width: 100% !important;
+    max-width: 200px;
+    height: 160px !important;
+    margin: 0 auto;
+  }
+  
+  .d-flex.flex-column.flex-md-row {
+    flex-direction: column !important;
+    gap: 1rem !important;
+    align-items: center !important;
+  }
+  
+  .d-flex.gap-5 {
+    gap: 1.5rem !important;
+  }
+  
+  .d-flex.gap-3 {
+    gap: 1rem !important;
+  }
+  
+  .d-flex.gap-4 {
+    gap: 1rem !important;
+  }
+  
+  .back {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  h5 {
+    font-size: 1.1rem !important;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* Navigation buttons mobile */
+  .next-btn,
+  .back-btn {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    margin: 0 0.5rem;
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.25rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .d-flex.justify-content-between,
+  .d-flex.justify-content-start {
+    justify-content: center !important;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 0 !important;
+  }
+}
+
+@media (max-width: 768px) and (min-width: 481px) {
+  .about-page {
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  .top-nav {
+    padding: 1rem 1.5rem;
+  }
+  
+  .top-nav img {
+    height: 32px;
+    width: auto;
+  }
+  
+  .close-btn {
+    font-size: 1.75rem;
+    padding: 0.5rem;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .about-content {
+    padding: 80px 1.5rem 3rem;
+  }
+  
+  .about-content h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1.75rem;
+  }
+  
+  .about-flex {
+    flex-direction: column !important;
+    gap: 2rem;
+  }
+  
+  .elon-img {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+  }
+  
+  .about-text-box {
+    padding: 1.5rem !important;
+    margin: 0;
+  }
+  
+  .about-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  
+  .product-img {
+    width: 100% !important;
+    max-width: 320px;
+    height: 200px !important;
+  }
+  
+  .team-img {
+    width: 100% !important;
+    max-width: 250px;
+    height: 180px !important;
+  }
+  
+  .back {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .next-btn,
+  .back-btn {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    margin: 0 0.5rem;
+  }
+}
