@@ -243,7 +243,7 @@ const PORT = process.env.PORT || 4000;
 // Test database connection on startup
 async function testDatabaseConnection() {
     try {
-        const result = await db.query('SELECT NOW() AS current_time');
+        const [result] = await db.query('SELECT NOW() AS current_time');
         console.log('✅ Database connected successfully at:', result[0].current_time);
     } catch (error) {
         console.error('❌ Database connection failed:', error.message);
