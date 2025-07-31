@@ -146,14 +146,18 @@ router.post('/login', async (req, res) => {
 router.get('/profile', verifyToken, async (req, res) => {
   try {
     const userId = req.user.id;
-    const [users] = await db.query('SELECT fullname, profile_image, subscription_plan_id FROM users WHERE id = ?', [userId]);
+    const [users] = await db.query(`
+      SELECT fullname, email, country, currency, next_of_kin, next_of_kin_number, 
+             profile_image, subscription_plan_id 
+      FROM users WHERE id = ?
+    `, [userId]);
     
     if (users.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
     
     const user = users[0];
-    let subscriptionName = null;
+    let subscriptionName = 'Free';
     
     if (user.subscription_plan_id) {
       const [plans] = await db.query('SELECT name FROM subscription_plans WHERE id = ?', [user.subscription_plan_id]);
@@ -164,11 +168,124 @@ router.get('/profile', verifyToken, async (req, res) => {
 
     res.json({
       fullname: user.fullname,
+      email: user.email,
+      country: user.country,
+      currency: user.currency,
+      phone: '', // Not in database yet
+      next_of_kin: user.next_of_kin,
+      next_of_kin_phone: user.next_of_kin_number,
       profile_image: user.profile_image,
       subscription_plan: subscriptionName
     });
   } catch (error) {
     console.error('Profile error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// ✅ UPDATE USER PROFILE (MySQL compatible)
+router.put('/profile', verifyToken, upload.single('profile_image'), async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { fullname, email, country, currency, nextOfKin, nextOfKinPhone } = req.body;
+    
+    // Check if email is already taken by another user
+    if (email) {
+      const [existingUsers] = await db.query('SELECT id FROM users WHERE email = ? AND id != ?', [email, userId]);
+      if (existingUsers.length > 0) {
+        return res.status(400).json({ message: 'Email already in use' });
+      }
+    }
+    
+    // Build update query dynamically
+    let updateFields = [];
+    let updateValues = [];
+    
+    if (fullname) {
+      updateFields.push('fullname = ?');
+      updateValues.push(fullname);
+    }
+    if (email) {
+      updateFields.push('email = ?');
+      updateValues.push(email);
+    }
+    if (country) {
+      updateFields.push('country = ?');
+      updateValues.push(country);
+    }
+    if (currency) {
+      updateFields.push('currency = ?');
+      updateValues.push(currency);
+    }
+    if (nextOfKin) {
+      updateFields.push('next_of_kin = ?');
+      updateValues.push(nextOfKin);
+    }
+    if (nextOfKinPhone) {
+      updateFields.push('next_of_kin_number = ?');
+      updateValues.push(nextOfKinPhone);
+    }
+    
+    // Handle profile image upload
+    if (req.file) {
+      const imageUrl = `/uploads/profiles/${req.file.filename}`;
+      updateFields.push('profile_image = ?');
+      updateValues.push(imageUrl);
+    }
+    
+    if (updateFields.length === 0) {
+      return res.status(400).json({ message: 'No fields to update' });
+    }
+    
+    updateValues.push(userId);
+    const updateQuery = `UPDATE users SET ${updateFields.join(', ')} WHERE id = ?`;
+    
+    await db.query(updateQuery, updateValues);
+    
+    res.json({ 
+      success: true, 
+      message: 'Profile updated successfully' 
+    });
+  } catch (error) {
+    console.error('Profile update error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// ✅ CHANGE PASSWORD (MySQL compatible)
+router.put('/change-password', verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { currentPassword, newPassword } = req.body;
+    
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'Current and new passwords are required' });
+    }
+    
+    // Get current user
+    const [users] = await db.query('SELECT password FROM users WHERE id = ?', [userId]);
+    if (users.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Verify current password
+    const isValidPassword = await bcrypt.compare(currentPassword, users[0].password);
+    if (!isValidPassword) {
+      return res.status(400).json({ message: 'Current password is incorrect' });
+    }
+    
+    // Hash new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    
+    // Update password
+    await db.query('UPDATE users SET password = ? WHERE id = ?', [hashedNewPassword, userId]);
+    
+    res.json({ 
+      success: true, 
+      message: 'Password updated successfully' 
+    });
+  } catch (error) {
+    console.error('Password change error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

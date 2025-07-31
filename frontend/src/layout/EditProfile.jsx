@@ -27,8 +27,17 @@ const EditProfile = () => {
   });
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      navigate('/');
+      return;
+    }
+
     axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/users/profile`)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/users/profile`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       .then((res) => {
         const data = res.data;
         setFormData({
@@ -41,10 +50,15 @@ const EditProfile = () => {
           nextOfKinPhone: data.next_of_kin_phone || "",
           subscriptionPlan: data.subscription_plan || "Free",
         });
-        setPreviewImage(data.profile_image_url || null);
+        setPreviewImage(data.profile_image || null);
       })
-      .catch((err) => console.error("Failed to load user profile:", err));
-  }, []);
+      .catch((err) => {
+        console.error("Failed to load user profile:", err);
+        if (err.response?.status === 401) {
+          navigate('/');
+        }
+      });
+  }, [navigate]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -64,6 +78,14 @@ const EditProfile = () => {
 
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
+    
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      navigate('/');
+      return;
+    }
+
     const submitData = new FormData();
     for (let key in formData) {
       submitData.append(key, formData[key]);
@@ -74,12 +96,19 @@ const EditProfile = () => {
 
     try {
       await axios.put(`${import.meta.env.VITE_API_BASE_URL}/users/profile`, submitData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { 
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`
+        },
       });
       alert("Profile updated!");
     } catch (error) {
       console.error(error);
-      alert("Failed to update profile.");
+      if (error.response?.status === 401) {
+        navigate('/');
+      } else {
+        alert("Failed to update profile.");
+      }
     }
   };
 
@@ -89,10 +118,19 @@ const EditProfile = () => {
       return alert("Passwords do not match");
     }
 
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      navigate('/');
+      return;
+    }
+
     try {
       await axios.put(`${import.meta.env.VITE_API_BASE_URL}/users/change-password`, {
         currentPassword: passwords.currentPassword,
         newPassword: passwords.newPassword,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       alert("Password updated!");
       setPasswords({
@@ -102,7 +140,11 @@ const EditProfile = () => {
       });
     } catch (err) {
       console.error(err);
-      alert("Password update failed.");
+      if (err.response?.status === 401) {
+        navigate('/');
+      } else {
+        alert("Password update failed.");
+      }
     }
   };
 
