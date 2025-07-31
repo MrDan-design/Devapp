@@ -56,20 +56,16 @@ if (isRender) {
 
 // Database abstraction layer - converts between PostgreSQL and MySQL syntax
 const dbQuery = async (sql, params = []) => {
-    console.log('🔍 SQL Query:', sql, 'Params:', params);
-    
     if (isRender) {
         // PostgreSQL - use $1, $2, $3 syntax and return .rows
         const pgSql = sql.replace(/\?/g, (match, offset) => {
             const paramIndex = sql.substring(0, offset).split('?').length;
             return `$${paramIndex}`;
         });
-        console.log('🐘 PostgreSQL Query:', pgSql);
         const result = await db.query(pgSql, params);
         return [result.rows]; // Return in MySQL format [rows]
     } else {
         // MySQL - use ? syntax and return [rows]
-        console.log('🐬 MySQL Query:', sql);
         return await db.query(sql, params);
     }
 };

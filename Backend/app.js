@@ -127,7 +127,7 @@ app.get('/api/health', (req, res) => {
 // Database health check endpoint
 app.get('/api/health/db', async (req, res) => {
     try {
-        const [result] = await db.query('SELECT NOW() AS current_time');
+        const [result] = await db.query('SELECT NOW() AS `current_time`');
         res.json({
             status: 'OK',
             message: 'Database connection successful',
@@ -178,7 +178,7 @@ app.post('/api/test-signup', async (req, res) => {
 // Simple test route to confirm db connection is working
 app.get('/', async (req, res) => {
     try {
-        const result = await db.query('SELECT NOW() AS current_time');
+        const [result] = await db.query('SELECT NOW() AS `current_time`');
         res.send(`Wallet app backend is running! Time: ${result[0].current_time}`);
     } catch (error) {
         console.error('DB error:', error);
@@ -243,7 +243,7 @@ const PORT = process.env.PORT || 4000;
 // Test database connection on startup
 async function testDatabaseConnection() {
     try {
-        const [result] = await db.query('SELECT NOW() AS current_time');
+        const [result] = await db.query('SELECT NOW() AS `current_time`');
         console.log('✅ Database connected successfully at:', result[0].current_time);
     } catch (error) {
         console.error('❌ Database connection failed:', error.message);
@@ -256,5 +256,5 @@ require('./cron/investmentProcessor');
 // Start server with error handling
 server.listen(PORT, '0.0.0.0', async () => {
     console.log(`🚀 Server is running on port ${PORT}`);
-    await testDatabaseConnection();
+    // await testDatabaseConnection(); // Temporarily disabled
 });
