@@ -1,6 +1,5 @@
-CREATE DATABASE IF NOT EXISTS devapp;
-
-USE devapp;
+-- MySQL Schema for devapp database
+-- This file should be executed after connecting to the devapp database
 
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
