@@ -48,7 +48,7 @@ router.post('/', verifyToken, async (req, res)=> {
 
 
     //5 Transaction: debit + insert investment
-    const conn = await db.getConnection();
+    const conn = await db.rawConnection.getConnection();
     try {
         await conn.beginTransaction();
 
@@ -61,7 +61,7 @@ router.post('/', verifyToken, async (req, res)=> {
             `INSERT INTO investments
             (user_id, category_id, amount_invested, shares_given, duration, roi_percent, end_date)
             VALUES (?,?,?,?,?,?, DATE_ADD(NOW(), INTERVAL ? DAY))`,
-            [userId, category_id, amount, shares, duration, days]
+            [userId, category_id, amount, shares, duration, roiPercent, days]
         );
 
         await conn.commit();

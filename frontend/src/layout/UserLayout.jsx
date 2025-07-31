@@ -14,7 +14,7 @@ const navLinks = [
   { name: "Dashboard", path: "/dashboard", icon: <FaTachometerAlt /> },
   { name: "Portfolio", path: "/portfolio", icon: <FaChartLine /> },
   { name: "Transactions", path: "/transactions", icon: <FaMoneyCheckAlt /> },
-  { name: "Wallet", path: "/wallet", icon: <FaWallet /> },
+  { name: "Fund Wallet", path: "/fundwallet", icon: <FaWallet /> },
   { name: "Investment", path: "/invest", icon: <FaExchangeAlt /> },
 ];
 

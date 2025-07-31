@@ -25,22 +25,23 @@ const Transactions = () => {
 
   useEffect(() => {
     const fetchTx = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/transactions/history`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/transactions/history`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-    const data = res.data;
-    // Ensure it's always an array
-    setTransactions(Array.isArray(data) ? data : []);
-  } catch (err) {
-    console.error("Transaction fetch failed", err);
-    setTransactions([]); // fallback to empty array on error
-  } finally {
-    setLoading(false);
-  }
-};
+        const data = res.data;
+        // Handle the API response structure { page, limit, results }
+        const txData = data.results || data || [];
+        setTransactions(Array.isArray(txData) ? txData : []);
+      } catch (err) {
+        console.error("Transaction fetch failed", err);
+        setTransactions([]); // fallback to empty array on error
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchTx();
   }, []);
@@ -68,10 +69,10 @@ const Transactions = () => {
               <tbody>
                 {transactions.map((tx, idx) => (
                   <tr key={idx}>
-                    <td>{new Date(tx.date).toLocaleDateString()}</td>
+                    <td>{new Date(tx.created_at).toLocaleDateString()}</td>
                     <td className="d-flex align-items-center">
-                      {getTxIcon(tx.type)}
-                      <span className="text-capitalize">{tx.type}</span>
+                      {getTxIcon(tx.label)}
+                      <span className="text-capitalize">{tx.label}</span>
                     </td>
                     <td className="fw-semibold text-success">${tx.amount}</td>
                     <td>
