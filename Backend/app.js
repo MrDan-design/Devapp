@@ -114,6 +114,40 @@ app.get('/api/setup-database', async (req, res) => {
 });
 
 // Health check endpoint (without database dependency)
+// Debug endpoint for Render
+app.get('/api/debug', async (req, res) => {
+    try {
+        const env = {
+            isRender: !!process.env.DATABASE_URL,
+            hasJWT: !!process.env.JWT_SECRET,
+            nodeEnv: process.env.NODE_ENV,
+            port: process.env.PORT
+        };
+        
+        // Test a simple database query
+        const [result] = await db.query('SELECT NOW() AS now_time');
+        
+        res.json({
+            status: 'OK',
+            environment: env,
+            database: {
+                connected: true,
+                timestamp: result[0].now_time
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'ERROR',
+            environment: {
+                isRender: !!process.env.DATABASE_URL,
+                hasJWT: !!process.env.JWT_SECRET
+            },
+            error: error.message,
+            stack: error.stack
+        });
+    }
+});
+
 app.get('/api/health', (req, res) => {
     res.json({ 
         status: 'OK', 
@@ -127,11 +161,11 @@ app.get('/api/health', (req, res) => {
 // Database health check endpoint
 app.get('/api/health/db', async (req, res) => {
     try {
-        const [result] = await db.query('SELECT NOW() AS `current_time`');
+        const [result] = await db.query('SELECT NOW() AS now_time');
         res.json({
             status: 'OK',
             message: 'Database connection successful',
-            timestamp: result[0].current_time
+            timestamp: result[0].now_time
         });
     } catch (error) {
         res.status(500).json({
@@ -178,8 +212,8 @@ app.post('/api/test-signup', async (req, res) => {
 // Simple test route to confirm db connection is working
 app.get('/', async (req, res) => {
     try {
-        const [result] = await db.query('SELECT NOW() AS `current_time`');
-        res.send(`Wallet app backend is running! Time: ${result[0].current_time}`);
+        const [result] = await db.query('SELECT NOW() AS now_time');
+        res.send(`Wallet app backend is running! Time: ${result[0].now_time}`);
     } catch (error) {
         console.error('DB error:', error);
         res.status(500).send('Database connection error');
@@ -243,8 +277,8 @@ const PORT = process.env.PORT || 4000;
 // Test database connection on startup
 async function testDatabaseConnection() {
     try {
-        const [result] = await db.query('SELECT NOW() AS `current_time`');
-        console.log('✅ Database connected successfully at:', result[0].current_time);
+        const [result] = await db.query('SELECT NOW() AS now_time');
+        console.log('✅ Database connected successfully at:', result[0].now_time);
     } catch (error) {
         console.error('❌ Database connection failed:', error.message);
         // Don't exit, let the app start anyway

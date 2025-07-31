@@ -58,10 +58,17 @@ if (isRender) {
 const dbQuery = async (sql, params = []) => {
     if (isRender) {
         // PostgreSQL - use $1, $2, $3 syntax and return .rows
-        const pgSql = sql.replace(/\?/g, (match, offset) => {
-            const paramIndex = sql.substring(0, offset).split('?').length;
-            return `$${paramIndex}`;
-        });
+        let pgSql = sql;
+        let paramIndex = 1;
+        
+        // Replace each ? with $1, $2, $3, etc.
+        pgSql = pgSql.replace(/\?/g, () => `$${paramIndex++}`);
+        
+        // Handle MySQL backtick identifiers - convert to PostgreSQL double quotes
+        pgSql = pgSql.replace(/`([^`]+)`/g, '"$1"');
+        
+        console.log('🐘 PostgreSQL Query:', pgSql, 'Params:', params);
+        
         const result = await db.query(pgSql, params);
         return [result.rows]; // Return in MySQL format [rows]
     } else {

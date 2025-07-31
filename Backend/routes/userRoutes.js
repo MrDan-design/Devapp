@@ -42,31 +42,44 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// ✅ LOGIN (MySQL compatible)
+// ✅ LOGIN (MySQL/PostgreSQL compatible)
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
+
+  console.log('🔍 Login attempt for:', email);
 
   if (!email || !password) {
     return res.status(400).json({ message: 'Email and password are required' });
   }
 
   try {
+    console.log('🔍 Querying database for user:', email);
     const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    console.log('🔍 Database query result:', users.length, 'users found');
+    
     if (users.length === 0) {
+      console.log('❌ No user found with email:', email);
       return res.status(401).json({ message: 'Invalid email or password' });
     }
     const user = users[0];
+    console.log('✅ User found:', user.id, user.email);
 
+    console.log('🔍 Comparing password...');
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('🔍 Password match:', isMatch);
+    
     if (!isMatch) {
+      console.log('❌ Password mismatch for user:', email);
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
+    console.log('🔍 Creating JWT token...');
     const token = jwt.sign({
       id: user.id,
       email: user.email,
       is_admin: user.is_admin
     }, JWT_SECRET, { expiresIn: '7d' });
+    console.log('✅ JWT token created successfully');
 
     res.status(200).json({
       token,
@@ -79,8 +92,9 @@ router.post('/login', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error('❌ Login error:', error.message);
+    console.error('❌ Login error stack:', error.stack);
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 });
 
