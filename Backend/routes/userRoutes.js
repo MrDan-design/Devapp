@@ -1,5 +1,5 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs'); // Use bcryptjs for better compatibility
 const jwt = require('jsonwebtoken');
 const db = require('../config/db.js');
 const getUploader = require('../middlewares/upload.js');
@@ -10,7 +10,13 @@ const upload = getUploader('profiles');
 
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
+
+// Ensure JWT_SECRET is properly loaded
+if (!process.env.JWT_SECRET) {
+    console.error('❌ CRITICAL: JWT_SECRET environment variable is not set!');
+    throw new Error('JWT_SECRET environment variable is required');
+}
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // ✅ SIGNUP (PostgreSQL compatible)
 router.post('/signup', async (req, res) => {
@@ -42,59 +48,97 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// ✅ LOGIN (MySQL/PostgreSQL compatible)
+// ✅ LOGIN (MySQL/PostgreSQL compatible with comprehensive error handling)
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-
-  console.log('🔍 Login attempt for:', email);
-
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' });
-  }
-
   try {
-    console.log('🔍 Querying database for user:', email);
-    const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-    console.log('🔍 Database query result:', users.length, 'users found');
+    const isDev = process.env.NODE_ENV === 'development';
     
-    if (users.length === 0) {
-      console.log('❌ No user found with email:', email);
+    if (isDev) console.log('🔍 Login request received');
+    
+    const { email, password } = req.body;
+
+    // Validation
+    if (!email || !password) {
+      if (isDev) console.log('❌ Missing email or password');
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      if (isDev) console.log('❌ Invalid data types for email or password');
+      return res.status(400).json({ message: 'Email and password must be strings' });
+    }
+
+    if (isDev) console.log('🔍 Attempting login for email:', email);
+
+    // Database query
+    const [users] = await db.query('SELECT id, email, fullname, password, balance, is_admin FROM users WHERE email = ?', [email]);
+    
+    if (!users || users.length === 0) {
+      if (isDev) console.log('❌ No user found with email:', email);
       return res.status(401).json({ message: 'Invalid email or password' });
     }
+    
     const user = users[0];
-    console.log('✅ User found:', user.id, user.email);
+    if (isDev) console.log('✅ User found - ID:', user.id);
 
-    console.log('🔍 Comparing password...');
+    // Password comparison
+    if (!user.password) {
+      if (isDev) console.log('❌ User has no password set');
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log('🔍 Password match:', isMatch);
     
     if (!isMatch) {
-      console.log('❌ Password mismatch for user:', email);
+      if (isDev) console.log('❌ Password mismatch');
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    console.log('🔍 Creating JWT token...');
-    const token = jwt.sign({
+    // JWT creation
+    if (!JWT_SECRET) {
+      console.error('❌ JWT_SECRET is not defined!');
+      return res.status(500).json({ message: 'Server configuration error' });
+    }
+
+    const tokenPayload = {
       id: user.id,
       email: user.email,
-      is_admin: user.is_admin
-    }, JWT_SECRET, { expiresIn: '7d' });
-    console.log('✅ JWT token created successfully');
+      is_admin: user.is_admin || false
+    };
 
-    res.status(200).json({
+    const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '7d' });
+
+    // Success response
+    const responseData = {
       token,
       user: {
         id: user.id,
         fullname: user.fullname,
         email: user.email,
-        balance: user.balance,
-        is_admin: user.is_admin
+        balance: user.balance || 0,
+        is_admin: user.is_admin || false
       }
-    });
+    };
+
+    if (isDev) console.log('✅ Login successful for user:', email);
+    res.status(200).json(responseData);
+
   } catch (error) {
-    console.error('❌ Login error:', error.message);
-    console.error('❌ Login error stack:', error.stack);
-    res.status(500).json({ message: 'Internal server error', error: error.message });
+    console.error('❌ LOGIN ERROR:', error.message);
+    
+    // Only show stack trace in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('❌ Stack:', error.stack);
+      res.status(500).json({ 
+        message: 'Internal server error', 
+        error: error.message,
+        stack: error.stack
+      });
+    } else {
+      res.status(500).json({ 
+        message: 'Internal server error'
+      });
+    }
   }
 });
 

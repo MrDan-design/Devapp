@@ -54,26 +54,57 @@ if (isRender) {
         });
 }
 
-// Database abstraction layer - converts between PostgreSQL and MySQL syntax
+// Database abstraction layer - handles PostgreSQL vs MySQL differences
 const dbQuery = async (sql, params = []) => {
-    if (isRender) {
-        // PostgreSQL - use $1, $2, $3 syntax and return .rows
-        let pgSql = sql;
-        let paramIndex = 1;
-        
-        // Replace each ? with $1, $2, $3, etc.
-        pgSql = pgSql.replace(/\?/g, () => `$${paramIndex++}`);
-        
-        // Handle MySQL backtick identifiers - convert to PostgreSQL double quotes
-        pgSql = pgSql.replace(/`([^`]+)`/g, '"$1"');
-        
-        console.log('🐘 PostgreSQL Query:', pgSql, 'Params:', params);
-        
-        const result = await db.query(pgSql, params);
-        return [result.rows]; // Return in MySQL format [rows]
-    } else {
-        // MySQL - use ? syntax and return [rows]
-        return await db.query(sql, params);
+    try {
+        if (isRender) {
+            // PostgreSQL (Render) - use $1, $2, $3 syntax
+            let pgSql = sql;
+            let paramIndex = 1;
+            
+            // Replace each ? with $1, $2, $3, etc.
+            pgSql = pgSql.replace(/\?/g, () => `$${paramIndex++}`);
+            
+            // Handle MySQL backtick identifiers - convert to PostgreSQL double quotes
+            pgSql = pgSql.replace(/`([^`]+)`/g, '"$1"');
+            
+            if (process.env.NODE_ENV === 'development') {
+                console.log('🐘 PostgreSQL Query:', pgSql, 'Params:', params);
+            }
+            
+            // PostgreSQL returns { rows: [...], rowCount: n }
+            const result = await db.query(pgSql, params);
+            
+            if (process.env.NODE_ENV === 'development') {
+                console.log('🐘 PostgreSQL Result rows:', result.rows?.length || 0);
+            }
+            
+            // Return in consistent format: [rows]
+            return [result.rows || []];
+            
+        } else {
+            // MySQL (Local) - use ? syntax
+            if (process.env.NODE_ENV === 'development') {
+                console.log('🐬 MySQL Query:', sql, 'Params:', params);
+            }
+            
+            // MySQL with mysql2/promise returns [rows, fields]
+            const [rows, fields] = await db.query(sql, params);
+            
+            if (process.env.NODE_ENV === 'development') {
+                console.log('🐬 MySQL Result rows:', rows?.length || 0);
+            }
+            
+            // Return in consistent format: [rows]
+            return [rows || []];
+        }
+    } catch (error) {
+        console.error('❌ Database Query Error:', error.message);
+        if (process.env.NODE_ENV === 'development') {
+            console.error('❌ SQL:', sql);
+            console.error('❌ Params:', params);
+        }
+        throw error;
     }
 };
 

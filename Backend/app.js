@@ -114,39 +114,41 @@ app.get('/api/setup-database', async (req, res) => {
 });
 
 // Health check endpoint (without database dependency)
-// Debug endpoint for Render
-app.get('/api/debug', async (req, res) => {
-    try {
-        const env = {
-            isRender: !!process.env.DATABASE_URL,
-            hasJWT: !!process.env.JWT_SECRET,
-            nodeEnv: process.env.NODE_ENV,
-            port: process.env.PORT
-        };
-        
-        // Test a simple database query
-        const [result] = await db.query('SELECT NOW() AS now_time');
-        
-        res.json({
-            status: 'OK',
-            environment: env,
-            database: {
-                connected: true,
-                timestamp: result[0].now_time
-            }
-        });
-    } catch (error) {
-        res.status(500).json({
-            status: 'ERROR',
-            environment: {
+// Debug endpoint for development only
+if (process.env.NODE_ENV === 'development') {
+    app.get('/api/debug', async (req, res) => {
+        try {
+            const env = {
                 isRender: !!process.env.DATABASE_URL,
-                hasJWT: !!process.env.JWT_SECRET
-            },
-            error: error.message,
-            stack: error.stack
-        });
-    }
-});
+                hasJWT: !!process.env.JWT_SECRET,
+                nodeEnv: process.env.NODE_ENV,
+                port: process.env.PORT
+            };
+            
+            // Test a simple database query
+            const [result] = await db.query('SELECT NOW() AS now_time');
+            
+            res.json({
+                status: 'OK',
+                environment: env,
+                database: {
+                    connected: true,
+                    timestamp: result[0].now_time
+                }
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 'ERROR',
+                environment: {
+                    isRender: !!process.env.DATABASE_URL,
+                    hasJWT: !!process.env.JWT_SECRET
+                },
+                error: error.message,
+                stack: error.stack
+            });
+        }
+    });
+}
 
 app.get('/api/health', (req, res) => {
     res.json({ 
