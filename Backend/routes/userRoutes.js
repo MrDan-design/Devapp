@@ -21,18 +21,18 @@ router.post('/signup', async (req, res) => {
   }
 
   try {
-    // Check if user exists (PostgreSQL syntax)
-    const existingUser = await db.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (existingUser.rows.length > 0) {
+    // Check if user exists (MySQL syntax)
+    const [existingUser] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    if (existingUser.length > 0) {
       return res.status(409).json({ message: 'User already exists' });
     }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert new user (PostgreSQL syntax)
+    // Insert new user (MySQL syntax)
     await db.query(
-      'INSERT INTO users (fullname, email, password, country, currency, next_of_kin, next_of_kin_number) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+      'INSERT INTO users (fullname, email, password, country, currency, next_of_kin, next_of_kin_number) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [fullname, email, hashedPassword, country, currency || 'USD', nextOfKin || null, nextOfKinNumber || null]
     );
     res.status(201).json({ message: 'User created successfully' });
@@ -42,7 +42,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// ✅ LOGIN (PostgreSQL compatible)
+// ✅ LOGIN (MySQL compatible)
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -51,11 +51,11 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    const users = await db.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (users.rows.length === 0) {
+    const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+    if (users.length === 0) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-    const user = users.rows[0];
+    const user = users[0];
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -84,23 +84,23 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// ✅ GET USER PROFILE (PostgreSQL compatible)
+// ✅ GET USER PROFILE (MySQL compatible)
 router.get('/profile', verifyToken, async (req, res) => {
   try {
     const userId = req.user.id;
-    const users = await db.query('SELECT fullname, profile_image, subscription_plan_id FROM users WHERE id = $1', [userId]);
+    const [users] = await db.query('SELECT fullname, profile_image, subscription_plan_id FROM users WHERE id = ?', [userId]);
     
-    if (users.rows.length === 0) {
+    if (users.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
     
-    const user = users.rows[0];
+    const user = users[0];
     let subscriptionName = null;
     
     if (user.subscription_plan_id) {
-      const plans = await db.query('SELECT name FROM subscription_plans WHERE id = $1', [user.subscription_plan_id]);
-      if (plans.rows.length > 0) {
-        subscriptionName = plans.rows[0].name;
+      const [plans] = await db.query('SELECT name FROM subscription_plans WHERE id = ?', [user.subscription_plan_id]);
+      if (plans.length > 0) {
+        subscriptionName = plans[0].name;
       }
     }
 
@@ -115,7 +115,7 @@ router.get('/profile', verifyToken, async (req, res) => {
   }
 });
 
-// ✅ UPLOAD PROFILE IMAGE (PostgreSQL compatible)
+// ✅ UPLOAD PROFILE IMAGE (MySQL compatible)
 router.post('/upload-profile-image', verifyToken, upload.single('profileImage'), async (req, res) => {
   try {
     const userId = req.user.id;
@@ -125,7 +125,7 @@ router.post('/upload-profile-image', verifyToken, upload.single('profileImage'),
       return res.status(400).json({ message: 'No image uploaded' });
     }
 
-    await db.query('UPDATE users SET profile_image = $1 WHERE id = $2', [imageUrl, userId]);
+    await db.query('UPDATE users SET profile_image = ? WHERE id = ?', [imageUrl, userId]);
     res.json({ message: 'Profile image uploaded successfully', imageUrl });
   } catch (error) {
     console.error('Upload error:', error);

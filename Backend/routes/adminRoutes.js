@@ -10,17 +10,17 @@ const makeURL = (req, filename) =>
   filename ? `${req.protocol}://${req.get('host')}/uploads/giftcards/${filename}` : null;
 
 router.get("/users", async (req, res) => {
-  const usersResult = await db.query("SELECT id, fullname, email, balance, is_admin, created_at FROM users");
-  res.json(usersResult.rows);
+  const [usersResult] = await db.query("SELECT id, fullname, email, balance, is_admin, created_at FROM users");
+  res.json(usersResult);
 });
 
 // Get all pending withdrawal
 router.get('/withdrawals/pending', verifyToken, isAdmin, async (req, res) => {
     try {
-        const results = await db.query(
-            'SELECT * FROM withdrawals WHERE status = $1', ['pending']
+        const [results] = await db.query(
+            'SELECT * FROM withdrawals WHERE status = ?', ['pending']
         );
-        res.status(200).json(results.rows);
+        res.status(200).json(results);
     } catch (err) {
         res.status(500).json({ message: 'Server error'});
     }

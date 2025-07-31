@@ -127,11 +127,11 @@ app.get('/api/health', (req, res) => {
 // Database health check endpoint
 app.get('/api/health/db', async (req, res) => {
     try {
-        const result = await db.query('SELECT NOW() AS current_time');
+        const [result] = await db.query('SELECT NOW() AS current_time');
         res.json({
             status: 'OK',
             message: 'Database connection successful',
-            timestamp: result.rows[0].current_time
+            timestamp: result[0].current_time
         });
     } catch (error) {
         res.status(500).json({
@@ -142,7 +142,7 @@ app.get('/api/health/db', async (req, res) => {
     }
 });
 
-// Test signup endpoint (PostgreSQL compatible)
+// Test signup endpoint (MySQL compatible)
 app.post('/api/test-signup', async (req, res) => {
     const { fullname, email, password } = req.body;
     
@@ -154,8 +154,8 @@ app.post('/api/test-signup', async (req, res) => {
         const bcrypt = require('bcryptjs');
         
         // Check if user exists
-        const existingUser = await db.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (existingUser.rows.length > 0) {
+        const [existingUser] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+        if (existingUser.length > 0) {
             return res.status(409).json({ message: 'User already exists' });
         }
         
@@ -164,7 +164,7 @@ app.post('/api/test-signup', async (req, res) => {
         
         // Insert new user
         await db.query(
-            'INSERT INTO users (fullname, email, password) VALUES ($1, $2, $3)',
+            'INSERT INTO users (fullname, email, password) VALUES (?, ?, ?)',
             [fullname, email, hashedPassword]
         );
         
@@ -179,7 +179,7 @@ app.post('/api/test-signup', async (req, res) => {
 app.get('/', async (req, res) => {
     try {
         const result = await db.query('SELECT NOW() AS current_time');
-        res.send(`Wallet app backend is running! Time: ${result.rows[0].current_time}`);
+        res.send(`Wallet app backend is running! Time: ${result[0].current_time}`);
     } catch (error) {
         console.error('DB error:', error);
         res.status(500).send('Database connection error');
@@ -244,7 +244,7 @@ const PORT = process.env.PORT || 4000;
 async function testDatabaseConnection() {
     try {
         const result = await db.query('SELECT NOW() AS current_time');
-        console.log('✅ Database connected successfully at:', result.rows[0].current_time);
+        console.log('✅ Database connected successfully at:', result[0].current_time);
     } catch (error) {
         console.error('❌ Database connection failed:', error.message);
         // Don't exit, let the app start anyway
