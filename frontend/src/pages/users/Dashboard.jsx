@@ -69,150 +69,155 @@ const UserDashboard = () => {
 
   return (
     <PageWrapper>
-      <div className="d-flex min-vh-100 bg-light">
-        <div className="container py-4">
-          {/* === Updated 3 Dashboard Cards === */}
-          <div className="dashboard-cards row g-3 mb-4">
-            {/* Shares Balance */}
-            <div className="col-md-4">
-              <div className="card p-3 border-0 rounded-4 bg-white h-100">
-                <div className="d-flex align-items-center gap-2 mb-2">
-                  <FaChartBar className="text-danger" />
-                  <h6 className="text-muted mb-0">Shares Balance</h6>
-                </div>
-                <div className="bg-light rounded px-3 py-2 d-inline-block">
-                  <h4 className="text-danger fw-bold mb-0">
-                    {dashboardData.totalShares || 0}
-                  </h4>
-                </div>
+      <div className="dashboard-container p-3 p-md-4">
+        {/* === Updated 3 Dashboard Cards === */}
+        <div className="dashboard-cards row g-3 mb-4">
+          {/* Shares Balance */}
+          <div className="col-sm-6 col-lg-4">
+            <div className="card p-3 border-0 rounded-4 bg-white h-100 shadow-sm">
+              <div className="d-flex align-items-center gap-2 mb-2">
+                <FaChartBar className="text-danger" />
+                <h6 className="text-muted mb-0 small">Shares Balance</h6>
               </div>
-            </div>
-
-            {/* Total Invested */}
-            <div className="col-md-4">
-              <div className="card p-3 border-0 rounded-4 bg-white h-100">
-                <div className="d-flex align-items-center gap-2 mb-2">
-                  <FaPiggyBank className="text-success" />
-                  <h6 className="text-muted mb-0">Total Invested</h6>
-                </div>
-                <div className="bg-light rounded px-3 py-2 d-inline-block">
-                  <h4 className="text-success fw-bold mb-0">
-                    ${dashboardData.totalInvested}
-                  </h4>
-                </div>
-              </div>
-            </div>
-
-            {/* User Wallet Balance */}
-            <div className="col-md-4">
-              <div className="card p-3 border-0 rounded-4 bg-white h-100">
-                <div className="d-flex align-items-center gap-2 mb-2">
-                  <FaDollarSign className="text-dark" />
-                  <h6 className="text-muted mb-0">User Balance</h6>
-                </div>
-                <div className="bg-light rounded px-3 py-2 d-inline-block">
-                  <h4 className="text-dark fw-bold mb-0">
-                    ${dashboardData.balance || 0}
-                  </h4>
-                </div>
+              <div className="bg-light rounded px-3 py-2 d-inline-block">
+                <h4 className="text-danger fw-bold mb-0">
+                  {dashboardData.totalShares || 0}
+                </h4>
               </div>
             </div>
           </div>
 
-          {/* Top Stocks */}
-          <div className="mt-4">
-            <div
-              className="bg-dark p-4 rounded-4 mb-4"
-              style={{ marginTop: "2rem" }}
-            >
-              <h5 className="fw-bold mb-3 text-light">Trending</h5>
-              <div className="d-flex flex-wrap gap-3">
-                {topStocks.map((stock, i) => (
-  <a
-    key={i}
-    href={stock.link}
-    target="_blank"
-    rel="noreferrer"
-    className="text-decoration-none"
-  >
-    <div className="d-flex align-items-center gap-2 p-2 px-3 bg-light text-dark rounded shadow-sm" style={{ opacity: 0.95, minWidth: 160 }}>
-      {stock.logo && (
-        <img
-          src={stock.logo}
-          alt={`${stock.symbol} logo`}
-          style={{ width: 32, height: 32, borderRadius: "50%" }}
-        />
-      )}
-      <div>
-        <div className="fw-semibold">{stock.symbol}</div>
-        <div className="small text-muted">${stock.price.toFixed(2)}</div>
-      </div>
-    </div>
-  </a>
-))}
+          {/* Total Invested */}
+          <div className="col-sm-6 col-lg-4">
+            <div className="card p-3 border-0 rounded-4 bg-white h-100 shadow-sm">
+              <div className="d-flex align-items-center gap-2 mb-2">
+                <FaPiggyBank className="text-success" />
+                <h6 className="text-muted mb-0 small">Total Invested</h6>
+              </div>
+              <div className="bg-light rounded px-3 py-2 d-inline-block">
+                <h4 className="text-success fw-bold mb-0">
+                  ${dashboardData.totalInvested || 0}
+                </h4>
               </div>
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="mb-4 d-flex flex-wrap gap-3">
-            <button
-              onClick={() => navigate("/fundwallet?tab=fund")}
-              className="btn btn-primary rounded-pill px-4 d-flex align-items-center gap-2"
-            >
-              <FiCreditCard size={18} /> Fund Wallet
-            </button>
-
-            <button
-              onClick={() => navigate("/fundwallet?tab=swap")}
-              className="btn btn-outline-dark rounded-pill px-4 d-flex align-items-center gap-2"
-            >
-              <FiRepeat size={18} /> Swap
-            </button>
-
-            <button
-              onClick={() => navigate("/fundwallet?tab=takeout")}
-              className="btn btn-outline-danger rounded-pill px-4 d-flex align-items-center gap-2"
-            >
-              <FiUpload size={18} /> Take Out Shares
-            </button>
+          {/* User Wallet Balance */}
+          <div className="col-sm-6 col-lg-4">
+            <div className="card p-3 border-0 rounded-4 bg-white h-100 shadow-sm">
+              <div className="d-flex align-items-center gap-2 mb-2">
+                <FaDollarSign className="text-dark" />
+                <h6 className="text-muted mb-0 small">User Balance</h6>
+              </div>
+              <div className="bg-light rounded px-3 py-2 d-inline-block">
+                <h4 className="text-dark fw-bold mb-0">
+                  ${dashboardData.balance || 0}
+                </h4>
+              </div>
+            </div>
           </div>
+        </div>
 
-          {/* Recent Transactions */}
-          <div className="mt-4">
-            <div className="bg-white p-4 rounded-4">
-              <h5 className="fw-semibold mb-3">Recent Transactions</h5>
-              {dashboardData.transactions?.length > 0 ? (
-                <>
-                  <ul className="list-group rounded-4 border-0">
-                    {dashboardData.transactions.map((tx, idx) => (
-                      <li
-                        key={idx}
-                        className="list-group-item d-flex justify-content-between align-items-center px-0"
-                      >
-                        <div className="d-flex align-items-center">
-                          {getTxIcon(tx.type)}
-                          <span className="fw-medium text-capitalize">
-                            {tx.type}
-                          </span>
-                        </div>
-                        <span className="fw-bold text-success">
-                          ${tx.amount}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="text-end mt-3">
-                    <Link to="/transactions" className="btn btn-link text-primary p-0">
-                      See all transactions →
-                    </Link>
+        {/* Top Stocks */}
+        <div className="mt-4">
+          <div className="bg-dark p-3 p-md-4 rounded-4 mb-4">
+            <h5 className="fw-bold mb-3 text-light">Trending</h5>
+            <div className="d-flex flex-wrap gap-2 gap-md-3">
+              {topStocks.map((stock, i) => (
+                <a
+                  key={i}
+                  href={stock.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-decoration-none"
+                >
+                  <div className="d-flex align-items-center gap-2 p-2 px-3 bg-light text-dark rounded shadow-sm" 
+                       style={{ opacity: 0.95, minWidth: '140px' }}>
+                    {stock.logo && (
+                      <img
+                        src={stock.logo}
+                        alt={`${stock.symbol} logo`}
+                        style={{ width: 28, height: 28, borderRadius: "50%" }}
+                      />
+                    )}
+                    <div>
+                      <div className="fw-semibold small">{stock.symbol}</div>
+                      <div className="small text-muted">${stock.price?.toFixed(2) || '0.00'}</div>
+                    </div>
                   </div>
-                </>
-              ) : (
-                <p className="text-muted">No recent transactions.</p>
-              )}
+                </a>
+              ))}
             </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="mb-4 d-flex flex-wrap gap-2 gap-md-3">
+          <button
+            onClick={() => navigate("/fundwallet?tab=fund")}
+            className="btn btn-primary rounded-pill px-3 px-md-4 d-flex align-items-center gap-2"
+          >
+            <FiCreditCard size={18} /> 
+            <span className="d-none d-sm-inline">Fund Wallet</span>
+            <span className="d-sm-none">Fund</span>
+          </button>
+
+          <button
+            onClick={() => navigate("/fundwallet?tab=swap")}
+            className="btn btn-outline-dark rounded-pill px-3 px-md-4 d-flex align-items-center gap-2"
+          >
+            <FiRepeat size={18} /> 
+            <span className="d-none d-sm-inline">Swap</span>
+            <span className="d-sm-none">Swap</span>
+          </button>
+
+          <button
+            onClick={() => navigate("/fundwallet?tab=takeout")}
+            className="btn btn-outline-danger rounded-pill px-3 px-md-4 d-flex align-items-center gap-2"
+          >
+            <FiUpload size={18} /> 
+            <span className="d-none d-sm-inline">Take Out Shares</span>
+            <span className="d-sm-none">Take Out</span>
+          </button>
+        </div>
+
+        {/* Recent Transactions */}
+        <div className="mt-4">
+          <div className="bg-white p-3 p-md-4 rounded-4 shadow-sm">
+            <h5 className="fw-semibold mb-3">Recent Transactions</h5>
+            {dashboardData.transactions?.length > 0 ? (
+              <>
+                <div className="table-responsive">
+                  <table className="table table-borderless align-middle mb-0">
+                    <tbody>
+                      {dashboardData.transactions.map((tx, idx) => (
+                        <tr key={idx}>
+                          <td className="d-flex align-items-center border-0">
+                            {getTxIcon(tx.type)}
+                            <span className="fw-medium text-capitalize">
+                              {tx.type}
+                            </span>
+                          </td>
+                          <td className="text-end border-0">
+                            <span className="fw-bold text-success">
+                              ${tx.amount}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="text-end mt-3">
+                  <Link to="/transactions" className="btn btn-link text-primary p-0">
+                    See all transactions →
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <p className="text-muted">No recent transactions.</p>
+            )}
           </div>
         </div>
       </div>

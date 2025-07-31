@@ -16,6 +16,7 @@ import UpgradePage from "../pages/users/UpgradePage";
 import CheckoutPage from "../pages/users/CheckoutPage";
 import PagePreview from "../pages/users/PagePreview";
 import ChatWidget from '../components/ChatWidget';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 import AdminLayout from "../layout/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -49,13 +50,13 @@ const AppRouter =() => {
             <Route path="/checkout" element={<CheckoutPage />} />
 
             <Route element={<UserLayout />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/portfolio" element={<Portfolio />} />
-                <Route path="/invest" element={<Invest />} />
-                <Route path="/fundwallet" element={<FundWallet />} />
-                <Route path="/transactions" element={<Transactions />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/profile/edit" element={<EditProfile />} />
+                <Route path="/dashboard" element={<ErrorBoundary><Dashboard /></ErrorBoundary>} />
+                <Route path="/portfolio" element={<ErrorBoundary><Portfolio /></ErrorBoundary>} />
+                <Route path="/invest" element={<ErrorBoundary><Invest /></ErrorBoundary>} />
+                <Route path="/fundwallet" element={<ErrorBoundary><FundWallet /></ErrorBoundary>} />
+                <Route path="/transactions" element={<ErrorBoundary><Transactions /></ErrorBoundary>} />
+                <Route path="/settings" element={<ErrorBoundary><Settings /></ErrorBoundary>} />
+                <Route path="/profile/edit" element={<ErrorBoundary><EditProfile /></ErrorBoundary>} />
             </Route>
 
             {/* Admin Routes */}
