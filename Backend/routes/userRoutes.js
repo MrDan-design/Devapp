@@ -221,4 +221,56 @@ router.get('/dashboard', verifyToken, async (req, res) => {
   }
 });
 
+// 🔍 PRODUCTION DEBUG ENDPOINT - Check environment and database
+router.get('/debug/production', async (req, res) => {
+  try {
+    const debugInfo = {
+      environment: {
+        NODE_ENV: process.env.NODE_ENV,
+        isRender: !!process.env.DATABASE_URL,
+        hasJWT: !!process.env.JWT_SECRET,
+        hasDatabaseUrl: !!process.env.DATABASE_URL,
+        dbType: !!process.env.DATABASE_URL ? 'PostgreSQL' : 'MySQL'
+      },
+      timestamp: new Date().toISOString()
+    };
+
+    // Test database connection
+    try {
+      const [testResult] = await db.query('SELECT 1 as test');
+      debugInfo.database = {
+        connected: true,
+        testQuery: testResult
+      };
+    } catch (dbError) {
+      debugInfo.database = {
+        connected: false,
+        error: dbError.message
+      };
+    }
+
+    // Test users table
+    try {
+      const [userCount] = await db.query('SELECT COUNT(*) as count FROM users LIMIT 1');
+      debugInfo.usersTable = {
+        accessible: true,
+        userCount: userCount[0]?.count || 0
+      };
+    } catch (tableError) {
+      debugInfo.usersTable = {
+        accessible: false,
+        error: tableError.message
+      };
+    }
+
+    res.json(debugInfo);
+  } catch (error) {
+    res.status(500).json({
+      error: 'Debug endpoint failed',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 module.exports = router;
