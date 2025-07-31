@@ -66,7 +66,15 @@ const dbQuery = async (sql, params = []) => {
         return [result.rows]; // Return in MySQL format [rows]
     } else {
         // MySQL - use ? syntax and return [rows]
-        return await db.query(sql, params);
+        // Handle MySQL-specific SQL differences
+        let mysqlSql = sql;
+        
+        // Convert NOW() AS current_time to MySQL format
+        if (sql.includes('SELECT NOW() AS current_time')) {
+            mysqlSql = 'SELECT NOW() AS current_time';
+        }
+        
+        return await db.query(mysqlSql, params);
     }
 };
 
