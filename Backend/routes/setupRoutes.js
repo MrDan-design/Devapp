@@ -1,28 +1,44 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const db = require('../config/db');
 
 const router = express.Router();
 
-// Database setup endpoint (admin only)
+// Database setup endpoint for MySQL (Railway)
 router.post('/setup', async (req, res) => {
   try {
-    console.log('🗃️ Setting up missing database tables...');
+    console.log('� Setting up Railway MySQL database...');
 
-    // Check existing tables
-    const existingTables = await db.query(`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public'
+    // Test connection first
+    const [testResult] = await db.query('SELECT 1 as test');
+    console.log('✅ Database connection successful');
+
+    // Create users table first (needed for foreign keys)
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        fullname VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        country VARCHAR(100),
+        currency VARCHAR(10) DEFAULT 'USD',
+        next_of_kin VARCHAR(255),
+        next_of_kin_number VARCHAR(50),
+        balance DECIMAL(15,2) DEFAULT 0.00,
+        is_admin BOOLEAN DEFAULT FALSE,
+        profile_image VARCHAR(500),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )
     `);
-    
-    console.log('📊 Existing tables:', existingTables.rows.map(row => row.table_name));
+    console.log('✅ Users table created');
 
     // Create deposits table
     await db.query(`
       CREATE TABLE IF NOT EXISTS deposits (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL,
-        method VARCHAR(20) NOT NULL CHECK (method IN ('crypto', 'gift_card')),
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        method VARCHAR(20) NOT NULL,
         crypto_type VARCHAR(20),
         card_value DECIMAL(10, 2),
         amount_usd DECIMAL(10, 2),
@@ -37,13 +53,13 @@ router.post('/setup', async (req, res) => {
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
-    console.log('✅ Created deposits table');
+    console.log('✅ Deposits table created');
 
     // Create withdrawals table
     await db.query(`
       CREATE TABLE IF NOT EXISTS withdrawals (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL,
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
         shares_symbol VARCHAR(10),
         shares_amount DECIMAL(10, 4),
         usd_value DECIMAL(10, 2),
@@ -55,39 +71,24 @@ router.post('/setup', async (req, res) => {
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `);
-    console.log('✅ Created withdrawals table');
+    console.log('✅ Withdrawals table created');
 
     // Create subscription_plans table
     await db.query(`
       CREATE TABLE IF NOT EXISTS subscription_plans (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         price DECIMAL(10, 2) NOT NULL,
         benefits TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
-    console.log('✅ Created subscription_plans table');
-
-    // Create pending_subscriptions table
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS pending_subscriptions (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL,
-        plan_id INTEGER NOT NULL,
-        payment_proof VARCHAR(255),
-        status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (plan_id) REFERENCES subscription_plans(id)
-      )
-    `);
-    console.log('✅ Created pending_subscriptions table');
+    console.log('✅ Subscription plans table created');
 
     // Create investment_categories table
     await db.query(`
       CREATE TABLE IF NOT EXISTS investment_categories (
-        id SERIAL PRIMARY KEY,
+        id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         min_amount DECIMAL(10, 2) NOT NULL,
         min_shares DECIMAL(10, 4) NOT NULL,
@@ -97,83 +98,115 @@ router.post('/setup', async (req, res) => {
         roi_annual DECIMAL(6, 2) DEFAULT 1000.00
       )
     `);
-    console.log('✅ Created investment_categories table');
+    console.log('✅ Investment categories table created');
+
+    // Create pending_subscriptions table
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS pending_subscriptions (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        plan_id INT NOT NULL,
+        payment_proof VARCHAR(255),
+        status VARCHAR(20) DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        FOREIGN KEY (plan_id) REFERENCES subscription_plans(id)
+      )
+    `);
+    console.log('✅ Pending subscriptions table created');
 
     // Create investments table
     await db.query(`
       CREATE TABLE IF NOT EXISTS investments (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER,
-        category_id INTEGER,
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT,
+        category_id INT,
         amount_invested DECIMAL(10, 2),
         shares_given DECIMAL(10, 4),
-        duration VARCHAR(20) CHECK (duration IN ('5days', '1month', '3months', 'annual')),
+        duration VARCHAR(20),
         start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         end_date TIMESTAMP,
-        status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'completed', 'withdrawn')),
+        status VARCHAR(20) DEFAULT 'active',
         roi_percent DECIMAL(5, 2),
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (category_id) REFERENCES investment_categories(id)
       )
     `);
-    console.log('✅ Created investments table');
+    console.log('✅ Investments table created');
+
+    // Create transactions table
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS transactions (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        type ENUM('deposit', 'withdrawal', 'investment', 'profit') NOT NULL,
+        amount DECIMAL(15,2) NOT NULL,
+        status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
+        description TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `);
+    console.log('✅ Transactions table created');
+
+    // Create admin user
+    const adminPassword = await bcrypt.hash('admin123', 10);
+    await db.query(`
+      INSERT IGNORE INTO users (fullname, email, password, balance, is_admin) 
+      VALUES (?, ?, ?, ?, ?)
+    `, ['Admin User', 'teslawallet.tco@gmail.com', adminPassword, 10000.00, true]);
+    console.log('✅ Admin user created');
 
     // Insert subscription plans
     await db.query(`
-      INSERT INTO subscription_plans (name, price, benefits) VALUES
+      INSERT IGNORE INTO subscription_plans (name, price, benefits) VALUES
       ('Megapack Momentum', 7155.99, 'No withdrawal limit, Account on max security, VVIP granted, Cyber truck auctioning, Meet and Greet with the team'),
       ('Xploration Zenith', 2820.00, 'No withdrawal limit, Account on max security, VVIP granted, Cyber truck auctioning, Meet and Greet with the team'),
       ('Hyperloop Horizon', 1250.00, 'No withdrawal limit, Account on max security, VVIP granted, Cyber truck auctioning'),
       ('Falcon Flight', 450.00, 'No withdrawal limit, Account on max security, VVIP granted'),
       ('Boring Blueprint', 180.55, 'Withdrawal limit, Account on max security')
-      ON CONFLICT DO NOTHING
     `);
-    console.log('✅ Inserted subscription plans');
+    console.log('✅ Subscription plans inserted');
 
     // Insert investment categories
     await db.query(`
-      INSERT INTO investment_categories (name, min_amount, min_shares, roi_5days, roi_1month, roi_3months, roi_annual) VALUES
+      INSERT IGNORE INTO investment_categories (name, min_amount, min_shares, roi_5days, roi_1month, roi_3months, roi_annual) VALUES
       ('Small Investors', 100.00, 0.2000, 10.00, 40.00, 300.00, 1000.00),
       ('XAI shares', 250.00, 4.0000, 10.00, 40.00, 300.00, 1000.00),
       ('Model 3 Shares', 2000.00, 20.0000, 10.00, 40.00, 300.00, 1000.00),
       ('Venture Shares', 10000.00, 42.0000, 10.00, 40.00, 300.00, 1000.00),
       ('Space Shares', 65000.00, 185.0000, 10.00, 40.00, 300.00, 1000.00)
-      ON CONFLICT DO NOTHING
     `);
-    console.log('✅ Inserted investment categories');
+    console.log('✅ Investment categories inserted');
 
-    // Check final table count
-    const finalTables = await db.query(`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public'
-      ORDER BY table_name
-    `);
+    // Get final stats
+    const [userCount] = await db.query('SELECT COUNT(*) as count FROM users');
+    const [planCount] = await db.query('SELECT COUNT(*) as count FROM subscription_plans');
+    const [categoryCount] = await db.query('SELECT COUNT(*) as count FROM investment_categories');
     
-    console.log('🎉 Database setup complete!');
-    console.log('📊 Final tables:', finalTables.rows.map(row => row.table_name));
-    
-    // Test queries to make sure everything works
-    const userCount = await db.query('SELECT COUNT(*) as count FROM users');
-    const depositCount = await db.query('SELECT COUNT(*) as count FROM deposits');
-    const planCount = await db.query('SELECT COUNT(*) as count FROM subscription_plans');
+    console.log('🎉 Railway MySQL database setup complete!');
     
     res.json({
       success: true,
-      message: 'Database tables set up successfully',
-      tables: finalTables.rows.map(row => row.table_name),
+      message: 'Railway MySQL database setup completed successfully',
+      database: 'Railway MySQL',
+      tables_created: [
+        'users', 'deposits', 'withdrawals', 'subscription_plans', 
+        'pending_subscriptions', 'investment_categories', 'investments', 'transactions'
+      ],
       stats: {
-        users: userCount.rows[0].count,
-        deposits: depositCount.rows[0].count,
-        subscription_plans: planCount.rows[0].count
-      }
+        users: userCount[0].count,
+        subscription_plans: planCount[0].count,
+        investment_categories: categoryCount[0].count
+      },
+      admin_user: 'teslawallet.tco@gmail.com'
     });
 
   } catch (error) {
     console.error('❌ Database setup error:', error);
     res.status(500).json({ 
       success: false, 
-      message: 'Database setup failed', 
+      message: 'Railway MySQL database setup failed', 
       error: error.message 
     });
   }
