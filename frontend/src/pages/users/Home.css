@@ -76,7 +76,7 @@
 /* Hamburger Button */
 .navbar .btn-outline-light:first-child {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: none;
   color: white;
   font-size: 14px;
   padding: 4px 6px;
@@ -93,7 +93,7 @@
 
 .navbar .btn-outline-light:first-child:hover {
   background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
+  border: none;
 }
 
 /* Brand/Logo */
@@ -125,7 +125,7 @@
 /* Auth Buttons */
 .navbar .btn-outline-light:not(:first-child) {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: none;
   color: white;
   font-size: 10px;
   font-weight: 500;
@@ -140,7 +140,7 @@
 
 .navbar .btn-outline-light:not(:first-child):hover {
   background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
+  border: none;
 }
 
 .navbar .custom-button {
