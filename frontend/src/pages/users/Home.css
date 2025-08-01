@@ -23,7 +23,9 @@
   background-attachment: fixed;
   position: relative;
   width: 100%;
+  max-width: 100vw;
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* ===================================
@@ -34,9 +36,14 @@
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   border: none !important;
-  padding: 12px 16px;
+  padding: 8px 12px;
   position: relative;
   z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .navbar .d-flex {
@@ -47,13 +54,18 @@
 .navbar .d-flex:first-child {
   flex: 1;
   min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .navbar .d-flex:last-child {
   flex-shrink: 0;
-  gap: 8px;
+  gap: 6px;
   margin-left: auto;
   justify-content: flex-end;
+  display: flex;
+  align-items: center;
 }
 
 /* Hamburger Button */
@@ -61,16 +73,17 @@
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
-  font-size: 18px;
-  padding: 8px 10px;
+  font-size: 16px;
+  padding: 6px 8px;
   border-radius: 6px;
-  min-width: 40px;
-  height: 40px;
+  min-width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 12px;
+  margin-right: 8px;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .navbar .btn-outline-light:first-child:hover {
@@ -81,7 +94,7 @@
 /* Brand/Logo */
 .navbar-brand {
   color: white !important;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   margin: 0;
   padding: 0;
@@ -91,12 +104,14 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .navbar-brand img {
-  height: 24px;
+  height: 20px;
   width: auto;
-  margin-right: 8px;
+  margin-right: 6px;
   flex-shrink: 0;
   display: block;
 }
@@ -106,13 +121,14 @@
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
-  padding: 8px 12px;
+  padding: 6px 8px;
   border-radius: 20px;
-  min-height: 36px;
+  min-height: 32px;
   transition: all 0.2s ease;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .navbar .btn-outline-light:not(:first-child):hover {
@@ -124,14 +140,15 @@
   background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
   border: none !important;
   color: white !important;
-  font-size: 13px !important;
+  font-size: 11px !important;
   font-weight: 600 !important;
-  padding: 8px 16px !important;
+  padding: 6px 12px !important;
   border-radius: 20px !important;
-  min-height: 36px !important;
+  min-height: 32px !important;
   transition: all 0.2s ease !important;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+  flex-shrink: 0;
 }
 
 .navbar .custom-button:hover {
@@ -144,13 +161,17 @@
    HERO SECTION - MOBILE FIRST
    =================================== */
 .hero-section {
-  padding: 20px 20px 40px;
-  text-align: center;
+  padding: 20px 16px 40px;
+  text-align: left;
   min-height: calc(100vh - 64px);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .hero-section h1 {
@@ -168,11 +189,13 @@
    =================================== */
 .input-group {
   max-width: 100%;
+  width: 100%;
   margin: 20px 0 24px 0;
   border-radius: 25px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   background: white;
+  box-sizing: border-box;
 }
 
 .custom-input {

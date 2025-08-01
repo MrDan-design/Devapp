@@ -63,7 +63,7 @@ const Home = () => {
     <PageWrapper>
       <div className="home-page">
       {/* Navbar */}
-      <nav className="navbar d-flex justify-content-between align-items-center px-4 py-3">
+      <nav className="navbar">
         <div className="d-flex align-items-center">
           <button className="btn btn-outline-light me-2" onClick={toggleMenu} style={{
             zIndex: 300, position: 'relative'
@@ -75,18 +75,18 @@ const Home = () => {
 
         <div className="d-flex align-items-center">
           <button className="btn btn-outline-light me-2" onClick={handleShowLogin}>Login</button>
-          <button className="btn btn-primary custom-button px-4" onClick={handleShowSignup}>Get Started</button>
+          <button className="btn btn-primary custom-button" onClick={handleShowSignup}>Get Started</button>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <div className="hero-section d-flex flex-column justify-content-center align-items-start text-white px-4">
-        <h1 className="display-4 fw-bold mb-3">
+      <div className="hero-section">
+        <h1>
           Encompassing The <br /> Modern World Shares
         </h1>
 
         {/* Search Bar */}
-        <div className="input-group " style={{ maxWidth: "400px" }}>
+        <div className="input-group">
           <input
             type="text"
             className="form-control custom-input"
