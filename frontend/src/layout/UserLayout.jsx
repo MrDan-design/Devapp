@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import "./UserLayout.css";
 import { FaTachometerAlt, FaWallet, FaChartLine, FaMoneyCheckAlt, FaExchangeAlt, FaUserCircle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import SearchBar from "../layout/SearchBar";
 import ChatWidget from '../components/ChatWidget';
 import lgNow from '../assets/rf-lg.png';
@@ -22,10 +21,7 @@ const UserLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userName, setUserName] = useState("");
   const [profileImage, setProfileImage] = useState("");
-  const [userPlan, setUserPlan] = useState("");
   const location = useLocation();
-
-  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -42,7 +38,6 @@ const UserLayout = () => {
           if (data?.fullname) {
             setUserName(data.fullname);
             setProfileImage(data.profile_image);
-            setUserPlan(data.subscription_plan); // Set user's plan here
           }
         })
         .catch((err) => console.error("Fetch profile error:", err));
@@ -117,7 +112,7 @@ const UserLayout = () => {
               top: 0,
               left: 0,
               backgroundColor: "rgba(0, 0, 0, 0.5)",
-              zIndex: 1100
+              zIndex: 999
             }}
             onClick={toggleSidebar}
           />
@@ -134,7 +129,7 @@ const UserLayout = () => {
             position: "fixed",
             height: "calc(100vh - 70px)",
             top: "70px",
-            zIndex: 1000,
+            zIndex: 1200,
           }}
         >
           <div className="p-3">
@@ -143,6 +138,12 @@ const UserLayout = () => {
                 <li key={link.path} className="nav-item mb-2">
                   <Link
                     to={link.path}
+                    onClick={() => {
+                      // Close sidebar on mobile after clicking a link
+                      if (window.innerWidth < 992) {
+                        setSidebarOpen(false);
+                      }
+                    }}
                     className={`nav-link d-flex align-items-center gap-3 rounded p-3 text-decoration-none ${
                       location.pathname === link.path
                         ? "bg-danger text-white"
@@ -172,23 +173,6 @@ const UserLayout = () => {
 
       {/* Chat Widget */}
       <ChatWidget />
-
-      {/* Sidebar Overlay for Mobile */}
-      {sidebarOpen && (
-        <div
-          className="sidebar-overlay d-lg-none"
-          onClick={() => setSidebarOpen(false)}
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            zIndex: 999,
-          }}
-        ></div>
-      )}
     </div>
   );
 };
