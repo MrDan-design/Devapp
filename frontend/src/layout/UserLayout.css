@@ -6,15 +6,15 @@
 }
 
 .user-sidebar {
-  width: 280px;
-  height: calc(100vh - 60px);
+  width: 250px;
+  height: calc(100vh - 70px);
   position: fixed;
-  top: 60px;
+  top: 70px;
   left: 0;
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   border-right: 1px solid #e0e0e0;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 1200;
   padding: 1.5rem;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -44,7 +44,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 70px;
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   z-index: 1100;
   border-bottom: 1px solid #e0e0e0;
@@ -55,12 +55,13 @@
 }
 
 .main-content {
-  margin-left: 280px;
-  margin-top: 60px;
+  margin-left: 250px;
+  margin-top: 70px;
   padding: 2rem;
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh - 70px);
   background: #fafbfc;
-  width: calc(100% - 280px);
+  width: calc(100% - 250px);
+  transition: margin-left 0.3s ease;
 }
 
 .active-link {
@@ -88,7 +89,7 @@
 @media (max-width: 991px) {
   .user-sidebar {
     left: -100%;
-    width: 280px;
+    width: 250px;
     height: 100vh;
     top: 0;
     padding: 1rem;
@@ -100,6 +101,13 @@
   .user-sidebar.open {
     left: 0;
     transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0;
+    margin-top: 70px;
+    width: 100%;
+    padding: 1rem;
   }
   
   .top-navbar {

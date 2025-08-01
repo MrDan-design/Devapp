@@ -150,12 +150,13 @@ const UserLayout = () => {
             sidebarOpen ? "open" : ""
           }`}
           style={{
-            width: sidebarOpen ? "250px" : "70px",
-            transition: "width 0.3s ease",
+            width: "250px", // Fixed width for desktop
+            transition: "left 0.3s ease", // Only animate position on mobile
             position: "fixed",
             height: "calc(100vh - 70px)",
             top: "70px",
             zIndex: 1200,
+            left: 0, // Always visible on desktop
           }}
         >
           <div className="p-3">
@@ -177,7 +178,8 @@ const UserLayout = () => {
                     }`}
                   >
                     <span className="fs-5">{link.icon}</span>
-                    {sidebarOpen && <span>{link.name}</span>}
+                    <span className="d-none d-lg-inline">{link.name}</span>
+                    {sidebarOpen && <span className="d-lg-none">{link.name}</span>}
                   </Link>
                 </li>
               ))}
@@ -187,11 +189,7 @@ const UserLayout = () => {
 
         {/* Main Content */}
         <main
-          className="flex-grow-1 p-4"
-          style={{
-            marginLeft: sidebarOpen ? "250px" : "70px",
-            transition: "margin-left 0.3s ease",
-          }}
+          className="main-content flex-grow-1 p-4"
         >
           <Outlet />
         </main>
