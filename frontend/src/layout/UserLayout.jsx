@@ -21,15 +21,34 @@ const UserLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userName, setUserName] = useState("");
   const [profileImage, setProfileImage] = useState("");
+  const [user, setUser] = useState(null);
   const location = useLocation();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  // Function to decode JWT token
+  const decodeToken = (token) => {
+    try {
+      const payload = token.split('.')[1];
+      const decoded = atob(payload);
+      return JSON.parse(decoded);
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
+      // Decode token to get user ID
+      const decodedToken = decodeToken(token);
+      if (decodedToken?.id) {
+        setUser({ id: decodedToken.id });
+      }
+
       fetch(`${import.meta.env.VITE_API_BASE_URL}/users/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -38,6 +57,13 @@ const UserLayout = () => {
           if (data?.fullname) {
             setUserName(data.fullname);
             setProfileImage(data.profile_image);
+            // Update user object with complete data
+            setUser(prev => ({ 
+              ...prev, 
+              id: prev?.id || decodedToken?.id,
+              fullname: data.fullname,
+              profileImage: data.profile_image 
+            }));
           }
         })
         .catch((err) => console.error("Fetch profile error:", err));
@@ -172,7 +198,7 @@ const UserLayout = () => {
       </div>
 
       {/* Chat Widget */}
-      <ChatWidget />
+      <ChatWidget user={user} />
     </div>
   );
 };
