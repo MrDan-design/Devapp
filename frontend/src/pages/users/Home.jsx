@@ -157,7 +157,14 @@ const Home = () => {
               left: 0;
               width: 100vw;
               height: 100vh;
-              background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+              background-image: linear-gradient(
+                  rgba(0, 0, 0, 0.6),
+                  rgba(0, 0, 0, 0.6)
+                ),
+                url("../../assets/bg-image.jpg");
+              background-size: cover;
+              background-position: center;
+              background-repeat: no-repeat;
               backdrop-filter: blur(15px);
               -webkit-backdrop-filter: blur(15px);
               z-index: 9999;

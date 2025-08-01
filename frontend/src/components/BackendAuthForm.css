@@ -1,4 +1,17 @@
-/* BackendAuthForm - Mobile-First Responsive Design */
+/* BackendAuthForm - Mobile-First Responsive Design with Background Image */
+
+/* Add background image to the parent container/overlay */
+.auth-form-backdrop {
+  background-image: linear-gradient(
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url("../assets/bg-image.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
 
 .auth-form-container {
   background: rgba(255, 255, 255, 0.98);
