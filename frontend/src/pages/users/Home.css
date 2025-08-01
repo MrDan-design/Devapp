@@ -98,6 +98,7 @@
   width: auto;
   margin-right: 8px;
   flex-shrink: 0;
+  display: block;
 }
 
 /* Auth Buttons */
@@ -351,6 +352,7 @@
   .navbar-brand img {
     height: 28px;
     margin-right: 10px;
+    display: block;
   }
 
   .navbar .btn-outline-light:not(:first-child) {
@@ -423,6 +425,7 @@
   .navbar-brand img {
     height: 32px;
     margin-right: 12px;
+    display: block;
   }
 
   .navbar .btn-outline-light:not(:first-child) {

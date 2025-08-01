@@ -68,8 +68,8 @@ const Home = () => {
           <button className="btn btn-outline-light me-2" onClick={toggleMenu} style={{
             zIndex: 300, position: 'relative'
           }}>☰</button>
-          <span className="navbar-brand text-white fw-bold fs-4">
-            <img src={lgNow} alt="Logo" style={{ height: "30px"}}/>
+          <span className="navbar-brand">
+            <img src={lgNow} alt="Logo" />
           </span>
         </div>
 
