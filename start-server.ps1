@@ -1,7 +1,7 @@
 Write-Host "Starting Wallet App Backend Server..." -ForegroundColor Green
 
 # Change to backend directory
-Set-Location "c:\Users\rrfm0\Desktop\devapp\Backend"
+Set-Location "c:\Users\HomePC\Devapp\Backend"
 
 # Check if required files exist
 if (!(Test-Path "app.js")) {
