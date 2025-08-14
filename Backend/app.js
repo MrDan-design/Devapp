@@ -102,6 +102,37 @@ app.use('/api/pending-subscriptions', pendingSubscriptionsRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/setup', setupRoutes);
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ 
+        status: 'healthy', 
+        timestamp: new Date().toISOString(),
+        message: 'DevApp Backend is running!',
+        subscriptions_available: true
+    });
+});
+
+// Test subscription endpoint
+app.get('/test-subscriptions', (req, res) => {
+    const mockPlans = [
+        {
+            id: 1,
+            name: 'Megapack Momentum',
+            price: 7155.99,
+            benefits: 'No withdrawal limit, Account on max security, VVIP granted, Cyber truck auctioning, Meet and Greet with the team',
+            created_at: new Date().toISOString()
+        },
+        {
+            id: 2,
+            name: 'Xploration Zenith',
+            price: 2820.00,
+            benefits: 'No withdrawal limit, Account on max security, VVIP granted, Cyber truck auctioning, Meet and Greet with the team',
+            created_at: new Date().toISOString()
+        }
+    ];
+    res.json(mockPlans);
+});
+
 // Database setup endpoint (run once to create tables)
 app.get('/api/setup-database', async (req, res) => {
     try {
