@@ -138,6 +138,64 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Subscription plans endpoint
+app.get('/api/subscriptions', (req, res) => {
+  const mockSubscriptionPlans = [
+    {
+      id: 1,
+      name: 'Megapack Momentum',
+      price: 7155.99,
+      benefits: 'No withdrawal limit, Account on max security, VVIP granted, Cyber truck auctioning, Meet and Greet with the team',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 2,
+      name: 'Xploration Zenith',
+      price: 2820.00,
+      benefits: 'No withdrawal limit, Account on max security, VVIP granted, Cyber truck auctioning, Meet and Greet with the team',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 3,
+      name: 'Hyperloop Horizon',
+      price: 1250.00,
+      benefits: 'No withdrawal limit, Account on max security, VVIP granted, Cyber truck auctioning',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 4,
+      name: 'Falcon Flight',
+      price: 450.00,
+      benefits: 'No withdrawal limit, Account on max security, VVIP granted',
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 5,
+      name: 'Boring Blueprint',
+      price: 180.55,
+      benefits: 'Withdrawal limit, Account on max security',
+      created_at: new Date().toISOString()
+    }
+  ];
+  
+  console.log('📦 Returning subscription plans for production');
+  res.json(mockSubscriptionPlans);
+});
+
+// Subscription submission endpoint
+app.post('/api/subscriptions/submit', (req, res) => {
+  const { userId, planId, paymentProof } = req.body;
+
+  if (!userId || !planId) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  // In production, you would save this to a database
+  console.log('📝 Subscription request submitted:', { userId, planId, paymentProof });
+  
+  res.json({ message: 'Subscription request submitted successfully' });
+});
+
 // Default route
 app.get('/', (req, res) => {
   res.json({ 
@@ -147,6 +205,8 @@ app.get('/', (req, res) => {
       'POST /api/users/login',
       'GET /api/users/balance',
       'GET /api/stocks/top',
+      'GET /api/subscriptions',
+      'POST /api/subscriptions/submit',
       'GET /api/health'
     ]
   });
