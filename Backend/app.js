@@ -29,6 +29,27 @@ const io = new Server(server, {
   }
 });
 
+// Lightweight, always-available endpoints (added to help Diagnose and ensure
+// the deployed instance returns JSON for subscriptions even if other modules fail)
+const SIMPLE_MOCK_PLANS = [
+    { id: 1, name: 'Megapack Momentum', price: 7155.99, benefits: 'No withdrawal limit, Account on max security, VVIP granted', created_at: new Date().toISOString() },
+    { id: 2, name: 'Xploration Zenith', price: 2820.00, benefits: 'No withdrawal limit, Account on max security, VVIP granted', created_at: new Date().toISOString() }
+];
+
+app.get('/subscriptions', (req, res) => {
+    console.log('Simple /subscriptions hit - returning mock plans');
+    res.json(SIMPLE_MOCK_PLANS);
+});
+
+app.get('/api/subscriptions', (req, res) => {
+    console.log('Simple /api/subscriptions hit - returning mock plans');
+    res.json(SIMPLE_MOCK_PLANS);
+});
+
+app.get('/_debug', (req, res) => {
+    res.json({ ok: true, source: 'simple-debug-endpoint', ts: new Date().toISOString() });
+});
+
 // SOCKET.IO HANDLER
 io.on('connection', (socket) => {
   console.log('New client connected:', socket.id);
