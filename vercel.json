@@ -4,9 +4,8 @@
   "installCommand": "npm install",
   "framework": null,
   "rewrites": [
-    
     {
-      "source": "/(.*)",
+      "source": "\\/((?!.*\\.).*)",
       "destination": "/index.html"
     }
   ],
