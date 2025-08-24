@@ -73,115 +73,81 @@ const UserLayout = () => {
   const initial = userName?.charAt(0).toUpperCase();
 
   return (
-    <div className="user-layout d-flex flex-column min-vh-100 bg-light">
+    <div className="user-layout">
       {/* Top Navbar */}
-<div className="d-flex align-items-center justify-content-between p-3 border-bottom bg-white position-fixed top-navbar w-100">
-  <div className="d-flex align-items-center gap-3">
-    <img
-      src={lgNow}
-      alt="Logo"
-      className="logo"
-      style={{ width: "40px", height: "40px" }}
-    />
-    <span className="fw-bold text-dark fs-5">Tesla Wallet</span>
-  </div>
-
-  <SearchBar />
-
-  <div className="d-flex align-items-center gap-3">
-    <div className="d-flex align-items-center gap-2">
-      {profileImage ? (
-        <img
-          src={profileImage}
-          alt="Profile"
-          className="rounded-circle border border-2 border-danger"
-          style={{ width: "40px", height: "40px", objectFit: "cover" }}
-        />
-      ) : (
-        <div
-          className="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center fw-bold border border-2 border-danger"
-          style={{ width: "40px", height: "40px" }}
-        >
-          {initial}
-        </div>
-      )}
-      <span className="text-dark fw-medium d-none d-md-inline">
-        {userName || "User"}
-      </span>
-    </div>
-
-    <button
-      className="btn d-lg-none"
-      onClick={toggleSidebar}
-      style={{ 
-        border: "none", 
-        background: "transparent",
-        fontSize: "1.5rem",
-        color: "#333",
-        minWidth: "44px",
-        minHeight: "44px"
-      }}
-      aria-label="Toggle sidebar"
-    >
-      ☰
-    </button>
-  </div>
-</div>
-
-      {/* Main Content Area */}
-      <div className="d-flex flex-grow-1" style={{ marginTop: "70px" }}>
-        {/* Mobile Overlay */}
-        {sidebarOpen && (
-          <div 
-            className="d-lg-none position-fixed w-100 h-100"
-            style={{
-              top: 0,
-              left: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              zIndex: 999
-            }}
+      <nav className="top-navbar">
+        <div className="d-flex align-items-center gap-3">
+          <button
+            className="btn d-lg-none"
             onClick={toggleSidebar}
+            aria-label="Toggle sidebar"
+          >
+            ☰
+          </button>
+          <img
+            src={lgNow}
+            alt="Tesla Wallet Logo"
+            className="logo"
           />
-        )}
-        
-        {/* Sidebar */}
-        <nav
-          className={`user-sidebar ${sidebarOpen ? "open" : ""}`}
-        >
-          <div className="p-3">
-            <ul className="nav flex-column">
-              {navLinks.map((link) => (
-                <li key={link.path} className="nav-item mb-2">
-                  <Link
-                    to={link.path}
-                    onClick={() => {
-                      // Close sidebar on mobile after clicking a link
-                      if (window.innerWidth < 992) {
-                        setSidebarOpen(false);
-                      }
-                    }}
-                    className={`nav-link d-flex align-items-center gap-3 rounded p-3 text-decoration-none ${
-                      location.pathname === link.path
-                        ? "bg-danger text-white"
-                        : "text-dark hover-bg-light"
-                    }`}
-                  >
-                    <span className="fs-5">{link.icon}</span>
-                    <span>{link.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </nav>
+          <span className="fw-bold d-none d-md-inline">Tesla Wallet</span>
+        </div>
 
-        {/* Main Content */}
-        <main
-          className="main-content flex-grow-1 p-4"
-        >
-          <Outlet />
-        </main>
-      </div>
+        <div className="d-none d-md-block">
+          <SearchBar />
+        </div>
+
+        <div className="d-flex align-items-center gap-2">
+          {profileImage ? (
+            <img
+              src={profileImage}
+              alt="Profile"
+              className="rounded-circle"
+            />
+          ) : (
+            <div className="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center fw-bold">
+              {initial}
+            </div>
+          )}
+          <span className="fw-medium d-none d-lg-inline">
+            {userName || "User"}
+          </span>
+        </div>
+      </nav>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && <div className="mobile-overlay" onClick={toggleSidebar} />}
+      
+      {/* Sidebar */}
+      <nav className={`user-sidebar ${sidebarOpen ? "open" : ""}`}>
+        <div className="p-3">
+          <ul className="nav flex-column">
+            {navLinks.map((link) => (
+              <li key={link.path} className="nav-item">
+                <Link
+                  to={link.path}
+                  onClick={() => {
+                    if (window.innerWidth < 992) {
+                      setSidebarOpen(false);
+                    }
+                  }}
+                  className={`nav-link ${
+                    location.pathname === link.path ? "bg-danger text-white" : ""
+                  }`}
+                >
+                  <span className="fs-5">{link.icon}</span>
+                  <span className="d-none d-lg-inline">{link.name}</span>
+                  {sidebarOpen && <span className="d-lg-none">{link.name}</span>}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <main className="main-content">
+        <Outlet />
+      </main>
 
       {/* Chat Widget */}
       <ChatWidget user={user} />
