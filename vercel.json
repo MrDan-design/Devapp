@@ -5,12 +5,16 @@
   "framework": null,
   "rewrites": [
     {
+      "source": "/api/subscriptions",
+      "destination": "/api/subscriptions.js"
+    },
+    {
       "source": "\\/((?!.*\\.).*)",
       "destination": "/index.html"
     }
   ],
   "functions": {
-    "api/index.js": {
+    "api/subscriptions.js": {
       "maxDuration": 30
     }
   }

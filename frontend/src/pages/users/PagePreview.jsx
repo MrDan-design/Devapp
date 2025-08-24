@@ -14,16 +14,29 @@ const PagePreview = () => {
   const cardsPerPage = 3;
 
   useEffect(() => {
-  // Determine API base at runtime. If VITE_API_BASE_URL is not an absolute URL,
-  // fall back to the Render backend so deployed frontend won't call Vercel serverless /api proxy.
-  const apiBase = (import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.startsWith('http'))
-    ? import.meta.env.VITE_API_BASE_URL
-    : 'https://devapp-backend.onrender.com/api';
+  // In production, always use static JSON for reliability
+  const isProduction = import.meta.env.PROD;
+  
+  if (isProduction) {
+    // Production: Use static JSON directly for maximum reliability
+    axios.get('/subscriptions.json')
+      .then(res => setPlans(res.data))
+      .catch(err => console.error('Failed to fetch static subscriptions.json', err?.message || err));
+  } else {
+    // Development: Try API first, then fallback to static
+    const apiBase = (import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.startsWith('http'))
+      ? import.meta.env.VITE_API_BASE_URL
+      : 'http://localhost:3000/api';
 
-  // Fetch subscription plans (no auth needed)
-  axios.get(`${apiBase}/subscriptions`)
-    .then(res => setPlans(res.data))
-    .catch(err => console.error('Failed to fetch plans:', err));
+    axios.get(`${apiBase}/subscriptions`)
+      .then(res => setPlans(res.data))
+      .catch(err => {
+        console.error('Failed to fetch plans from API, falling back to static subscriptions.json', err?.message || err);
+        axios.get('/subscriptions.json')
+          .then(r2 => setPlans(r2.data))
+          .catch(e2 => console.error('Failed to fetch local subscriptions.json', e2?.message || e2));
+      });
+  }
 
   // Fetch user profile (auth needed)
   const token = localStorage.getItem('token'); // or sessionStorage.getItem

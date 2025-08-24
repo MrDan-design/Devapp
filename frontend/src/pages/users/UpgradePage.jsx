@@ -14,13 +14,21 @@ const UpgradePage = () => {
   const cardsPerPage = 3;
 
   useEffect(() => {
-  const apiBase = (import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.startsWith('http'))
-    ? import.meta.env.VITE_API_BASE_URL
-    : 'https://devapp-backend.onrender.com/api';
+  // In production, always use static JSON for reliability
+  // In development, try API first then fallback
+  const isProduction = import.meta.env.PROD;
+  
+  if (isProduction) {
+    // Production: Use static JSON directly for maximum reliability
+    axios.get('/subscriptions.json')
+      .then(res => setPlans(res.data))
+      .catch(err => console.error('Failed to fetch static subscriptions.json', err?.message || err));
+  } else {
+    // Development: Try API first, then fallback to static
+    const apiBase = (import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.startsWith('http'))
+      ? import.meta.env.VITE_API_BASE_URL
+      : 'http://localhost:3000/api';
 
-  // Fetch subscription plans (no auth needed)
-    // Fetch subscription plans (no auth needed). If the API call fails,
-    // fall back to the static file bundled with the frontend: /subscriptions.json
     axios.get(`${apiBase}/subscriptions`)
       .then(res => setPlans(res.data))
       .catch(err => {
@@ -29,6 +37,7 @@ const UpgradePage = () => {
           .then(r2 => setPlans(r2.data))
           .catch(e2 => console.error('Failed to fetch local subscriptions.json', e2?.message || e2));
       });
+  }
 
   // Fetch user profile (auth needed)
   const token = localStorage.getItem('token'); // or sessionStorage.getItem
