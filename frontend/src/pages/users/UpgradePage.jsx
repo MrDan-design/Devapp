@@ -14,8 +14,12 @@ const UpgradePage = () => {
   const cardsPerPage = 3;
 
   useEffect(() => {
+  const apiBase = (import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.startsWith('http'))
+    ? import.meta.env.VITE_API_BASE_URL
+    : 'https://devapp-backend.onrender.com/api';
+
   // Fetch subscription plans (no auth needed)
-  axios.get(`${import.meta.env.VITE_API_BASE_URL}/subscriptions`)
+  axios.get(`${apiBase}/subscriptions`)
     .then(res => setPlans(res.data))
     .catch(err => console.error('Failed to fetch plans:', err));
 

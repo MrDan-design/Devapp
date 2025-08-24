@@ -14,8 +14,14 @@ const PagePreview = () => {
   const cardsPerPage = 3;
 
   useEffect(() => {
+  // Determine API base at runtime. If VITE_API_BASE_URL is not an absolute URL,
+  // fall back to the Render backend so deployed frontend won't call Vercel serverless /api proxy.
+  const apiBase = (import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.startsWith('http'))
+    ? import.meta.env.VITE_API_BASE_URL
+    : 'https://devapp-backend.onrender.com/api';
+
   // Fetch subscription plans (no auth needed)
-  axios.get(`${import.meta.env.VITE_API_BASE_URL}/subscriptions`)
+  axios.get(`${apiBase}/subscriptions`)
     .then(res => setPlans(res.data))
     .catch(err => console.error('Failed to fetch plans:', err));
 
