@@ -1,57 +1,423 @@
-/* Desktop-First UserLayout Design */
+/* ===================================
+   USER LAYOUT - MOBILE-FIRST RESPONSIVE DESIGN
+   =================================== */
 
-.user-layout-container {
-  display: flex;
+/* Global Layout Container */
+.user-layout {
   min-height: 100vh;
+  background: #f8f9fa;
+  width: 100%;
+  overflow-x: hidden;
 }
 
-.user-sidebar {
-  width: 250px;
-  height: calc(100vh - 70px);
-  position: fixed;
-  top: 70px;
-  left: 0;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border-right: 1px solid #e0e0e0;
-  overflow-y: auto;
-  z-index: 1200;
-  padding: 1.5rem;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.user-sidebar .nav-link {
-  padding: 1rem 1.5rem;
-  margin-bottom: 0.5rem;
-  border-radius: 10px;
-  transition: all 0.3s ease;
-  font-size: 1rem;
-  font-weight: 500;
-  color: #333;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.user-sidebar .nav-link:hover {
-  background: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
-  transform: translateX(5px);
-}
-
+/* ===================================
+   TOP NAVBAR - MOBILE FIRST
+   =================================== */
 .top-navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 70px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  height: 60px;
+  background: white;
   z-index: 1100;
   border-bottom: 1px solid #e0e0e0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
-  padding: 0 2rem;
+  justify-content: space-between;
+  padding: 0 1rem;
+  width: 100%;
+}
+
+.top-navbar .d-flex:first-child {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.top-navbar .logo {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.top-navbar .fw-bold {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.top-navbar .d-flex:last-child {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.top-navbar .rounded-circle {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.top-navbar .fw-medium {
+  font-size: 0.875rem;
+  color: #333;
+  display: none;
+}
+
+.top-navbar .btn {
+  background: transparent;
+  border: none;
+  color: #333;
+  font-size: 1.25rem;
+  padding: 0.5rem;
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.top-navbar .btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ===================================
+   SIDEBAR - MOBILE FIRST
+   =================================== */
+.user-sidebar {
+  position: fixed;
+  top: 60px;
+  left: -100%;
+  width: 280px;
+  height: calc(100vh - 60px);
+  background: white;
+  z-index: 1200;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+  border-right: 1px solid #e0e0e0;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-sidebar.open {
+  left: 0;
+}
+
+.user-sidebar .p-3 {
+  padding: 1rem;
+}
+
+.user-sidebar .nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-sidebar .nav-item {
+  margin-bottom: 0.5rem;
+}
+
+.user-sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  color: #333;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-height: 44px;
+}
+
+.user-sidebar .nav-link:hover {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+.user-sidebar .nav-link.bg-danger {
+  background: #dc3545 !important;
+  color: white !important;
+}
+
+.user-sidebar .nav-link .fs-5 {
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+/* ===================================
+   MAIN CONTENT - MOBILE FIRST
+   =================================== */
+.main-content {
+  margin-top: 60px;
+  padding: 1rem;
+  min-height: calc(100vh - 60px);
+  width: 100%;
+  background: #f8f9fa;
+}
+
+/* Mobile Overlay for Sidebar */
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: block;
+}
+
+/* ===================================
+   TABLET STYLES (768px and up)
+   =================================== */
+@media (min-width: 768px) {
+  .top-navbar {
+    height: 70px;
+    padding: 0 1.5rem;
+  }
+
+  .top-navbar .logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  .top-navbar .fw-bold {
+    font-size: 1.125rem;
+  }
+
+  .top-navbar .fw-medium {
+    display: inline;
+    font-size: 0.9rem;
+  }
+
+  .top-navbar .rounded-circle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .user-sidebar {
+    top: 70px;
+    height: calc(100vh - 70px);
+    width: 260px;
+  }
+
+  .user-sidebar .p-3 {
+    padding: 1.25rem;
+  }
+
+  .user-sidebar .nav-link {
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+    min-height: 48px;
+  }
+
+  .main-content {
+    margin-top: 70px;
+    padding: 1.5rem;
+    min-height: calc(100vh - 70px);
+  }
+}
+
+/* ===================================
+   DESKTOP STYLES (992px and up)
+   =================================== */
+@media (min-width: 992px) {
+  .top-navbar .btn.d-lg-none {
+    display: none !important;
+  }
+
+  .user-sidebar {
+    left: 0;
+    position: fixed;
+    width: 250px;
+  }
+
+  .user-sidebar.open {
+    left: 0;
+  }
+
+  .main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    padding: 2rem;
+  }
+
+  .mobile-overlay {
+    display: none;
+  }
+}
+
+/* ===================================
+   LARGE DESKTOP STYLES (1200px and up)
+   =================================== */
+@media (min-width: 1200px) {
+  .top-navbar {
+    padding: 0 2rem;
+  }
+
+  .top-navbar .fw-bold {
+    font-size: 1.25rem;
+  }
+
+  .top-navbar .fw-medium {
+    font-size: 1rem;
+  }
+
+  .top-navbar .rounded-circle {
+    width: 40px;
+    height: 40px;
+  }
+
+  .user-sidebar {
+    width: 280px;
+  }
+
+  .user-sidebar .p-3 {
+    padding: 1.5rem;
+  }
+
+  .user-sidebar .nav-link {
+    padding: 1.125rem 1.5rem;
+    font-size: 1rem;
+    min-height: 52px;
+  }
+
+  .main-content {
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    padding: 2.5rem;
+  }
+}
+
+/* ===================================
+   ACCESSIBILITY & FOCUS STATES
+   =================================== */
+.top-navbar .btn:focus,
+.user-sidebar .nav-link:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .top-navbar {
+    background: white;
+    border-bottom: 2px solid #000;
+  }
+  
+  .user-sidebar {
+    background: white;
+    border-right: 2px solid #000;
+  }
+  
+  .user-sidebar .nav-link {
+    border: 1px solid transparent;
+  }
+  
+  .user-sidebar .nav-link:hover,
+  .user-sidebar .nav-link.bg-danger {
+    border-color: #000;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .user-sidebar,
+  .user-sidebar .nav-link,
+  .top-navbar .btn {
+    transition: none;
+  }
+}
+/* ===================================
+   LARGE DESKTOP STYLES (1200px and up)
+   =================================== */
+@media (min-width: 1200px) {
+  .top-navbar {
+    padding: 0 2rem;
+  }
+
+  .top-navbar .fw-bold {
+    font-size: 1.25rem;
+  }
+
+  .top-navbar .fw-medium {
+    font-size: 1rem;
+  }
+
+  .top-navbar .rounded-circle {
+    width: 40px;
+    height: 40px;
+  }
+
+  .user-sidebar {
+    width: 280px;
+  }
+
+  .user-sidebar .p-3 {
+    padding: 1.5rem;
+  }
+
+  .user-sidebar .nav-link {
+    padding: 1.125rem 1.5rem;
+    font-size: 1rem;
+    min-height: 52px;
+  }
+
+  .main-content {
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    padding: 2.5rem;
+  }
+}
+
+/* ===================================
+   ACCESSIBILITY & FOCUS STATES
+   =================================== */
+.top-navbar .btn:focus,
+.user-sidebar .nav-link:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .top-navbar {
+    background: white;
+    border-bottom: 2px solid #000;
+  }
+  
+  .user-sidebar {
+    background: white;
+    border-right: 2px solid #000;
+  }
+  
+  .user-sidebar .nav-link {
+    border: 1px solid transparent;
+  }
+  
+  .user-sidebar .nav-link:hover,
+  .user-sidebar .nav-link.bg-danger {
+    border-color: #000;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .user-sidebar,
+  .user-sidebar .nav-link,
+  .top-navbar .btn {
+    transition: none;
+  }
 }
 
 .main-content {
