@@ -102,6 +102,20 @@ app.use('/api/pending-subscriptions', pendingSubscriptionsRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/setup', setupRoutes);
 
+// Simple debug endpoint to verify deployment and environment
+app.get('/api/_debug', (req, res) => {
+    const info = {
+        status: 'ok',
+        node: process.version,
+        env: process.env.NODE_ENV || 'development',
+        port: process.env.PORT || 3000,
+        frontend_url: process.env.FRONTEND_URL || null,
+        git_commit: process.env.GIT_COMMIT_SHA || process.env.RENDER_GIT_COMMIT || null,
+        timestamp: new Date().toISOString()
+    };
+    res.json(info);
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.json({ 
