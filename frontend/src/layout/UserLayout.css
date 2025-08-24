@@ -338,6 +338,46 @@
     transition: none;
   }
 }
+
+/* ===================================
+   ACCESSIBILITY & FOCUS STATES
+   =================================== */
+.top-navbar .btn:focus,
+.user-sidebar .nav-link:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .top-navbar {
+    background: white;
+    border-bottom: 2px solid #000;
+  }
+  
+  .user-sidebar {
+    background: white;
+    border-right: 2px solid #000;
+  }
+  
+  .user-sidebar .nav-link {
+    border: 1px solid transparent;
+  }
+  
+  .user-sidebar .nav-link:hover,
+  .user-sidebar .nav-link.bg-danger {
+    border-color: #000;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .user-sidebar,
+  .user-sidebar .nav-link,
+  .top-navbar .btn {
+    transition: none;
+  }
+}
 /* ===================================
    LARGE DESKTOP STYLES (1200px and up)
    =================================== */

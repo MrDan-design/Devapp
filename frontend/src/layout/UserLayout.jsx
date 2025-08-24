@@ -146,18 +146,7 @@ const UserLayout = () => {
         
         {/* Sidebar */}
         <nav
-          className={`user-sidebar bg-white border-end ${
-            sidebarOpen ? "open" : ""
-          }`}
-          style={{
-            width: "250px", // Fixed width for desktop
-            transition: "left 0.3s ease", // Only animate position on mobile
-            position: "fixed",
-            height: "calc(100vh - 70px)",
-            top: "70px",
-            zIndex: 1200,
-            left: 0, // Always visible on desktop
-          }}
+          className={`user-sidebar ${sidebarOpen ? "open" : ""}`}
         >
           <div className="p-3">
             <ul className="nav flex-column">
@@ -178,8 +167,7 @@ const UserLayout = () => {
                     }`}
                   >
                     <span className="fs-5">{link.icon}</span>
-                    <span className="d-none d-lg-inline">{link.name}</span>
-                    {sidebarOpen && <span className="d-lg-none">{link.name}</span>}
+                    <span>{link.name}</span>
                   </Link>
                 </li>
               ))}

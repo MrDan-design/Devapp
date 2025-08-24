@@ -119,7 +119,7 @@ const UserDashboard = () => {
         </div>
 
         {/* Top Stocks */}
-        <div className="mt-4">
+        <div className="top-stocks-container">
           <div className="bg-dark p-3 p-md-4 rounded-4 mb-4">
             <h5 className="fw-bold mb-3 text-light">Trending</h5>
             <div className="d-flex flex-wrap gap-2 gap-md-3">
@@ -132,12 +132,12 @@ const UserDashboard = () => {
                   className="text-decoration-none"
                 >
                   <div className="d-flex align-items-center gap-2 p-2 px-3 bg-light text-dark rounded shadow-sm" 
-                       style={{ opacity: 0.95, minWidth: '140px' }}>
+                       style={{ opacity: 0.95, minWidth: '120px' }}>
                     {stock.logo && (
                       <img
                         src={stock.logo}
                         alt={`${stock.symbol} logo`}
-                        style={{ width: 28, height: 28, borderRadius: "50%" }}
+                        style={{ width: 24, height: 24, borderRadius: "50%" }}
                       />
                     )}
                     <div>
@@ -152,37 +152,34 @@ const UserDashboard = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="mb-4 d-flex flex-wrap gap-2 gap-md-3">
+        <div className="action-buttons mb-4">
           <button
             onClick={() => navigate("/fundwallet?tab=fund")}
-            className="btn btn-primary rounded-pill px-3 px-md-4 d-flex align-items-center gap-2"
+            className="btn btn-primary rounded-pill d-flex align-items-center justify-content-center gap-2"
           >
             <FiCreditCard size={18} /> 
-            <span className="d-none d-sm-inline">Fund Wallet</span>
-            <span className="d-sm-none">Fund</span>
+            <span>Fund Wallet</span>
           </button>
 
           <button
             onClick={() => navigate("/fundwallet?tab=swap")}
-            className="btn btn-outline-dark rounded-pill px-3 px-md-4 d-flex align-items-center gap-2"
+            className="btn btn-outline-dark rounded-pill d-flex align-items-center justify-content-center gap-2"
           >
             <FiRepeat size={18} /> 
-            <span className="d-none d-sm-inline">Swap</span>
-            <span className="d-sm-none">Swap</span>
+            <span>Swap</span>
           </button>
 
           <button
             onClick={() => navigate("/fundwallet?tab=takeout")}
-            className="btn btn-outline-danger rounded-pill px-3 px-md-4 d-flex align-items-center gap-2"
+            className="btn btn-outline-danger rounded-pill d-flex align-items-center justify-content-center gap-2"
           >
             <FiUpload size={18} /> 
-            <span className="d-none d-sm-inline">Take Out Shares</span>
-            <span className="d-sm-none">Take Out</span>
+            <span>Take Out</span>
           </button>
         </div>
 
         {/* Recent Transactions */}
-        <div className="mt-4">
+        <div className="recent-transactions">
           <div className="bg-white p-3 p-md-4 rounded-4 shadow-sm">
             <h5 className="fw-semibold mb-3">Recent Transactions</h5>
             {dashboardData.transactions?.length > 0 ? (
