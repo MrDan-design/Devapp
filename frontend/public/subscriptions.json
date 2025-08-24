@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Megapack Momentum",
+    "price": 7155.99,
+    "benefits": "No withdrawal limit, Account on max security, VVIP granted, Cyber truck auctioning, Meet and Greet with the team",
+    "created_at": "2025-08-24T00:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "name": "Xploration Zenith",
+    "price": 2820.00,
+    "benefits": "No withdrawal limit, Account on max security, VVIP granted, Cyber truck auctioning",
+    "created_at": "2025-08-24T00:00:00.000Z"
+  },
+  {
+    "id": 3,
+    "name": "Hyperloop Horizon",
+    "price": 1250.00,
+    "benefits": "No withdrawal limit, Account on max security, VVIP granted",
+    "created_at": "2025-08-24T00:00:00.000Z"
+  }
+]

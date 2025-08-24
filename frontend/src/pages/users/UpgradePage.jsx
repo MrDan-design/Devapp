@@ -19,9 +19,16 @@ const UpgradePage = () => {
     : 'https://devapp-backend.onrender.com/api';
 
   // Fetch subscription plans (no auth needed)
-  axios.get(`${apiBase}/subscriptions`)
-    .then(res => setPlans(res.data))
-    .catch(err => console.error('Failed to fetch plans:', err));
+    // Fetch subscription plans (no auth needed). If the API call fails,
+    // fall back to the static file bundled with the frontend: /subscriptions.json
+    axios.get(`${apiBase}/subscriptions`)
+      .then(res => setPlans(res.data))
+      .catch(err => {
+        console.error('Failed to fetch plans from API, falling back to static subscriptions.json', err?.message || err);
+        axios.get('/subscriptions.json')
+          .then(r2 => setPlans(r2.data))
+          .catch(e2 => console.error('Failed to fetch local subscriptions.json', e2?.message || e2));
+      });
 
   // Fetch user profile (auth needed)
   const token = localStorage.getItem('token'); // or sessionStorage.getItem
