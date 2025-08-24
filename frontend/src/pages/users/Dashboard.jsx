@@ -69,51 +69,45 @@ const UserDashboard = () => {
 
   return (
     <PageWrapper>
-      <div className="dashboard-container p-3 p-md-4">
-        {/* === Updated 3 Dashboard Cards === */}
-        <div className="dashboard-cards row g-3 mb-4">
+      <div className="dashboard-container">
+        {/* Dashboard Cards - Mobile Responsive */}
+        <div className="dashboard-cards">
           {/* Shares Balance */}
-          <div className="col-sm-6 col-lg-4">
-            <div className="card p-3 border-0 rounded-4 bg-white h-100 shadow-sm">
-              <div className="d-flex align-items-center gap-2 mb-2">
-                <FaChartBar className="text-danger" />
-                <h6 className="text-muted mb-0 small">Shares Balance</h6>
-              </div>
-              <div className="bg-light rounded px-3 py-2 d-inline-block">
-                <h4 className="text-danger fw-bold mb-0">
-                  {dashboardData.totalShares || 0}
-                </h4>
-              </div>
+          <div className="card">
+            <div className="d-flex align-items-center gap-2 mb-2">
+              <FaChartBar className="text-danger" />
+              <h6 className="text-muted mb-0">Shares Balance</h6>
+            </div>
+            <div className="bg-light rounded px-3 py-2 d-inline-block">
+              <h4 className="text-danger fw-bold mb-0">
+                {dashboardData.totalShares || 0}
+              </h4>
             </div>
           </div>
 
           {/* Total Invested */}
-          <div className="col-sm-6 col-lg-4">
-            <div className="card p-3 border-0 rounded-4 bg-white h-100 shadow-sm">
-              <div className="d-flex align-items-center gap-2 mb-2">
-                <FaPiggyBank className="text-success" />
-                <h6 className="text-muted mb-0 small">Total Invested</h6>
-              </div>
-              <div className="bg-light rounded px-3 py-2 d-inline-block">
-                <h4 className="text-success fw-bold mb-0">
-                  ${dashboardData.totalInvested || 0}
-                </h4>
-              </div>
+          <div className="card">
+            <div className="d-flex align-items-center gap-2 mb-2">
+              <FaPiggyBank className="text-success" />
+              <h6 className="text-muted mb-0">Total Invested</h6>
+            </div>
+            <div className="bg-light rounded px-3 py-2 d-inline-block">
+              <h4 className="text-success fw-bold mb-0">
+                ${dashboardData.totalInvested || 0}
+              </h4>
             </div>
           </div>
 
           {/* User Wallet Balance */}
-          <div className="col-sm-6 col-lg-4">
-            <div className="card p-3 border-0 rounded-4 bg-white h-100 shadow-sm">
-              <div className="d-flex align-items-center gap-2 mb-2">
-                <FaDollarSign className="text-dark" />
-                <h6 className="text-muted mb-0 small">User Balance</h6>
-              </div>
-              <div className="bg-light rounded px-3 py-2 d-inline-block">
-                <h4 className="text-dark fw-bold mb-0">
-                  ${dashboardData.balance || 0}
-                </h4>
-              </div>
+          <div className="card">
+            <div className="d-flex align-items-center gap-2 mb-2">
+              <FaDollarSign className="text-dark" />
+              <h6 className="text-muted mb-0">User Balance</h6>
+            </div>
+            <div className="bg-light rounded px-3 py-2 d-inline-block">
+              <h4 className="text-dark fw-bold mb-0">
+                ${dashboardData.balance || 0}
+              </h4>
             </div>
           </div>
         </div>
@@ -152,10 +146,10 @@ const UserDashboard = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="action-buttons mb-4">
+        <div className="action-buttons">
           <button
             onClick={() => navigate("/fundwallet?tab=fund")}
-            className="btn btn-primary rounded-pill d-flex align-items-center justify-content-center gap-2"
+            className="btn btn-primary"
           >
             <FiCreditCard size={18} /> 
             <span>Fund Wallet</span>
@@ -163,7 +157,7 @@ const UserDashboard = () => {
 
           <button
             onClick={() => navigate("/fundwallet?tab=swap")}
-            className="btn btn-outline-dark rounded-pill d-flex align-items-center justify-content-center gap-2"
+            className="btn btn-outline-dark"
           >
             <FiRepeat size={18} /> 
             <span>Swap</span>
@@ -171,7 +165,7 @@ const UserDashboard = () => {
 
           <button
             onClick={() => navigate("/fundwallet?tab=takeout")}
-            className="btn btn-outline-danger rounded-pill d-flex align-items-center justify-content-center gap-2"
+            className="btn btn-outline-danger"
           >
             <FiUpload size={18} /> 
             <span>Take Out</span>
@@ -180,42 +174,42 @@ const UserDashboard = () => {
 
         {/* Recent Transactions */}
         <div className="recent-transactions">
-          <div className="bg-white p-3 p-md-4 rounded-4 shadow-sm">
-            <h5 className="fw-semibold mb-3">Recent Transactions</h5>
-            {dashboardData.transactions?.length > 0 ? (
-              <>
-                <div className="table-responsive">
-                  <table className="table table-borderless align-middle mb-0">
-                    <tbody>
-                      {dashboardData.transactions.map((tx, idx) => (
-                        <tr key={idx}>
-                          <td className="d-flex align-items-center border-0">
+          <h5 className="fw-semibold mb-3">Recent Transactions</h5>
+          {dashboardData.transactions?.length > 0 ? (
+            <>
+              <div className="table-responsive">
+                <table className="table table-borderless align-middle mb-0">
+                  <tbody>
+                    {dashboardData.transactions.map((tx, idx) => (
+                      <tr key={idx}>
+                        <td className="border-0">
+                          <div className="d-flex align-items-center">
                             {getTxIcon(tx.type)}
                             <span className="fw-medium text-capitalize">
                               {tx.type}
                             </span>
-                          </td>
-                          <td className="text-end border-0">
-                            <span className="fw-bold text-success">
-                              ${tx.amount}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                          </div>
+                        </td>
+                        <td className="text-end border-0">
+                          <span className="fw-bold text-success">
+                            ${tx.amount}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-                <div className="text-end mt-3">
-                  <Link to="/transactions" className="btn btn-link text-primary p-0">
-                    See all transactions →
-                  </Link>
-                </div>
-              </>
-            ) : (
-              <p className="text-muted">No recent transactions.</p>
-            )}
-          </div>
+              <div className="text-end mt-3">
+                <Link to="/transactions" className="btn btn-link text-primary p-0">
+                  See all transactions →
+                </Link>
+              </div>
+            </>
+          ) : (
+            <p className="text-muted">No recent transactions.</p>
+          )}
         </div>
       </div>
     </PageWrapper>
