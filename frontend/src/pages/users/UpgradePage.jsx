@@ -6,8 +6,10 @@ import { useNavigate } from 'react-router-dom';
 
 const UpgradePage = () => {
   const [plans, setPlans] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0); // pagination index
+  const [currentPage, setCurrentPage] = useState(0);
   const [userPlan, setUserPlan] = useState('');
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -39,23 +41,56 @@ const UpgradePage = () => {
       });
   }
 
-  // Fetch user profile (auth needed)
-  const token = localStorage.getItem('token'); // or sessionStorage.getItem
+  // Fetch user subscription status
+  const token = localStorage.getItem('token');
 
   if (token) {
+    // Fetch user subscription status
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/subscriptions/status`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(res => {
+      setSubscriptionStatus(res.data);
+      if (res.data.currentPlan) {
+        setUserPlan(res.data.currentPlan.name);
+      }
+    })
+    .catch(err => console.error('Failed to fetch subscription status:', err.response?.data || err.message));
+
+    // Fetch user profile for backwards compatibility
     axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/profile`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-    .then(res => setUserPlan(res.data.subscription_plan))
+    .then(res => {
+      if (!userPlan && res.data.subscription_plan) {
+        setUserPlan(res.data.subscription_plan);
+      }
+    })
     .catch(err => console.error('Failed to fetch user profile:', err.response?.data || err.message));
   } else {
     console.warn('No token found – user might not be logged in');
   }
+  
+  setLoading(false);
 }, []);
 
   const handleSelectPlan = (plan) => {
+    // Check if user has pending requests
+    if (subscriptionStatus?.pendingRequests.length > 0) {
+      alert('You already have a pending subscription request. Please wait for approval.');
+      return;
+    }
+    
+    // Check if user already has this plan
+    if (subscriptionStatus?.currentPlan && subscriptionStatus.currentPlan.name === plan.name) {
+      alert('You already have this subscription plan.');
+      return;
+    }
+    
     localStorage.setItem('selected_plan', JSON.stringify(plan));
     const token = localStorage.getItem('token');
     if (token) {
@@ -95,6 +130,28 @@ const UpgradePage = () => {
         <h2 className="title">ACCOUNT UPGRADE</h2>
         <p className="subtitle">Account upgrade subscription</p>
 
+        {/* Current Subscription Status */}
+        {subscriptionStatus && (
+          <div className="subscription-status mb-4 p-3 rounded" style={{ backgroundColor: '#f8f9fa', border: '1px solid #dee2e6' }}>
+            {subscriptionStatus.hasSubscription ? (
+              <div className="d-flex align-items-center gap-2">
+                <span className="badge bg-success">Active</span>
+                <span>Current Plan: <strong>{subscriptionStatus.currentPlan?.name}</strong></span>
+              </div>
+            ) : subscriptionStatus.pendingRequests.length > 0 ? (
+              <div className="d-flex align-items-center gap-2">
+                <span className="badge bg-warning">Pending</span>
+                <span>You have a subscription request pending approval</span>
+              </div>
+            ) : (
+              <div className="d-flex align-items-center gap-2">
+                <span className="badge bg-secondary">No Plan</span>
+                <span>Select a plan below to upgrade your account</span>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="plan-carousel">
           {currentPage > 0 && <button className="arrow-btn left" onClick={handlePrev}>‹</button>}
 
@@ -105,6 +162,7 @@ const UpgradePage = () => {
                 plan={plan}
                 isActive={plan.name === userPlan}
                 onSelect={() => handleSelectPlan(plan)}
+                disabled={subscriptionStatus?.pendingRequests.length > 0}
               />
             ))}
           </div>

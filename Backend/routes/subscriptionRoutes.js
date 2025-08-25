@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
+const verifyToken = require('../middlewares/authMiddleware');
 
 router.get('/', async (req, res) => {
   // Central mock plans used as a safe fallback
@@ -37,20 +38,81 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/submit', async (req, res) => {
-  const { userId, planId, paymentProof } = req.body;
+// Get user's current subscription status
+router.get('/status', verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Get user's current subscription plan
+    const userResult = await db.query(
+      'SELECT subscription_plan_id FROM users WHERE id = ?',
+      [userId]
+    );
+    
+    if (!userResult || userResult.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    const subscriptionPlanId = userResult[0].subscription_plan_id;
+    
+    if (!subscriptionPlanId) {
+      return res.json({ 
+        hasSubscription: false, 
+        currentPlan: null,
+        pendingRequests: []
+      });
+    }
+    
+    // Get subscription plan details
+    const planResult = await db.query(
+      'SELECT * FROM subscription_plans WHERE id = ?',
+      [subscriptionPlanId]
+    );
+    
+    // Get pending subscription requests
+    const pendingResult = await db.query(
+      'SELECT * FROM pending_subscriptions WHERE user_id = ? AND status = "pending"',
+      [userId]
+    );
+    
+    res.json({
+      hasSubscription: true,
+      currentPlan: planResult[0] || null,
+      pendingRequests: pendingResult || []
+    });
+    
+  } catch (err) {
+    console.error('Error fetching subscription status:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
-  if (!userId || !planId) {
-    return res.status(400).json({ message: 'Missing required fields' });
+router.post('/submit', verifyToken, async (req, res) => {
+  const { planId, paymentProof } = req.body;
+  const userId = req.user.id;
+
+  if (!planId) {
+    return res.status(400).json({ message: 'Plan ID is required' });
   }
 
   try {
+    // Check if user already has a pending request
+    const existingRequest = await db.query(
+      'SELECT * FROM pending_subscriptions WHERE user_id = ? AND status = "pending"',
+      [userId]
+    );
+    
+    if (existingRequest && existingRequest.length > 0) {
+      return res.status(400).json({ message: 'You already have a pending subscription request' });
+    }
+    
     await db.query(
       `INSERT INTO pending_subscriptions (user_id, plan_id, payment_proof, status)
-       VALUES ($1, $2, $3, $4)`,
+       VALUES (?, ?, ?, ?)`,
       [userId, planId, paymentProof || null, 'pending']
     );
 
+    console.log(`📝 Subscription request submitted - User: ${userId}, Plan: ${planId}`);
     res.json({ message: 'Subscription request submitted successfully' });
   } catch (err) {
     console.error('Error submitting subscription request:', err);

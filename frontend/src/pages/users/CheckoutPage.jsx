@@ -15,13 +15,19 @@ const CheckoutPage = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const user = JSON.parse(localStorage.getItem('user'));
       const planId = selectedPlan?.id;
 
+      if (!token) {
+        alert('Please log in to submit subscription request');
+        navigate('/');
+        return;
+      }
+
       const formData = new FormData();
-      formData.append('userId', user.id);
       formData.append('planId', planId);
-      formData.append('paymentProof', paymentProof);
+      if (paymentProof) {
+        formData.append('paymentProof', paymentProof);
+      }
 
       await axios.post(`${import.meta.env.VITE_API_BASE_URL}/subscriptions/submit`, formData, {
         headers: {
@@ -30,11 +36,12 @@ const CheckoutPage = () => {
         },
       });
 
-      alert('Subscription request submitted successfully!');
+      alert('Subscription request submitted successfully! Please wait for admin approval.');
       navigate('/dashboard');
     } catch (err) {
       console.error('Error submitting subscription request:', err);
-      alert('Error submitting. Try again.');
+      const errorMessage = err.response?.data?.message || 'Error submitting request. Please try again.';
+      alert(errorMessage);
     }
   };
 

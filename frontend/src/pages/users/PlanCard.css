@@ -77,6 +77,18 @@
   border: 2px solid #6425FE;
 }
 
+/* Disabled state */
+.plan-card.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.plan-card.disabled .select-btn {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
 .active-icon {
   position: absolute;
   top: 10px;

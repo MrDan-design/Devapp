@@ -3,11 +3,11 @@
 import './PlanCard.css';
 import { FaCrown, FaCircle } from 'react-icons/fa';
 
-const PlanCard = ({ plan, isActive, onSelect }) => {
+const PlanCard = ({ plan, isActive, onSelect, disabled = false }) => {
   const benefits = plan.benefits.split(',').map(b => b.trim());
 
   return (
-    <div className={`plan-card ${isActive ? 'active' : ''}`}>
+    <div className={`plan-card ${isActive ? 'active' : ''} ${disabled ? 'disabled' : ''}`}>
       {isActive && <FaCrown className="active-icon" />}
       <h3 className="plan-title">{plan.name}</h3>
       <p className="plan-price">${parseFloat(plan.price).toFixed(2)} <span>/monthly</span></p>
@@ -18,8 +18,12 @@ const PlanCard = ({ plan, isActive, onSelect }) => {
         ))}
       </ul>
 
-      <button className="select-btn" onClick={() => onSelect(plan)}>
-        Select Plan
+      <button 
+        className="select-btn" 
+        onClick={() => onSelect(plan)}
+        disabled={disabled}
+      >
+        {isActive ? 'Current Plan' : disabled ? 'Pending Approval' : 'Select Plan'}
       </button>
     </div>
   );
