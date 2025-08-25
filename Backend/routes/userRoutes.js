@@ -147,7 +147,7 @@ router.get('/profile', verifyToken, async (req, res) => {
   try {
     const userId = req.user.id;
     const [users] = await db.query(`
-      SELECT fullname, email, country, currency, next_of_kin, next_of_kin_number, 
+      SELECT fullname, email, country, currency, phone, next_of_kin, next_of_kin_phone, 
              profile_image, subscription_plan_id 
       FROM users WHERE id = ?
     `, [userId]);
@@ -171,9 +171,9 @@ router.get('/profile', verifyToken, async (req, res) => {
       email: user.email,
       country: user.country,
       currency: user.currency,
-      phone: '', // Not in database yet
+      phone: user.phone,
       next_of_kin: user.next_of_kin,
-      next_of_kin_phone: user.next_of_kin_number,
+      next_of_kin_phone: user.next_of_kin_phone,
       profile_image: user.profile_image,
       subscription_plan: subscriptionName
     });
@@ -187,7 +187,7 @@ router.get('/profile', verifyToken, async (req, res) => {
 router.put('/profile', verifyToken, upload.single('profile_image'), async (req, res) => {
   try {
     const userId = req.user.id;
-    const { fullname, email, country, currency, nextOfKin, nextOfKinPhone } = req.body;
+    const { fullname, email, country, currency, phone, nextOfKin, nextOfKinPhone } = req.body;
     
     // Check if email is already taken by another user
     if (email) {
@@ -217,12 +217,16 @@ router.put('/profile', verifyToken, upload.single('profile_image'), async (req, 
       updateFields.push('currency = ?');
       updateValues.push(currency);
     }
+    if (phone) {
+      updateFields.push('phone = ?');
+      updateValues.push(phone);
+    }
     if (nextOfKin) {
       updateFields.push('next_of_kin = ?');
       updateValues.push(nextOfKin);
     }
     if (nextOfKinPhone) {
-      updateFields.push('next_of_kin_number = ?');
+      updateFields.push('next_of_kin_phone = ?');
       updateValues.push(nextOfKinPhone);
     }
     

@@ -1,8 +1,18 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Menu } from "lucide-react";
+import { FaSignOutAlt } from "react-icons/fa";
 
 // src/components/AdminNavbar.jsx
 const AdminNavbar = () => {
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
   return (
     <nav
       className="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm"
@@ -10,7 +20,16 @@ const AdminNavbar = () => {
     >
       <div className="container-fluid d-flex justify-content-between align-items-center px-4">
         <span className="navbar-brand text-primary fw-bold">TESLA Admin</span>
-        <span className="me-2 text-secondary small">Admin</span>
+        <div className="d-flex align-items-center gap-3">
+          <span className="me-2 text-secondary small">Admin</span>
+          <button
+            className="btn btn-outline-danger btn-sm"
+            onClick={handleSignOut}
+            title="Sign Out"
+          >
+            <FaSignOutAlt />
+          </button>
+        </div>
       </div>
     </nav>
   );

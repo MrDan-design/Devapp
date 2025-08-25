@@ -2,9 +2,9 @@ import React from "react";
 // UserLayout.jsx
 
 import { useState, useEffect } from "react";
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import "./UserLayout.css";
-import { FaTachometerAlt, FaWallet, FaChartLine, FaMoneyCheckAlt, FaExchangeAlt, FaUserCircle, FaHome, FaCog } from "react-icons/fa";
+import { FaTachometerAlt, FaWallet, FaChartLine, FaMoneyCheckAlt, FaExchangeAlt, FaUserCircle, FaHome, FaCog, FaSignOutAlt } from "react-icons/fa";
 import SearchBar from "../layout/SearchBar";
 import ChatWidget from '../components/ChatWidget';
 import lgNow from '../assets/rf-lg.png';
@@ -25,9 +25,16 @@ const UserLayout = () => {
   const [profileImage, setProfileImage] = useState("");
   const [user, setUser] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/");
   };
 
   // Function to decode JWT token
@@ -113,6 +120,13 @@ const UserLayout = () => {
           <span className="fw-medium d-none d-lg-inline">
             {userName || "User"}
           </span>
+          <button
+            className="btn btn-outline-danger btn-sm ms-2"
+            onClick={handleSignOut}
+            title="Sign Out"
+          >
+            <FaSignOutAlt />
+          </button>
         </div>
       </nav>
 

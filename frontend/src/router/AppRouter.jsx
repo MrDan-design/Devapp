@@ -32,7 +32,7 @@ import PendingSubscriptions from '../pages/admin/PendingSubscriptions';
 
 const AppRouter =() => {
     const user = JSON.parse(localStorage.getItem('user'));
-    const isAdmin = user?.role === 'admin';
+    const isAdmin = user?.is_admin || false;
 
     return (
         <BrowserRouter 

@@ -1,5 +1,5 @@
-import { Outlet } from "react-router-dom";
-import { useState } from "react"; //  Added!
+import { Outlet, Navigate } from "react-router-dom";
+import { useState, useEffect } from "react"; //  Added!
 import Sidebar from "../components/Sidebar";
 import AdminNavbar from "../components/AdminNavbar";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -9,6 +9,29 @@ import ChatBox from "../components/ChatBox"; //  Make sure this is imported too!
 
 const AdminLayout = () => {
   const [selectedChat, setSelectedChat] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+    setLoading(false);
+  }, []);
+
+  if (loading) {
+    return <div className="d-flex justify-content-center align-items-center" style={{height: '100vh'}}>
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>;
+  }
+
+  // Check if user is admin
+  if (!user || !user.is_admin) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="admin-layout d-flex">
