@@ -13,6 +13,17 @@ const PagePreview = () => {
 
   const cardsPerPage = 3;
 
+  const handleSelectPlan = (plan) => {
+    localStorage.setItem('selected_plan', JSON.stringify(plan));
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/checkout', { state: { selectedPlan: plan } });
+    } else {
+      // User not logged in, redirect to login/signup first
+      navigate('/', { state: { showAuth: true, selectedPlan: plan } });
+    }
+  };
+
   useEffect(() => {
   // In production, always use static JSON for reliability
   const isProduction = import.meta.env.PROD;
@@ -93,6 +104,7 @@ const PagePreview = () => {
                 key={index}
                 plan={plan}
                 isActive={plan.name === userPlan}
+                onSelect={handleSelectPlan}
               />
             ))}
           </div>
