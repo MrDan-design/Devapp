@@ -1,14 +1,15 @@
 const mysql = require('mysql2/promise');
 
 const migrateUserFields = async () => {
-  const db = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Lightholdbossamuelebiloma4321$$',
-    database: 'devapp',
-  });
-
   try {
+    const db = await mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: 'Lightholdbossamuelebiloma4321$$',
+      database: 'devapp',
+      port: 3306
+    });
+
     console.log('🔄 Starting user fields migration...');
 
     // Add phone column if it doesn't exist
@@ -54,10 +55,12 @@ const migrateUserFields = async () => {
     }
 
     console.log('✅ Migration completed successfully');
-  } catch (error) {
-    console.error('❌ Migration failed:', error);
-  } finally {
     await db.end();
+  } catch (error) {
+    console.error('❌ Migration failed:', error.message);
+    if (error.code === 'ECONNREFUSED') {
+      console.log('💡 Make sure MySQL is running and accessible');
+    }
   }
 };
 

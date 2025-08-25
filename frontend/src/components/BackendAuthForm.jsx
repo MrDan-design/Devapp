@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import './BackendAuthForm.css';
+import lgNow from '../assets/lg-now.png';
 
 export default function BackendAuthForm({ onAuthSuccess, initialMode = 'login' }) {
   const { login } = useAuth();
@@ -98,6 +99,13 @@ export default function BackendAuthForm({ onAuthSuccess, initialMode = 'login' }
     <div className="auth-form-container">
         {/* Header */}
         <div className="auth-form-header">
+          <div className="auth-form-logo-container">
+            <img 
+              src={lgNow} 
+              alt="Tesla Wallet Logo" 
+              className="auth-form-logo"
+            />
+          </div>
           <h2 className="auth-form-title">
             {isLogin ? 'Welcome Back' : 'Join Us'}
           </h2>

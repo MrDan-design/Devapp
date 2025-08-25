@@ -115,11 +115,13 @@
 }
 
 .navbar-brand img {
-  height: 28px;
+  height: 45px;
   width: auto;
-  margin-right: 6px;
+  margin-right: 8px;
   flex-shrink: 0;
   display: block;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Auth Buttons */

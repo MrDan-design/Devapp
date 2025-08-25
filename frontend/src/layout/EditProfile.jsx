@@ -86,28 +86,42 @@ const EditProfile = () => {
       return;
     }
 
+    console.log('📋 Submitting profile data:', formData);
+
     const submitData = new FormData();
     for (let key in formData) {
-      submitData.append(key, formData[key]);
+      if (formData[key] && formData[key] !== '') {
+        submitData.append(key, formData[key]);
+      }
     }
     if (profileImage) {
       submitData.append("profile_image", profileImage);
     }
 
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/users/profile`, submitData, {
+      const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/users/profile`, submitData, {
         headers: { 
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`
         },
       });
-      alert("Profile updated!");
+      
+      console.log('✅ Profile update response:', response.data);
+      alert("Profile updated successfully!");
+      
+      // Refresh the page data
+      window.location.reload();
     } catch (error) {
-      console.error(error);
+      console.error('❌ Profile update error:', error);
+      console.error('❌ Error response:', error.response?.data);
+      
       if (error.response?.status === 401) {
+        alert('Session expired. Please login again.');
         navigate('/');
+      } else if (error.response?.data?.message) {
+        alert(`Failed to update profile: ${error.response.data.message}`);
       } else {
-        alert("Failed to update profile.");
+        alert("Failed to update profile. Please try again.");
       }
     }
   };
