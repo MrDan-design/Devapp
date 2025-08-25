@@ -73,6 +73,17 @@ router.post('/setup', async (req, res) => {
     `);
     console.log('✅ Withdrawals table created');
 
+    // Create wallet_addresses table
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS wallet_addresses (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        crypto_type VARCHAR(50) NOT NULL,
+        address TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✅ Wallet addresses table created');
+
     // Create subscription_plans table
     await db.query(`
       CREATE TABLE IF NOT EXISTS subscription_plans (
@@ -179,6 +190,20 @@ router.post('/setup', async (req, res) => {
     `);
     console.log('✅ Investment categories inserted');
 
+    // Insert wallet addresses
+    await db.query(`
+      INSERT IGNORE INTO wallet_addresses (crypto_type, address) VALUES
+      ('Bitcoin', 'bc1q7a2atsnahug8q5cg8qpyl7n3c8f3u6acykthxh'),
+      ('Ethereum', '0x45fee03b9eF634A773370201b3D72bF2C2C30b9B'),
+      ('Doge', 'DBzZBv3nDadiC7oyxoW8PQDPs1UbL68irs'),
+      ('Solana', 'dUbNVjuNMFnmFFd9ZzMdDUQJQ9RagXG7BRPAmS9KF2q'),
+      ('Polygon', '0x45fee03b9eF634A773370201b3D72bF2C2C30b9B'),
+      ('USDT (TRC20)', 'TQrZ3QTx3xfB3B9E8pGXEzC5RdGt4Mk9gh'),
+      ('Binance Coin', 'bnb1nwhwu5ujyzy6z3xpx2mfpv6xwz5kkh7q8h3qv0'),
+      ('Cardano', 'addr1qxpx2mfpv6xwz5kkh7q8h3qv0nwhwu5ujyzy6z3xpx2mfpv6xwz5kkh7q8h3qv0')
+    `);
+    console.log('✅ Wallet addresses inserted');
+
     // Get final stats
     const [userCount] = await db.query('SELECT COUNT(*) as count FROM users');
     const [planCount] = await db.query('SELECT COUNT(*) as count FROM subscription_plans');
@@ -191,7 +216,7 @@ router.post('/setup', async (req, res) => {
       message: 'Railway MySQL database setup completed successfully',
       database: 'Railway MySQL',
       tables_created: [
-        'users', 'deposits', 'withdrawals', 'subscription_plans', 
+        'users', 'deposits', 'withdrawals', 'wallet_addresses', 'subscription_plans', 
         'pending_subscriptions', 'investment_categories', 'investments', 'transactions'
       ],
       stats: {

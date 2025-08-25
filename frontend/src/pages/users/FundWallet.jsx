@@ -61,9 +61,24 @@ const FundWallet = () => {
 
   useEffect(() => {
     if (method === 'crypto') {
+      console.log('🔍 Fetching wallet addresses...');
       axios.get(`${import.meta.env.VITE_API_BASE_URL}/deposit/wallets`)
-        .then(res => setWallets(res.data))
-        .catch(err => console.error(err));
+        .then(res => {
+          console.log('📦 Received wallets:', res.data);
+          setWallets(res.data);
+        })
+        .catch(err => {
+          console.error('❌ Error fetching wallets:', err);
+          // Set fallback wallets if API fails
+          const fallbackWallets = [
+            { crypto_type: 'Bitcoin', address: 'bc1q7a2atsnahug8q5cg8qpyl7n3c8f3u6acykthxh' },
+            { crypto_type: 'Ethereum', address: '0x45fee03b9eF634A773370201b3D72bF2C2C30b9B' },
+            { crypto_type: 'Doge', address: 'DBzZBv3nDadiC7oyxoW8PQDPs1UbL68irs' },
+            { crypto_type: 'USDT (TRC20)', address: 'TQrZ3QTx3xfB3B9E8pGXEzC5RdGt4Mk9gh' }
+          ];
+          console.log('📦 Using fallback wallets');
+          setWallets(fallbackWallets);
+        });
     }
   }, [method]);
 
