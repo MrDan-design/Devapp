@@ -4,17 +4,19 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import "./UserLayout.css";
-import { FaTachometerAlt, FaWallet, FaChartLine, FaMoneyCheckAlt, FaExchangeAlt, FaUserCircle } from "react-icons/fa";
+import { FaTachometerAlt, FaWallet, FaChartLine, FaMoneyCheckAlt, FaExchangeAlt, FaUserCircle, FaHome, FaCog } from "react-icons/fa";
 import SearchBar from "../layout/SearchBar";
 import ChatWidget from '../components/ChatWidget';
 import lgNow from '../assets/rf-lg.png';
 
 const navLinks = [
+  { name: "Home", path: "/", icon: <FaHome /> },
   { name: "Dashboard", path: "/dashboard", icon: <FaTachometerAlt /> },
   { name: "Portfolio", path: "/portfolio", icon: <FaChartLine /> },
   { name: "Transactions", path: "/transactions", icon: <FaMoneyCheckAlt /> },
   { name: "Fund Wallet", path: "/fundwallet", icon: <FaWallet /> },
   { name: "Investment", path: "/invest", icon: <FaExchangeAlt /> },
+  { name: "Settings", path: "/settings", icon: <FaCog /> },
 ];
 
 const UserLayout = () => {
