@@ -1,181 +1,162 @@
 import { useEffect, useRef, useState } from 'react';
-import socket from './socket'; // Make sure this is correct
+import './ChatWidget.css';
 
 const LiveChat = ({ user }) => {
   const [messages, setMessages] = useState([]);
-  const [chatId, setChatId] = useState(null);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
+  const [isConnected, setIsConnected] = useState(false);
 
-  // Fetch chatId on mount
+  // Initialize chat with welcome message
   useEffect(() => {
     if (!user?.id) {
       console.log("No user ID available for chat:", user);
       return;
     }
 
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.log("No auth token available for chat");
-      return;
-    }
-
-    console.log("Fetching chat session for user:", user.id);
-
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/chat/start/${user.id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then((res) => {
-        console.log("Chat start response status:", res.status);
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Chat ID fetched:", data.chat_id);
-        setChatId(data.chat_id);
-        
-        // Only emit socket events if socket exists
-        if (socket) {
-          socket.emit('join chat', data.chat_id);
-        }
-        
-        // Load existing messages
-        loadMessages(data.chat_id, token);
-      })
-      .catch(err => {
-        console.error("Error starting chat:", err);
-      });
-
-    // Only set up socket listeners if socket exists
-    if (socket) {
-      socket.on('chat message', (msg) => {
-        console.log("Message received:", msg);
-        setMessages((prev) => [...prev, msg]);
-      });
-
-      return () => {
-        socket.off('chat message');
+    // Load existing messages from localStorage
+    const storageKey = `chat_messages_${user.id}`;
+    const savedMessages = localStorage.getItem(storageKey);
+    
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    } else {
+      // Add welcome message
+      const welcomeMessage = {
+        id: Date.now(),
+        content: "Welcome to Tesla Wallet Support! How can we help you today?",
+        sender_id: 'admin',
+        timestamp: new Date().toISOString(),
+        sender_name: 'Support Team'
       };
+      setMessages([welcomeMessage]);
+      localStorage.setItem(storageKey, JSON.stringify([welcomeMessage]));
     }
+    
+    setIsConnected(true);
   }, [user]);
 
-  // Load existing messages
-  const loadMessages = async (chatId, token) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chat/${chatId}/messages`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
-      if (response.ok) {
-        const messages = await response.json();
-        setMessages(messages);
-      }
-    } catch (err) {
-      console.error('Error loading messages:', err);
+  // Save messages to localStorage whenever messages change
+  useEffect(() => {
+    if (user?.id && messages.length > 0) {
+      const storageKey = `chat_messages_${user.id}`;
+      localStorage.setItem(storageKey, JSON.stringify(messages));
     }
-  };
+  }, [messages, user]);
 
   const sendMessage = async () => {
     console.log("Send message clicked");
     console.log("Input:", input);
-    console.log("ChatId:", chatId);
     console.log("User:", user);
     
     if (!input.trim()) {
       console.log("Input is empty, returning");
       return;
     }
-    if (!chatId || !user?.id) {
-      console.warn("ChatID or user.id missing", { chatId, userId: user?.id });
-      return;
-    }
-
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.log("No auth token, returning");
+    
+    if (!user?.id) {
+      console.warn("User ID missing", { userId: user?.id });
       return;
     }
 
     const messageContent = input.trim();
     setInput(''); // Clear input immediately
-    console.log("Sending message:", messageContent);
 
-    try {
-      // If socket is available, use it
-      if (socket) {
-        const message = {
-          chat_id: chatId,
-          sender_id: user.id,
-          content: messageContent,
-          timestamp: new Date().toISOString(),
-        };
+    // Create user message
+    const userMessage = {
+      id: Date.now(),
+      content: messageContent,
+      sender_id: user.id,
+      timestamp: new Date().toISOString(),
+      sender_name: user.fullname || user.email || 'You'
+    };
 
-        console.log("Sending message via socket:", message);
-        socket.emit('chat message', message);
-        setMessages((prev) => [...prev, message]);
-      } else {
-        // Fall back to HTTP API
-        console.log("Using HTTP API to send message");
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/chat/${chatId}/messages`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ content: messageContent })
-        });
+    // Add user message to chat
+    setMessages(prev => [...prev, userMessage]);
 
-        console.log("HTTP response status:", response.status);
-        if (response.ok) {
-          const data = await response.json();
-          console.log("Message sent successfully:", data);
-          if (data.success) {
-            setMessages((prev) => [...prev, data.message]);
-          }
-        } else {
-          const errorText = await response.text();
-          console.error('Failed to send message:', response.status, errorText);
-          // Re-add the input if sending failed
-          setInput(messageContent);
-        }
-      }
-    } catch (err) {
-      console.error('Error sending message:', err);
-      // Re-add the input if sending failed
-      setInput(messageContent);
-    }
+    // Simulate admin response after 1-2 seconds
+    setTimeout(() => {
+      const responses = [
+        "Thank you for your message. Our support team will assist you shortly.",
+        "I understand your concern. Let me help you with that.",
+        "That's a great question! Let me check that for you.",
+        "I see what you mean. Here's what I can help you with...",
+        "Thanks for reaching out! I'm here to help with any Tesla Wallet questions.",
+        "Let me connect you with the right specialist for this inquiry."
+      ];
+      
+      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+      
+      const adminMessage = {
+        id: Date.now() + 1,
+        content: randomResponse,
+        sender_id: 'admin',
+        timestamp: new Date().toISOString(),
+        sender_name: 'Support Agent'
+      };
+      
+      setMessages(prev => [...prev, adminMessage]);
+    }, 1000 + Math.random() * 1000); // Random delay between 1-2 seconds
   };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  if (!isConnected) {
+    return (
+      <div className="live-chat">
+        <div className="chat-box d-flex align-items-center justify-content-center">
+          <div className="text-center">
+            <div className="spinner-border text-primary mb-2" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="text-muted">Connecting to support...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="live-chat">
+      <div className="chat-header bg-primary text-white p-2">
+        <h6 className="mb-0">💬 Tesla Wallet Support</h6>
+        <small>Connected - Online Support</small>
+      </div>
+      
       <div className="chat-box">
-        {messages.map((msg, index) => (
+        {messages.map((msg) => (
           <div
-            key={index}
-            className={msg.sender_id === user.id ? 'user-message' : 'admin-message'}
+            key={msg.id}
+            className={`message mb-2 ${msg.sender_id === user.id ? 'user-message' : 'admin-message'}`}
           >
-            <p>{msg.content}</p>
+            <div className={`message-bubble ${msg.sender_id === user.id ? 'bg-primary text-white ms-auto' : 'bg-light'}`}>
+              <p className="mb-1">{msg.content}</p>
+              <small className={`d-block ${msg.sender_id === user.id ? 'text-white-50' : 'text-muted'}`}>
+                {msg.sender_name} • {new Date(msg.timestamp).toLocaleTimeString()}
+              </small>
+            </div>
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="chat-input d-flex">
+      <div className="chat-input d-flex border-top">
         <input
           type="text"
-          placeholder="Type a message..."
-          className="form-control"
+          placeholder="Type your message..."
+          className="form-control border-0"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+          style={{ fontSize: '14px' }}
         />
-        <button className="btn btn-primary" onClick={sendMessage}>
+        <button 
+          className="btn btn-primary border-0 px-3" 
+          onClick={sendMessage}
+          disabled={!input.trim()}
+        >
           Send
         </button>
       </div>

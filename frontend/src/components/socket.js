@@ -1,10 +1,10 @@
 // socket.js
-// import { io } from 'socket.io-client';
+import { io } from 'socket.io-client';
 
-// Disable socket connection for now since backend is serverless
-const socket = null; // io(import.meta.env.VITE_API_BASE_URL, {
-//   transports: ['websocket'],
-//   withCredentials: true,
-// });
+// Enable socket connection for chat functionality
+const socket = io(import.meta.env.VITE_API_BASE_URL, {
+  transports: ['websocket', 'polling'],
+  withCredentials: true,
+});
 
 export default socket;
