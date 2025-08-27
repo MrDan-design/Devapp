@@ -70,19 +70,28 @@
 }
   
 .arrow-btn {
-  background-color: transparent;
-  color: #424141;
-  font-size: 2rem;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #e90d44;
+  font-size: 1.8rem;
+  border: 2px solid #e90d44;
   border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
+  font-weight: bold;
+  z-index: 10;
 }
 
 .arrow-btn:hover {
-  color: #f50909;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #e90d44;
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 5px 18px rgba(233, 13, 68, 0.3);
 }
 
 /* Enhanced Mobile-First Responsive Design */
@@ -156,7 +165,28 @@
   }
   
   .arrow-btn {
-    display: none; /* Hide arrows on mobile, use scroll instead */
+    display: flex; /* Show on mobile with better styling */
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #e90d44;
+    font-size: 1.5rem;
+    border: 2px solid #e90d44;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+    z-index: 10;
+    position: relative;
+    margin: 0 8px;
+  }
+  
+  .arrow-btn:hover {
+    background-color: #e90d44;
+    color: white;
+    transform: scale(1.1);
   }
   
   /* Add scroll indicators for mobile */
@@ -192,19 +222,46 @@
   }
   
   .plan-carousel {
-    flex-direction: column;
-    gap: 1rem;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 0;
   }
   
   .plan-cards {
-    width: 100%;
-    justify-content: flex-start;
+    width: calc(100% - 120px); /* Make room for navigation buttons */
+    justify-content: center;
     gap: 1rem;
     padding: 0.5rem 0;
+    overflow: visible; /* Allow buttons to be visible */
   }
   
   .arrow-btn {
-    display: none; /* Hide arrows on mobile, use scroll instead */
+    display: flex; /* Show on mobile with better styling */
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #e90d44;
+    font-size: 1.5rem;
+    border: 2px solid #e90d44;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    z-index: 10;
+    position: relative;
+    margin: 0 10px;
+    font-weight: bold;
+  }
+  
+  .arrow-btn:hover {
+    background-color: #e90d44;
+    color: white;
+    transform: scale(1.15);
+    box-shadow: 0 6px 20px rgba(233, 13, 68, 0.3);
   }
 }
 
