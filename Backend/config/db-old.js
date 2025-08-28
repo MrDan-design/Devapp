@@ -33,9 +33,6 @@ try {
 // Test connection and fallback to mock if needed
 const testConnection = async () => {
     try {
-        if (!db) {
-            throw new Error('No database pool available');
-        }
         const connection = await db.getConnection();
         console.log('✅ MySQL Database connected successfully');
         connection.release();
@@ -51,17 +48,14 @@ const testConnection = async () => {
 
 // Initialize connection test
 testConnection();
+        console.error('❌ MySQL Database connection failed:', err.message);
+        console.error('Connection config:', { ...dbConfig, password: '[HIDDEN]' });
+    });
 
-// Simplified database query function - MySQL with fallback to mock
+// Simplified database query function - MySQL only
 const dbQuery = async (sql, params = []) => {
     try {
-        if (useMockDb) {
-            // Use mock database
-            const mockDb = require('./mock-db');
-            return await mockDb.query(sql, params);
-        }
-        
-        console.log('🐬 MySQL Query:', sql);
+        console.log('� MySQL Query:', sql);
         console.log('🐬 MySQL Params:', params);
         
         // MySQL with mysql2/promise returns [rows, fields]
@@ -76,15 +70,6 @@ const dbQuery = async (sql, params = []) => {
         console.error('❌ Database Query Error:', error.message);
         console.error('❌ SQL:', sql);
         console.error('❌ Params:', params);
-        
-        // If MySQL fails, try fallback to mock
-        if (!useMockDb) {
-            console.log('🔄 MySQL failed, trying mock database...');
-            useMockDb = true;
-            const mockDb = require('./mock-db');
-            return await mockDb.query(sql, params);
-        }
-        
         throw error;
     }
 };
