@@ -119,46 +119,62 @@ const mockQuery = async (sql, params = []) => {
         const userId = params[params.length - 1]; // Last parameter is usually the ID
         const userIndex = data.users.findIndex(u => u.id === parseInt(userId));
         
+        console.log('🔄 Mock Update - User ID:', userId, 'User Index:', userIndex);
+        console.log('🔄 Mock Update - SQL:', sql);
+        console.log('🔄 Mock Update - Params:', params);
+        
         if (userIndex !== -1) {
-          // Parse the update fields from SQL and parameters
-          if (params.length >= 2) {
-            const user = data.users[userIndex];
+          const user = data.users[userIndex];
+          console.log('🔄 Mock Update - Before:', JSON.stringify(user, null, 2));
+          
+          // Parse the dynamic SQL - match field names with parameters
+          const setClause = sql.match(/SET\s+(.+?)\s+WHERE/i);
+          if (setClause) {
+            const fieldUpdates = setClause[1].split(',').map(s => s.trim());
             
-            // Map common update patterns
-            if (sqlLower.includes('fullname')) user.fullname = params[0];
-            if (sqlLower.includes('email')) user.email = params[1] || params[0];
-            if (sqlLower.includes('country')) {
-              const countryIndex = params.findIndex((_, i) => sqlLower.split('?')[i]?.includes('country'));
-              if (countryIndex >= 0) user.country = params[countryIndex];
-            }
-            if (sqlLower.includes('currency')) {
-              const currencyIndex = params.findIndex((_, i) => sqlLower.split('?')[i]?.includes('currency'));
-              if (currencyIndex >= 0) user.currency = params[currencyIndex];
-            }
-            if (sqlLower.includes('phone')) {
-              const phoneIndex = params.findIndex((_, i) => sqlLower.split('?')[i]?.includes('phone'));
-              if (phoneIndex >= 0) user.phone = params[phoneIndex];
-            }
-            if (sqlLower.includes('next_of_kin')) {
-              const kinIndex = params.findIndex((_, i) => sqlLower.split('?')[i]?.includes('next_of_kin') && !sqlLower.split('?')[i]?.includes('phone'));
-              if (kinIndex >= 0) user.next_of_kin = params[kinIndex];
-            }
-            if (sqlLower.includes('next_of_kin_phone')) {
-              const kinPhoneIndex = params.findIndex((_, i) => sqlLower.split('?')[i]?.includes('next_of_kin_phone'));
-              if (kinPhoneIndex >= 0) user.next_of_kin_phone = params[kinPhoneIndex];
-            }
-            if (sqlLower.includes('profile_image')) {
-              const imgIndex = params.findIndex((_, i) => sqlLower.split('?')[i]?.includes('profile_image'));
-              if (imgIndex >= 0) user.profile_image = params[imgIndex];
-            }
-            if (sqlLower.includes('password')) {
-              const passIndex = params.findIndex((_, i) => sqlLower.split('?')[i]?.includes('password'));
-              if (passIndex >= 0) user.password = params[passIndex];
-            }
-            
-            writeData(data);
+            fieldUpdates.forEach((fieldUpdate, index) => {
+              const fieldName = fieldUpdate.split('=')[0].trim();
+              const paramValue = params[index];
+              
+              console.log(`🔄 Mock Update - Field: ${fieldName}, Value: ${paramValue}`);
+              
+              switch (fieldName) {
+                case 'fullname':
+                  user.fullname = paramValue;
+                  break;
+                case 'email':
+                  user.email = paramValue;
+                  break;
+                case 'country':
+                  user.country = paramValue;
+                  break;
+                case 'currency':
+                  user.currency = paramValue;
+                  break;
+                case 'phone':
+                  user.phone = paramValue;
+                  break;
+                case 'next_of_kin':
+                  user.next_of_kin = paramValue;
+                  break;
+                case 'next_of_kin_phone':
+                  user.next_of_kin_phone = paramValue;
+                  break;
+                case 'profile_image':
+                  user.profile_image = paramValue;
+                  break;
+                case 'password':
+                  user.password = paramValue;
+                  break;
+              }
+            });
           }
+          
+          console.log('🔄 Mock Update - After:', JSON.stringify(user, null, 2));
+          writeData(data);
           return [{ affectedRows: 1 }];
+        } else {
+          console.log('❌ Mock Update - User not found');
         }
       }
       return [{ affectedRows: 0 }];
