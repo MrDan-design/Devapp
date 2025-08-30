@@ -7,7 +7,7 @@ import "./UserLayout.css";
 import { FaTachometerAlt, FaWallet, FaChartLine, FaMoneyCheckAlt, FaExchangeAlt, FaUserCircle, FaHome, FaCog, FaSignOutAlt } from "react-icons/fa";
 import SearchBar from "../layout/SearchBar";
 import ChatWidget from '../components/ChatWidget';
-import lgNow from '../assets/rf-lg.png';
+import lgNow from '../assets/Tesla-Logo.png';
 
 const navLinks = [
   { name: "Home", path: "/", icon: <FaHome /> },
