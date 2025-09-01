@@ -69,7 +69,12 @@ const mockQuery = async (sql, params = []) => {
     if (sqlLower.startsWith('select')) {
       // Handle SELECT queries
       if (sqlLower.includes('from users')) {
-        if (sqlLower.includes('where email = ?')) {
+        if (sqlLower.includes('where email = ? and id != ?')) {
+          const email = params[0];
+          const userId = parseInt(params[1]);
+          const user = data.users.find(u => u.email === email && u.id !== userId);
+          return [user ? [user] : []];
+        } else if (sqlLower.includes('where email = ?')) {
           const email = params[0];
           const user = data.users.find(u => u.email === email);
           return [user ? [user] : []];
