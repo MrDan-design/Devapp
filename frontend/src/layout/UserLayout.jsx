@@ -108,7 +108,7 @@ const UserLayout = () => {
         <div className="d-flex align-items-center gap-2">
           {profileImage ? (
             <img
-              src={profileImage}
+              src={profileImage.startsWith('http') ? profileImage : `${import.meta.env.VITE_API_BASE_URL}${profileImage}`}
               alt="Profile"
               className="rounded-circle"
             />

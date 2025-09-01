@@ -50,7 +50,15 @@ const EditProfile = () => {
           nextOfKinPhone: data.next_of_kin_phone || "",
           subscriptionPlan: data.subscription_plan || "Free",
         });
-        setPreviewImage(data.profile_image || null);
+        // Set preview image with full URL if it exists
+        if (data.profile_image) {
+          const fullImageUrl = data.profile_image.startsWith('http') 
+            ? data.profile_image 
+            : `${import.meta.env.VITE_API_BASE_URL}${data.profile_image}`;
+          setPreviewImage(fullImageUrl);
+        } else {
+          setPreviewImage(null);
+        }
       })
       .catch((err) => {
         console.error("Failed to load user profile:", err);
@@ -206,6 +214,7 @@ const EditProfile = () => {
                   className="rounded-circle mb-3"
                   width="120"
                   height="120"
+                  style={{ objectFit: 'cover' }}
                 />
                 <input
                   type="file"
